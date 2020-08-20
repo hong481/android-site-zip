@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1093481546113",
+    "firebase_url": "https://sitezip-9c999.firebaseio.com",
+    "project_id": "sitezip-9c999",
+    "storage_bucket": "sitezip-9c999.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1093481546113:android:0937fd3b28b15ce2dd6880",
+        "android_client_info": {
+          "package_name": "kr.co.honga.sitezip"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1093481546113-163vclo8sgp563q7k0of3c16637nnku0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPrVMhb6nm94xictCpcKPTJHxYNGsGJsQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1093481546113-163vclo8sgp563q7k0of3c16637nnku0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

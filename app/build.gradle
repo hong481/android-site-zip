@@ -1,0 +1,263 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'com.google.firebase.crashlytics'
+
+apply plugin: 'com.google.firebase.firebase-perf'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-kapt'
+
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+
+        applicationId "kr.co.honga.sitezip"
+
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+
+        ndk {
+            abiFilters(*rootProject.ext.ndkAbiFilters)
+        }
+
+        testInstrumentationRunner rootProject.ext.testInstrumentationRunner
+
+        manifestPlaceholders = [
+                manifestApplicationId: "${applicationId}"
+        ]
+
+        vectorDrawables.useSupportLibrary = true
+
+        resConfigs "ko", "en"
+
+        multiDexEnabled true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/roomSchemas".toString()]
+            }
+        }
+    }
+
+    signingConfigs {
+        keystore {
+            def keystorePropertiesFile = rootProject.file("./app/keystore/keystore.properties")
+            def keystoreProperties = new Properties()
+            keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+    }
+
+    flavorDimensions 'default'
+
+    productFlavors {
+        def BUILD_PROPERTIES_TYPE = "String"
+        def BUILD_PROPERTIES_NAME = "BUILD_PROPERTIES"
+
+        def SPARK_PROPERTIES_PATH = "./properties/SPARK.json"
+
+        SPARK_ {
+            versionCode 1
+            versionName "0.0.0"
+
+            buildConfigField(BUILD_PROPERTIES_TYPE, BUILD_PROPERTIES_NAME, loadProperties(SPARK_PROPERTIES_PATH))
+        }
+    }
+
+    buildTypes {
+        release {
+            debuggable false
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
+            aaptOptions.cruncherEnabled = true
+
+            signingConfig signingConfigs.keystore
+
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            createApk()
+        }
+
+        debug {
+            debuggable true
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            ext.enableCrashlytics = false
+            ext.alwaysUpdateBuildId = false
+            aaptOptions.cruncherEnabled = false
+
+            splits.abi.enable = false
+            splits.density.enable = false
+
+            signingConfig signingConfigs.keystore
+
+            createApk()
+        }
+    }
+
+    buildFeatures {
+        dataBinding = true
+    }
+
+    androidExtensions {
+        experimental true
+    }
+
+    dexOptions {
+        preDexLibraries false
+        jumboMode true
+        javaMaxHeapSize "4g"
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
+    compileOptions {
+        sourceCompatibility rootProject.ext.javaVersion
+        targetCompatibility rootProject.ext.javaVersion
+    }
+
+    kotlinOptions {
+        jvmTarget = rootProject.ext.javaVersion.toString()
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+    }
+}
+
+def loadProperties(filePath) {
+    return "\"" +
+            file(filePath).text
+                    .replace("\"", "\\\"")
+                    .replace(" ", "")
+                    .replace("\n", "")
+                    .replace("\r", "") +
+            "\""
+}
+
+def createApk() {
+    android.applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            if (outputFileName.endsWith('.apk')) {
+                def date = new Date().format('yyyyMMddHHmm')
+
+                def dir = "./apk/" + variant.applicationId + "/" + variant.versionName + "(" + variant.versionCode + ')'
+                def apk = variant.applicationId + "-" + variant.versionName + "(" + variant.versionCode + ")" + "-" + date + ".apk"
+
+                outputFileName = new File(dir, apk)
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Kotlin
+    kapt "androidx.databinding:databinding-compiler:$gradle_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // Android Support
+    implementation "androidx.core:core-ktx:${rootProject.ext.androidxVersion}"
+    implementation "androidx.appcompat:appcompat:${rootProject.ext.appcompatVersion}"
+    implementation "androidx.constraintlayout:constraintlayout:${rootProject.ext.constraintLayoutVersion}"
+
+    // Support
+    implementation "com.google.android:flexbox:${rootProject.ext.flexboxVersion}"
+    implementation "com.google.android.material:material:${rootProject.ext.appcompatVersion}"
+
+    // AAC - ViewModel and LiveData and Lifecycle
+    implementation "androidx.lifecycle:lifecycle-extensions:${rootProject.ext.lifecycleVersion}"
+    implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:${rootProject.ext.lifecycleVersion}"
+
+    // AAC - Room
+    kapt "androidx.room:room-compiler:${rootProject.ext.roomVersion}"
+    implementation "androidx.room:room-runtime:${rootProject.ext.roomVersion}"
+    implementation "androidx.room:room-rxjava2:${rootProject.ext.roomVersion}"
+    annotationProcessor "android.arch.persistence.room:compiler:${rootProject.ext.roomVersion}"
+    testImplementation "androidx.room:room-testing:${rootProject.ext.roomVersion}"
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
+
+    // RxAndroid
+    implementation "io.reactivex.rxjava3:rxkotlin:${rootProject.ext.rxKotlinVersion}"
+    implementation "io.reactivex.rxjava3:rxandroid:${rootProject.ext.rxAndroidVersion}"
+    implementation "com.github.akarnokd:rxjava3-bridge:${rootProject.ext.rx3BridgeVersion}"
+
+    // Koin
+    implementation "org.koin:koin-core:$koin_version"
+    implementation "org.koin:koin-core-ext:$koin_version"
+    implementation "org.koin:koin-android:$koin_version"
+    implementation "org.koin:koin-androidx-ext:$koin_version"
+    implementation "org.koin:koin-androidx-scope:$koin_version"
+    implementation "org.koin:koin-androidx-fragment:$koin_version"
+    implementation "org.koin:koin-androidx-viewmodel:$koin_version"
+    testImplementation "org.koin:koin-test:$koin_version"
+
+    // Moshi
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:${rootProject.ext.moshiVersion}"
+    implementation "com.squareup.moshi:moshi-kotlin:${rootProject.ext.moshiVersion}"
+
+    // Retrofit2
+    implementation "com.squareup.retrofit2:retrofit:${rootProject.ext.retrofitVersion}"
+    implementation "com.squareup.retrofit2:adapter-rxjava3:${rootProject.ext.retrofitVersion}"
+    implementation "com.squareup.retrofit2:converter-moshi:${rootProject.ext.retrofitVersion}"
+    implementation "com.squareup.retrofit2:converter-scalars:${rootProject.ext.retrofitVersion}"
+
+    // Glide
+    implementation "com.github.bumptech.glide:glide:${rootProject.ext.glideVersion}"
+    kapt "com.github.bumptech.glide:compiler:${rootProject.ext.glideVersion}"
+
+    // Socket.IO
+    implementation("io.socket:socket.io-client:${rootProject.ext.socketIoVersion}") {
+        exclude group: 'org.json', module: 'json'
+    }
+
+    // ActivityResult
+    implementation "gun0912.ted:tedonactivityresult-rx2:${rootProject.ext.tedActivityResultVersion}"
+
+    // SwipeRecyclerView
+    implementation "com.android.support:design:${rootProject.ext.swipeRecyclerViewVersion}"
+
+    // LeakCanary
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:${rootProject.ext.leakcanaryVersion}"
+
+    // fireBase
+    implementation "com.google.firebase:firebase-analytics:${rootProject.ext.analyticsVersion}"
+    implementation "com.google.firebase:firebase-crashlytics:${rootProject.ext.crashlyticsVersion}"
+    implementation "com.google.firebase:firebase-perf:${rootProject.ext.perfVersion}"
+    implementation "com.google.firebase:firebase-storage:${rootProject.ext.storageVersion}"
+    implementation "com.google.firebase:firebase-messaging:${rootProject.ext.messagingVersion}"
+    implementation "com.google.firebase:firebase-database-ktx:${rootProject.ext.databaseVersion}"
+    implementation "com.firebaseui:firebase-ui-storage:${rootProject.ext.storageUiVersion}"
+
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+
+    // Test
+    testImplementation "junit:junit:${rootProject.ext.junitVersion}"
+    androidTestImplementation "androidx.test.ext:junit:${rootProject.ext.junitAndroidVersion}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${rootProject.ext.espressoCoreVersion}"
+}
+
+apply plugin: 'com.google.gms.google-services'

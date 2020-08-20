@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">SiteZip</string>
+
+    <string name="content_description">ContentDescription</string>
+
+    <string name="tab_one">탭 1</string>
+    <string name="tab_two">탭 2</string>
+    <string name="tab_third">탭 3</string>
+
+    <string name="site_info">사이트 정보</string>
+
+    <string name="search_hint">사이트 명 및 주소를 검색하세요</string>
+    <string name="favorites">즐겨찾기</string>
+
+    <string name="copy_to_link_message">링크를 복사했어요</string>
+
+</resources>

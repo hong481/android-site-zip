@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1A3C5E</color>
+    <color name="colorPrimaryDark">#182E44</color>
+    <color name="colorAccent">#64B5F6</color>
+
+    <color name="color_ffffff">#ffffff</color>
+    <color name="color_000000">#000000</color>
+    <color name="color_353535">#353535</color>
+    <color name="color_5c5c5c">#5c5c5c</color>
+    <color name="color_eeeeee">#eeeeee</color>
+    <color name="color_c5c1c1">#c5c1c1</color>
+
+    <color name="dialogBackground">#80000000</color>
+</resources>

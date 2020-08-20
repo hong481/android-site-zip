@@ -1,0 +1,60 @@
+ext {
+    minSdkVersion = 21
+
+    targetSdkVersion = 29
+    compileSdkVersion = 29
+
+    desugarjdkLibsVersion = '1.0.5'
+
+    buildToolsVersion = '29.0.2'
+
+    multidexVersion = '1.0.3'
+
+    irRecorderVersion = '2.0.7'
+
+    flexboxVersion = '2.0.1'
+    androidxVersion = '1.3.1'
+    materialVersion = '1.1.0'
+    appcompatVersion = '1.2.0'
+    constraintLayoutVersion = '1.1.3'
+
+    roomVersion = '2.2.5'
+    lifecycleVersion = '2.2.0'
+
+    rxKotlinVersion = '3.0.0'
+    rxAndroidVersion = '3.0.0'
+    rx3BridgeVersion = '3.0.0'
+
+    moshiVersion = '1.9.3'
+
+    retrofitVersion = '2.9.0'
+
+    socketIoVersion = '1.0.0'
+
+    tedpermissionVersion = '2.2.3'
+    tedActivityResultVersion = '1.0.8'
+
+    junitVersion = '4.12'
+    junitAndroidVersion = '1.1.1'
+    espressoCoreVersion = '3.2.0'
+
+    analyticsVersion = '17.4.4'
+    crashlyticsVersion = '17.1.1'
+    perfVersion = '19.0.8'
+    storageVersion = '19.1.1'
+    messagingVersion = '20.2.4'
+    databaseVersion = '19.3.1'
+    storageUiVersion = '4.3.2'
+
+    glideVersion = '4.9.0'
+
+    swipeRecyclerViewVersion = '28.0.0'
+
+    leakcanaryVersion = '2.4'
+
+    javaVersion = JavaVersion.VERSION_1_8
+
+    ndkAbiFilters = ["armeabi-v7a", "armeabi", "x86", "mips"]
+
+    testInstrumentationRunner = 'androidx.test.runner.AndroidJUnitRunner'
+}

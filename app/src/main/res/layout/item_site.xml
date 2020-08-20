@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="kr.co.honga.sitezip.ui.screen.SiteViewHolder.ViewModel" />
+
+        <variable
+            name="viewHolder"
+            type="kr.co.honga.sitezip.ui.screen.SiteViewHolder" />
+    </data>
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="1dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="@color/color_ffffff"
+        app:cardCornerRadius="10dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="120dp">
+
+            <Button
+                android:id="@+id/iv_favorite"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/ic_baseline_star_24"
+                android:contentDescription="@string/content_description"
+                app:layout_constraintBottom_toTopOf="@id/v_bottom"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_icon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="15dp"
+                android:contentDescription="@string/content_description"
+                app:firebaseLoadImage="@{viewHolder.imageReference}"
+                app:layout_constraintBottom_toTopOf="@id/v_bottom"
+                app:layout_constraintStart_toEndOf="@id/iv_favorite"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_site_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:text="@{viewHolder.item.siteName}"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/btn_open_link"
+                app:layout_constraintStart_toEndOf="@+id/iv_icon"
+                app:layout_constraintTop_toTopOf="@+id/iv_icon"
+                tools:text="Site Name" />
+
+            <TextView
+                android:id="@+id/tv_site_shortInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:text="@{viewHolder.item.shortInfo}"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toStartOf="@id/btn_open_link"
+                app:layout_constraintStart_toEndOf="@+id/iv_icon"
+                app:layout_constraintTop_toBottomOf="@+id/tv_site_name"
+                tools:text="Site Name" />
+
+            <Button
+                android:id="@+id/btn_open_link"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/ic_baseline_open_in_new_24"
+                android:onClick="@{() -> viewModel.intentUrl(viewHolder.item.siteLink)}"
+                app:layout_constraintBottom_toTopOf="@id/v_bottom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/v_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@color/color_eeeeee"
+                android:backgroundTint="@color/color_eeeeee"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_link_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/ic_baseline_link_24"
+                android:contentDescription="@string/content_description"
+                app:layout_constraintBottom_toBottomOf="@id/v_bottom"
+                app:layout_constraintStart_toStartOf="@id/v_bottom"
+                app:layout_constraintTop_toTopOf="@id/v_bottom" />
+
+            <TextView
+                android:id="@+id/tv_site_link"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="20dp"
+                android:text="@{viewHolder.item.siteLink}"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@id/v_bottom"
+                app:layout_constraintEnd_toEndOf="@id/btn_link_copy"
+                app:layout_constraintStart_toEndOf="@+id/iv_link_icon"
+                app:layout_constraintTop_toTopOf="@id/v_bottom"
+                tools:text="Site Link" />
+
+            <Button
+                android:id="@+id/btn_link_copy"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/ic_baseline_file_copy_24"
+                android:onClick="@{() -> viewModel.copyLink(viewHolder.item.siteName, viewHolder.item.siteLink)}"
+                app:layout_constraintBottom_toBottomOf="@id/v_bottom"
+                app:layout_constraintEnd_toEndOf="@id/v_bottom"
+                app:layout_constraintTop_toTopOf="@id/v_bottom" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+</layout>
