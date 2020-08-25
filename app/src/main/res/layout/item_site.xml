@@ -13,6 +13,8 @@
         <variable
             name="viewHolder"
             type="kr.co.honga.sitezip.ui.screen.SiteViewHolder" />
+
+        <import type="android.view.View" />
     </data>
 
 
@@ -33,26 +35,61 @@
             android:layout_height="wrap_content"
             android:minHeight="120dp">
 
-            <Button
-                android:id="@+id/iv_favorite"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="15dp"
-                android:background="@drawable/ic_baseline_star_24"
-                android:contentDescription="@string/content_description"
+            <FrameLayout
+                android:id="@+id/iv_favorite_off"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:onClick="@{() -> viewModel.chooseFavorite(viewHolder.item)}"
+                android:padding="10dp"
+                android:visibility="@{viewHolder.item.favorite == true ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toTopOf="@id/v_bottom"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="gone">
+
+                <ImageButton
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:clickable="false"
+                    android:background="@drawable/ic_baseline_star_24"
+                    android:backgroundTint="@color/color_353535"
+                    android:contentDescription="@string/content_description" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/ic_baseline_star_24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:onClick="@{() -> viewModel.releaseFavorite(viewHolder.item)}"
+                android:padding="10dp"
+                android:visibility="@{viewHolder.item.favorite == true ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toTopOf="@id/v_bottom"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible">
+
+                <ImageButton
+                    android:id="@+id/iv_favorite_on"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:clickable="false"
+                    android:background="@drawable/ic_baseline_star_24"
+                    android:backgroundTint="@color/color_ffc107"
+                    android:contentDescription="@string/content_description"
+                    android:scaleType="centerInside" />
+            </FrameLayout>
 
             <ImageView
                 android:id="@+id/iv_icon"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="60dp"
                 android:contentDescription="@string/content_description"
                 app:firebaseLoadImage="@{viewHolder.imageReference}"
                 app:layout_constraintBottom_toTopOf="@id/v_bottom"
-                app:layout_constraintStart_toEndOf="@id/iv_favorite"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView

@@ -5,7 +5,6 @@ import kr.co.honga.sitezip.util.*
 import org.koin.core.module.Module
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import java.util.*
 
 object UtilModule {
 
@@ -28,6 +27,15 @@ object UtilModule {
             ClipboardUtil(
                 get()
             )
+        }
+        single {
+            DirectoryManagerImpl(
+                get(),
+                get()
+            )
+        } bind DirectoryManager::class
+        single {
+            FileUtil()
         }
     }
 }

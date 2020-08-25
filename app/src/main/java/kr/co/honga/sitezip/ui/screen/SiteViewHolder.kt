@@ -1,6 +1,5 @@
 package kr.co.honga.sitezip.ui.screen
 
-import android.content.ClipData
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -38,6 +37,10 @@ class SiteViewHolder(
         fun intentUrl(url: String)
 
         fun copyLink(label: String, text: String)
+
+        fun chooseFavorite(site: Site)
+
+        fun releaseFavorite(site: Site)
     }
 
 }

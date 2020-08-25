@@ -7,6 +7,8 @@ import android.content.Context
 import android.os.Process
 import androidx.core.app.ActivityCompat
 import kr.co.honga.sitezip.di.AppModule
+import kr.co.honga.sitezip.util.DatabaseDebugUtil
+import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.fragment.koin.fragmentFactory
@@ -29,10 +31,15 @@ class App : Application() {
         }
     }
 
+    private val databaseDebugUtil: DatabaseDebugUtil by inject()
+
     override fun onCreate() {
         super.onCreate()
         initApp()
         initKoin()
+
+        // room 데이터베이스 디버그 활성화.
+        debugDatabase()
     }
 
     /**
@@ -51,4 +58,9 @@ class App : Application() {
         fragmentFactory()
         modules(AppModule.getModules())
     }
+
+    /**
+     * 데이터 베이스 디버그.
+     */
+    private fun debugDatabase() = databaseDebugUtil.setCustomDatabaseFiles()
 }

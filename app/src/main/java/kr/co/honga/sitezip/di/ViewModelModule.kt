@@ -13,13 +13,15 @@ object ViewModelModule {
     val INSTANCE: Module = module {
         viewModel {
             MainViewModel(
+                get(),
                 get()
             )
         }
 
-        viewModel { (stateHandle : SavedStateHandle) ->
+        viewModel { (stateHandle: SavedStateHandle) ->
             SiteTypesViewModel(
                 stateHandle,
+                get(),
                 get(),
                 get()
             )

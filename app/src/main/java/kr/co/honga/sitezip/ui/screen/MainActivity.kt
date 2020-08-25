@@ -66,11 +66,12 @@ class MainActivity : BaseActivity() {
     private fun initViewModel() {
         // 키보드 리스너 등록.
         keyboardUtil = KeyboardUtil(applicationContext, window)
-
         // 사이트 정보 가져오기.
-        viewModel.getSites {
+        viewModel.getSites()
+
+        viewModel.siteTypes.observe(this, Observer {
             (binding.viewPager.adapter as? SiteTypesAdapter)?.setItems(it)
-        }
+        })
 
         // 라이브데이터 옵저버.
         viewModel.searchVisibility.observe(this, Observer {
@@ -94,9 +95,11 @@ class MainActivity : BaseActivity() {
      * 뷰 페이저 초기화.
      */
     private fun initViewPager() {
-        binding.viewPager.adapter = SiteTypesAdapter(this)
+        binding.viewPager.adapter = SiteTypesAdapter(
+            fragmentActivity = this
+        )
         binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-
+        binding.viewPager.isUserInputEnabled = false
 
         TabLayoutMediator(
             binding.tabLayout,

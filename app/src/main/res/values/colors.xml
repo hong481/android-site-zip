@@ -10,6 +10,7 @@
     <color name="color_5c5c5c">#5c5c5c</color>
     <color name="color_eeeeee">#eeeeee</color>
     <color name="color_c5c1c1">#c5c1c1</color>
+    <color name="color_ffc107">#ffc107</color>
 
     <color name="dialogBackground">#80000000</color>
 </resources>

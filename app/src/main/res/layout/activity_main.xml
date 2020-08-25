@@ -37,7 +37,7 @@
             android:layout_height="?attr/actionBarSize"
             android:visibility="@{viewModel.searchVisibility == true ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="gone">
+            tools:visibility="visible">
 
 
             <TextView
@@ -61,13 +61,13 @@
                 android:id="@+id/btn_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="110dp"
                 android:background="@drawable/ic_baseline_search_24"
                 android:backgroundTint="@color/color_ffffff"
                 android:contentDescription="@string/content_description"
                 android:onClick="@{() -> viewModel.setSearchVisibility(true)}"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/btn_favorites_on"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
@@ -76,11 +76,29 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/ic_baseline_star_24"
-                android:backgroundTint="@color/color_ffffff"
+                android:backgroundTint="@color/color_ffc107"
                 android:contentDescription="@string/content_description"
+                android:onClick="@{() -> viewModel.setFavoriteMode(false)}"
+                android:visibility="@{viewModel.isFavoriteMode() == true ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btn_more"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+
+            <ImageButton
+                android:id="@+id/btn_favorites_off"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/ic_baseline_star_24"
+                android:backgroundTint="@color/color_ffffff"
+                android:contentDescription="@string/content_description"
+                android:onClick="@{() -> viewModel.setFavoriteMode(true)}"
+                android:visibility="@{viewModel.isFavoriteMode() == true ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_more"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="gone" />
 
             <ImageButton
                 android:id="@+id/btn_more"
@@ -88,6 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/ic_baseline_more_vert_24"
+                android:backgroundTint="@color/color_ffffff"
                 android:contentDescription="@string/content_description"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -101,7 +120,7 @@
             android:layout_height="?attr/actionBarSize"
             android:visibility="@{viewModel.searchVisibility == true ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible">
+            tools:visibility="gone">
 
             <ImageButton
                 android:id="@+id/btn_close"

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kr.co.honga.sitezip.util.extension.setValueIfNew
 import org.koin.core.KoinComponent
 

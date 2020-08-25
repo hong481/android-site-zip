@@ -23,9 +23,10 @@ object AppModule {
 
     fun getModules(): List<Module> = mutableListOf(
         INSTANCE,
+        UtilModule.INSTANCE,
+        DataBaseModule.INSTANCE,
         FragmentModule.INSTANCE,
         ViewModelModule.INSTANCE,
-        FirebaseModule.INSTANCE,
-        UtilModule.INSTANCE
+        FirebaseModule.INSTANCE
     )
 }

@@ -237,6 +237,9 @@ dependencies {
     // ActivityResult
     implementation "gun0912.ted:tedonactivityresult-rx2:${rootProject.ext.tedActivityResultVersion}"
 
+    // Permission
+    implementation "gun0912.ted:tedpermission-rx2:${rootProject.ext.tedpermissionVersion}"
+
     // SwipeRecyclerView
     implementation "com.android.support:design:${rootProject.ext.swipeRecyclerViewVersion}"
 

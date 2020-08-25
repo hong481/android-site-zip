@@ -6,7 +6,9 @@
       <w>flowable</w>
       <w>honga</w>
       <w>koin</w>
+      <w>okhttp</w>
       <w>sitezip</w>
+      <w>vert</w>
     </words>
   </dictionary>
 </component>

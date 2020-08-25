@@ -2,42 +2,18 @@ package kr.co.honga.sitezip.ui.screen
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.adapter.FragmentViewHolder
-import kr.co.honga.sitezip.base.adapter.DiffCallback
-import kr.co.honga.sitezip.base.model.Model
 import kr.co.honga.sitezip.data.local.entity.SiteType
 
 class SiteTypesAdapter(
 
-    fragmentActivity: FragmentActivity
+    val fragmentActivity: FragmentActivity
 
 ) : FragmentStateAdapter(fragmentActivity) {
 
     var siteTypes: MutableList<SiteType> = mutableListOf()
-        set(value) {
-            val diffCallback: DiffCallback<SiteType> = DiffCallback(field, value)
-            val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(diffCallback)
-
-            field.clear()
-            field.addAll(value)
-
-            diffResult.dispatchUpdatesTo(this)
-        }
-
-    init {
-        setHasStableIds(false)
-    }
-
-    override fun onBindViewHolder(
-        holder: FragmentViewHolder,
-        position: Int,
-        payloads: MutableList<Any>
-    ) {
-        super.onBindViewHolder(holder, position, payloads)
-        
-    }
 
     override fun getItemCount(): Int = siteTypes.size
 
@@ -47,5 +23,21 @@ class SiteTypesAdapter(
     fun setItems(siteTypes: MutableList<SiteType>) {
         this.siteTypes = siteTypes
         notifyDataSetChanged()
+    }
+
+    override fun onBindViewHolder(
+        holder: FragmentViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        super.onBindViewHolder(holder, position, payloads)
+        val adapterPosition: Int = holder.adapterPosition.takeIf {
+            it != RecyclerView.NO_POSITION
+        } ?: return
+
+        val fragment: SiteTypeFragment =
+            (this.fragmentActivity.supportFragmentManager.findFragmentByTag("f" + holder.itemId) as? SiteTypeFragment) ?: return
+
+        fragment.viewModel.onBind(siteTypes[adapterPosition])
     }
 }
