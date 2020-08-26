@@ -38,8 +38,8 @@ ext {
     junitAndroidVersion = '1.1.1'
     espressoCoreVersion = '3.2.0'
 
-    analyticsVersion = '17.4.4'
-    crashlyticsVersion = '17.1.1'
+    analyticsVersion = '17.5.0'
+    crashlyticsVersion = '17.2.1'
     perfVersion = '19.0.8'
     storageVersion = '19.1.1'
     messagingVersion = '20.2.4'

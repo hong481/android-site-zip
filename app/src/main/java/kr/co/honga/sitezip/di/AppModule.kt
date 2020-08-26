@@ -27,6 +27,7 @@ object AppModule {
         DataBaseModule.INSTANCE,
         FragmentModule.INSTANCE,
         ViewModelModule.INSTANCE,
-        FirebaseModule.INSTANCE
+        FirebaseModule.INSTANCE,
+        AdMobModule.INSTANCE
     )
 }

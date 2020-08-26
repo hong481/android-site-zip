@@ -6,6 +6,7 @@ import android.app.Application
 import android.content.Context
 import android.os.Process
 import androidx.core.app.ActivityCompat
+import com.google.android.gms.ads.MobileAds
 import kr.co.honga.sitezip.di.AppModule
 import kr.co.honga.sitezip.util.DatabaseDebugUtil
 import org.koin.android.ext.android.inject
@@ -37,7 +38,7 @@ class App : Application() {
         super.onCreate()
         initApp()
         initKoin()
-
+        initMobileAds()
         // room 데이터베이스 디버그 활성화.
         debugDatabase()
     }
@@ -57,6 +58,13 @@ class App : Application() {
         androidContext(androidContext = this@App)
         fragmentFactory()
         modules(AppModule.getModules())
+    }
+
+    /**
+     * 구글 애드몹 초기화.
+     */
+    private fun initMobileAds() {
+        MobileAds.initialize(this)
     }
 
     /**

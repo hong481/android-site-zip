@@ -256,7 +256,8 @@ dependencies {
     implementation "com.firebaseui:firebase-ui-storage:${rootProject.ext.storageUiVersion}"
 
     implementation "androidx.viewpager2:viewpager2:1.0.0"
-    implementation 'org.jsoup:jsoup:1.12.1'
+    implementation "org.jsoup:jsoup:1.12.1"
+    implementation 'com.google.android.gms:play-services-ads:19.3.0'
 
     // Test
     testImplementation "junit:junit:${rootProject.ext.junitVersion}"

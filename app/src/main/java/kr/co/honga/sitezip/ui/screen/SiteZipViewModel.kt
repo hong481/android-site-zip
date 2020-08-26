@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kr.co.honga.sitezip.R
+import kr.co.honga.sitezip.admob.AdMobManager
 import kr.co.honga.sitezip.base.livedata.Event
 import kr.co.honga.sitezip.base.viewmodel.BaseViewModel
 import kr.co.honga.sitezip.data.local.entity.Site
@@ -22,7 +23,8 @@ class SiteZipViewModel(
     savedStateHandle: SavedStateHandle,
     private val siteRepository: SiteRepository,
     private val clipboardUtil: ClipboardUtil,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val adMobManager: AdMobManager
 
 ) : BaseViewModel(), SiteViewHolder.ViewModel {
 
@@ -95,6 +97,7 @@ class SiteZipViewModel(
 
     override fun intentUrl(url: String) {
         _intentUrlEvent.notify = url
+        adMobManager.showInterstitialAd()
     }
 
     override fun copyLink(label: String, text: String) {

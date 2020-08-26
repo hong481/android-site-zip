@@ -7,6 +7,7 @@ import android.speech.RecognizerIntent
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.gms.ads.AdRequest
 import com.google.android.material.tabs.TabLayoutMediator
 import kr.co.honga.sitezip.R
 import kr.co.honga.sitezip.base.activity.BaseActivity
@@ -16,7 +17,6 @@ import kr.co.honga.sitezip.util.KeyboardUtil
 import kr.co.honga.sitezip.util.LogUtil
 import kr.co.honga.sitezip.util.extension.observeBaseViewModelEvent
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class MainActivity : BaseActivity() {
 
@@ -59,6 +59,7 @@ class MainActivity : BaseActivity() {
         initBinding()
         initViewPager()
         initViewModel()
+        initAdViewBanner()
     }
 
     private fun initBinding() {
@@ -120,5 +121,12 @@ class MainActivity : BaseActivity() {
         ) { tab, position ->
             tab.text = (binding.viewPager.adapter as SiteZipsAdapter).siteZips[position].typeName
         }.attach()
+    }
+
+    /**
+     * 애드몹 배너 초기화.
+     */
+    private fun initAdViewBanner() {
+        binding.adViewBanner.loadAd(AdRequest.Builder().build())
     }
 }

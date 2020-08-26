@@ -24,6 +24,7 @@ object ViewModelModule {
                 stateHandle,
                 get(),
                 get(),
+                get(),
                 get()
             )
         }
