@@ -59,22 +59,38 @@ class SiteTypesViewModel(
      */
     private val _isFavoriteMode: MutableLiveData<Boolean> = MutableLiveData()
 
+    /**
+     * 검색 텍스트.
+     */
+    private val _searchText: MutableLiveData<String> = MutableLiveData()
+
     fun getDisplaySiteType() {
-        if (_isFavoriteMode.value == true) {
-            val tempSiteType = _siteType.value?.copy() ?: return
-            tempSiteType.apply {
-                siteList = tempSiteType.siteList.filter {
-                    it.isFavorite
+        val tempSiteType: SiteType = _siteType.value?.copy() ?: return
+        tempSiteType.apply {
+            siteList = if (_isFavoriteMode.value == true) {
+                tempSiteType.siteList.filter {
+                    it.isFavorite && (it.siteName.contains(_searchText.value ?: "",ignoreCase = true)
+                            || it.siteLink.contains(_searchText.value ?: "", ignoreCase = true))
+                }.toMutableList()
+            } else {
+                tempSiteType.siteList.filter {
+                    it.siteName.contains(_searchText.value ?: "", ignoreCase = true)
+                            || it.siteLink.contains(_searchText.value ?: "", ignoreCase = true)
                 }.toMutableList()
             }
-            _searchSiteType.value = tempSiteType
-        } else {
-            _searchSiteType.value = siteType.value
+            siteList.sortBy {
+                it.id
+            }
         }
+        _searchSiteType.value = tempSiteType
     }
 
     fun setFavoriteMode(isFavorite: Boolean) {
         _isFavoriteMode.value = isFavorite
+    }
+
+    fun setSearchText(text: String) {
+        _searchText.value = text
     }
 
     override fun intentUrl(url: String) {

@@ -72,6 +72,10 @@ class SiteTypeFragment : BaseFragment() {
             viewModel.setFavoriteMode(it)
             viewModel.getDisplaySiteType()
         })
+        mainViewModel.searchText.observe(viewLifecycleOwner, Observer {
+            viewModel.setSearchText(it)
+            viewModel.getDisplaySiteType()
+        })
     }
 
     /**

@@ -39,16 +39,27 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible">
 
+            <ImageView
+                android:id="@+id/iv_logo"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="20dp"
+                android:contentDescription="@string/content_description"
+                android:src="@mipmap/ic_launcher"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="10dp"
                 android:text="@string/site_info"
                 android:textColor="@color/color_ffffff"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/iv_logo"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <View
@@ -155,14 +166,14 @@
                 app:layout_constraintStart_toEndOf="@id/btn_close"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
             <ImageButton
-                android:id="@+id/btn_mic"
+                android:id="@+id/iv_play_voice_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/ic_baseline_mic_24"
                 android:contentDescription="@string/content_description"
+                android:onClick="@{() -> viewModel.playVoiceSearch()}"
                 android:visibility="@{viewModel.isSearchTextChanged() == true ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -175,7 +186,7 @@
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/ic_baseline_clear_24"
                 android:contentDescription="@string/content_description"
-                android:onClick="@{() -> viewModel.clearSearchText()}"
+                android:onClick="@{() -> viewModel.setSearchText(``)}"
                 android:visibility="@{viewModel.isSearchTextChanged() == true ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -197,6 +208,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:background="@color/colorPrimary"
+            android:visibility="@{viewModel.siteTypes.size() > 0 == true ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toBottomOf="@id/v_top"
             app:tabSelectedTextColor="@color/colorAccent"
             app:tabTextColor="@color/color_ffffff" />

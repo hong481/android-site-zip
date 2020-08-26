@@ -3,17 +3,20 @@ package kr.co.honga.sitezip.ui.screen
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import kr.co.honga.sitezip.R
 import kr.co.honga.sitezip.base.activity.BaseActivity
+import kr.co.honga.sitezip.base.livedata.EventObserver
 import kr.co.honga.sitezip.databinding.ActivityMainBinding
 import kr.co.honga.sitezip.util.KeyboardUtil
 import kr.co.honga.sitezip.util.LogUtil
 import kr.co.honga.sitezip.util.extension.observeBaseViewModelEvent
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class MainActivity : BaseActivity() {
 
@@ -67,7 +70,7 @@ class MainActivity : BaseActivity() {
         // 키보드 리스너 등록.
         keyboardUtil = KeyboardUtil(applicationContext, window)
         // 사이트 정보 가져오기.
-        viewModel.getSites()
+        viewModel.getSiteTypes()
 
         viewModel.siteTypes.observe(this, Observer {
             (binding.viewPager.adapter as? SiteTypesAdapter)?.setItems(it)
@@ -86,7 +89,17 @@ class MainActivity : BaseActivity() {
             LogUtil.d(TAG, "viewModel.searchText.observe.")
             viewModel.searchSites()
         })
-
+        viewModel.playVoiceSearch.observe(this, EventObserver {
+            OuterActivities.intentVoiceSearch(this) {
+                if (it.data != null) {
+                    val textArray: ArrayList<String>? =
+                        it.data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                    textArray.let {
+                        viewModel.setSearchText(textArray?.get(0) ?: "")
+                    }
+                }
+            }
+        })
         // 뷰모델 기본 옵저버.
         observeBaseViewModelEvent(viewModel)
     }

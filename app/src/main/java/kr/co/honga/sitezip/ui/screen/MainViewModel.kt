@@ -6,19 +6,22 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kr.co.honga.sitezip.base.livedata.EmptyEvent
 import kr.co.honga.sitezip.base.viewmodel.BaseViewModel
 import kr.co.honga.sitezip.data.local.entity.Site
 import kr.co.honga.sitezip.data.local.entity.SiteType
 import kr.co.honga.sitezip.firebase.FireBaseDatabaseUtil
 import kr.co.honga.sitezip.repositories.repository.SiteRepository
+import kr.co.honga.sitezip.util.UrlParserUtil
+import kr.co.honga.sitezip.util.extension.notify
 
 class MainViewModel(
 
     private val fireBaseDatabaseUtil: FireBaseDatabaseUtil,
-    private val siteRepository: SiteRepository
+    private val siteRepository: SiteRepository,
+    private val urlParserUtil: UrlParserUtil
 
 ) : BaseViewModel() {
 
@@ -38,8 +41,13 @@ class MainViewModel(
     /**
      * 검색어.
      */
-    private val _searchText: MutableLiveData<String> = MutableLiveData()
-    val searchText: MutableLiveData<String> = _searchText
+    val searchText: MutableLiveData<String> = MutableLiveData()
+
+    /**
+     * 음성 검색 시작 이벤트.
+     */
+    private val _playVoiceSearch: MutableLiveData<EmptyEvent> = MutableLiveData()
+    val playVoiceSearch: LiveData<EmptyEvent> = _playVoiceSearch
 
     /**
      * 검색 텍스트 변경 여부.
@@ -53,76 +61,101 @@ class MainViewModel(
     private val _isFavoriteMode: MutableLiveData<Boolean> = MutableLiveData()
     val isFavoriteMode: LiveData<Boolean> = _isFavoriteMode
 
-    fun getSites() {
+    /**
+     * 사이트 유형 가져오기.
+     */
+    fun getSiteTypes() {
         showProgress(true)
         fireBaseDatabaseUtil.database.getReference(FireBaseDatabaseUtil.SITES_PATH)
-            .addValueEventListener(
-                object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        Log.d(TAG, dataSnapshot.childrenCount.toString())
-                        siteRepository.getAllSites()
-                            .firstOrError()
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribeBy(
-                                onSuccess = { allSites ->
-                                    val siteTypes: ArrayList<SiteType> = arrayListOf()
-                                    for (typeSnapshot: DataSnapshot in dataSnapshot.children) {
-                                        val siteType: SiteType? = typeSnapshot.getValue(SiteType::class.java).apply {
-                                                this?.typeName = typeSnapshot.key ?: ""
-                                                typeSnapshot.children.forEach { dataSnapshot ->
-                                                    val site: Site? = dataSnapshot.getValue(Site::class.java).apply {
-                                                        this?.sitePrimaryKey = "${typeSnapshot.key}_${dataSnapshot.key}"
-                                                    }
-                                                    for (chooseFavoriteSite: Site in allSites) {
-                                                        if (chooseFavoriteSite.sitePrimaryKey == site?.sitePrimaryKey) {
-                                                            site.isFavorite = true
-                                                            break
-                                                        }
-                                                    }
-                                                    Log.d(
-                                                        TAG,
-                                                        "key : ${dataSnapshot.key} / site.isFavorite: ${site?.isFavorite}"
-                                                    )
-                                                    this?.siteList?.add(site ?: return@apply)
-                                                }
-                                            }
-                                        if (siteType != null) {
-                                            siteTypes.add(siteType)
-                                        }
-                                    }
-                                    _siteTypes.value = siteTypes
-                                    dismissProgress(true)
-                                },
-                                onError = { throwable ->
-                                    throwable.printStackTrace()
-                                }
-                            )
-                    }
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    Log.d(TAG, dataSnapshot.childrenCount.toString())
+                    siteRepository.getAllSites()
+                        .firstOrError()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(Schedulers.io())
+                        .subscribeBy(
+                            onSuccess = { allSites ->
+                                val siteTypes: ArrayList<SiteType> = arrayListOf()
+                                for (typeSnapshot: DataSnapshot in dataSnapshot.children) {
+                                    val siteType: SiteType? =
+                                        typeSnapshot.getValue(SiteType::class.java).apply {
+                                            this?.typeName = typeSnapshot.key ?: ""
+                                            typeSnapshot.children.forEach { dataSnapshot ->
+                                                val site: Site? =
+                                                    dataSnapshot.getValue(Site::class.java)
+                                                        .apply {
+                                                            this?.sitePrimaryKey =
+                                                                "${typeSnapshot.key}_${dataSnapshot.key}"
 
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        Log.w(
-                            FireBaseDatabaseUtil.TAG,
-                            "loadPost:onCancelled",
-                            databaseError.toException()
+                                                            val url =
+                                                                urlParserUtil.extractUrlFromText(
+                                                                    this?.siteLink ?: ""
+                                                                )
+                                                            if (url.isNotEmpty()) {
+                                                                val metadata =
+                                                                    urlParserUtil.getMetadataFromUrl(
+                                                                        url
+                                                                    )
+                                                                if (metadata != null) {
+                                                                    this?.siteIconUrl =
+                                                                        metadata.imageUrl
+                                                                }
+                                                            }
+                                                        }
+                                                for (chooseFavoriteSite: Site in allSites) {
+                                                    if (chooseFavoriteSite.sitePrimaryKey == site?.sitePrimaryKey) {
+                                                        site.isFavorite = true
+                                                        break
+                                                    }
+                                                }
+                                                Log.d(
+                                                    TAG,
+                                                    "key : ${dataSnapshot.key} / site.isFavorite: ${site?.isFavorite}"
+                                                )
+                                                this?.siteList?.add(site ?: return@apply)
+                                            }
+                                        }
+                                    if (siteType != null) {
+                                        siteTypes.add(siteType)
+                                    }
+                                }
+                                _siteTypes.postValue(siteTypes)
+                                dismissProgress(true)
+                            },
+                            onError = { throwable ->
+                                throwable.printStackTrace()
+                            }
                         )
-                    }
-                })
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Log.w(
+                        FireBaseDatabaseUtil.TAG,
+                        "loadPost:onCancelled",
+                        databaseError.toException()
+                    )
+                }
+            })
     }
 
 
     /**
-     * 내역 검색.
+     * 사이트 검색.
      */
     fun searchSites() {
         _isSearchTextChanged.value = !searchText.value.isNullOrEmpty()
     }
 
+    fun setSearchText(text: String = "") {
+        searchText.value = text
+    }
+
     /**
-     * 검색 텍스트 클리어.
+     * 음성 검색 시작.
      */
-    fun clearSearchText() {
-        _searchText.value = ""
+    fun playVoiceSearch() {
+        _playVoiceSearch.notify()
     }
 
     /**

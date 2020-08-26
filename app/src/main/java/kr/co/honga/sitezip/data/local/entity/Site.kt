@@ -6,6 +6,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.firebase.database.IgnoreExtraProperties
 import kotlinx.android.parcel.Parcelize
+import kr.co.honga.sitezip.base.model.Model
 
 @IgnoreExtraProperties
 @Parcelize
@@ -17,7 +18,7 @@ data class Site(
      */
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name ="id")
-    var id: Long = 0L,
+    override var id: Long? = 0L,
 
     /**
      * 사이트 고유 키값.
@@ -55,4 +56,4 @@ data class Site(
     @ColumnInfo(name = "site_icon_url")
     var siteIconUrl: String = ""
 
-) : Parcelable
+) : Parcelable, Model

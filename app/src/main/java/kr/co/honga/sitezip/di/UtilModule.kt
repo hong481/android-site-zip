@@ -28,14 +28,26 @@ object UtilModule {
                 get()
             )
         }
+
         single {
             DirectoryManagerImpl(
                 get(),
                 get()
             )
         } bind DirectoryManager::class
+
         single {
             FileUtil()
+        }
+
+        single {
+            ValidatorUtil()
+        }
+
+        single {
+            UrlParserUtil(
+                get()
+            )
         }
     }
 }

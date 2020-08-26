@@ -14,6 +14,7 @@ object ViewModelModule {
         viewModel {
             MainViewModel(
                 get(),
+                get(),
                 get()
             )
         }

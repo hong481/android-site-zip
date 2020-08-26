@@ -23,8 +23,8 @@ class SiteViewHolder(
         ItemSiteBinding.bind(itemView)
     }
 
-    val imageReference: LiveData<StorageReference> = item.map {
-        FirebaseStorage.getInstance().getReference(item.value?.siteIconUrl ?: "")
+    val imageUrl: LiveData<String> =  item.map {
+        item.value?.siteIconUrl ?: ""
     }
 
     init {

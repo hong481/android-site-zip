@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-
     <data>
 
         <import type="android.view.View" />
@@ -16,13 +15,17 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_sites"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:nestedScrollingEnabled="false"
+            android:clipToPadding="false"
+            android:paddingBottom="5dp"
+            android:descendantFocusability="blocksDescendants"
+            android:scrollbars="vertical"
             app:items="@{viewModel.searchSiteType.siteList}" />
 
         <TextView
