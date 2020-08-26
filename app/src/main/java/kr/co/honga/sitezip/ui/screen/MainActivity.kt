@@ -72,8 +72,8 @@ class MainActivity : BaseActivity() {
         // 사이트 정보 가져오기.
         viewModel.getSiteTypes()
 
-        viewModel.siteTypes.observe(this, Observer {
-            (binding.viewPager.adapter as? SiteTypesAdapter)?.setItems(it)
+        viewModel.siteZips.observe(this, Observer {
+            (binding.viewPager.adapter as? SiteZipsAdapter)?.setItems(it)
         })
 
         // 라이브데이터 옵저버.
@@ -108,7 +108,7 @@ class MainActivity : BaseActivity() {
      * 뷰 페이저 초기화.
      */
     private fun initViewPager() {
-        binding.viewPager.adapter = SiteTypesAdapter(
+        binding.viewPager.adapter = SiteZipsAdapter(
             fragmentActivity = this
         )
         binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
@@ -118,7 +118,7 @@ class MainActivity : BaseActivity() {
             binding.tabLayout,
             binding.viewPager
         ) { tab, position ->
-            tab.text = (binding.viewPager.adapter as SiteTypesAdapter).siteTypes[position].typeName
+            tab.text = (binding.viewPager.adapter as SiteZipsAdapter).siteZips[position].typeName
         }.attach()
     }
 }

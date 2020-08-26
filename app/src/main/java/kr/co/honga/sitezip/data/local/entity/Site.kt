@@ -29,8 +29,8 @@ data class Site(
     /**
      * 사이트 명.
      */
-    @ColumnInfo(name = "site_name")
-    var siteName: String = "",
+    @ColumnInfo(name = "title")
+    var title: String = "",
 
     /**
      * 즐겨 찾기 여부.
@@ -39,21 +39,21 @@ data class Site(
     var isFavorite: Boolean = false,
 
     /**
-     * 사이트 짧은 설명.
+     * 사이트 설명.
      */
-    @ColumnInfo(name = "sht_info")
-    var shortInfo: String = "",
+    @ColumnInfo(name = "description")
+    var description: String = "",
 
     /**
      * 사이트 주소.
      */
-    @ColumnInfo(name = "site_link")
-    var siteLink: String = "",
+    @ColumnInfo(name = "url")
+    var url: String = "",
 
     /**
      * 사이트 아이콘 url.
      */
-    @ColumnInfo(name = "site_icon_url")
-    var siteIconUrl: String = ""
+    @ColumnInfo(name = "icon_url")
+    var iconUrl: String = ""
 
 ) : Parcelable, Model

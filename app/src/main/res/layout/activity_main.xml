@@ -208,7 +208,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:background="@color/colorPrimary"
-            android:visibility="@{viewModel.siteTypes.size() > 0 == true ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.siteZips.size() > 0 == true ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toBottomOf="@id/v_top"
             app:tabSelectedTextColor="@color/colorAccent"
             app:tabTextColor="@color/color_ffffff" />

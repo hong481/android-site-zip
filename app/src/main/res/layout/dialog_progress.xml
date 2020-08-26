@@ -14,7 +14,7 @@
             android:id="@+id/progress_bar"
             android:layout_width="75dp"
             android:layout_height="75dp"
-            android:indeterminateTint="@color/color_ffffff"
+            android:indeterminateTint="@color/color_ffc107"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

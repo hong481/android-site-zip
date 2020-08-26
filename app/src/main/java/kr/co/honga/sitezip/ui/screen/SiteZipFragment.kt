@@ -13,40 +13,40 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kr.co.honga.sitezip.R
 import kr.co.honga.sitezip.base.fragment.BaseFragment
 import kr.co.honga.sitezip.base.livedata.EventObserver
-import kr.co.honga.sitezip.data.local.entity.SiteType
-import kr.co.honga.sitezip.databinding.FragmentSitesBinding
-import kr.co.honga.sitezip.ui.screen.SiteTypesViewModel.Serializable.SITE_TYPE
+import kr.co.honga.sitezip.data.local.entity.SiteZip
+import kr.co.honga.sitezip.databinding.FragmentSiteZipBinding
+import kr.co.honga.sitezip.ui.screen.SiteZipViewModel.Serializable.SITE_ZIP
 import org.koin.androidx.viewmodel.ext.android.getStateViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
-class SiteTypeFragment : BaseFragment() {
+class SiteZipFragment : BaseFragment() {
 
     companion object {
         const val TAG: String = "SiteTypeFragment"
 
-        fun newInstance(siteType: SiteType): SiteTypeFragment =
-            SiteTypeFragment().apply {
+        fun newInstance(siteZip: SiteZip): SiteZipFragment =
+            SiteZipFragment().apply {
                 arguments = bundleOf()
-                arguments?.putParcelable(SITE_TYPE, siteType)
+                arguments?.putParcelable(SITE_ZIP, siteZip)
             }
     }
 
-    private val binding: FragmentSitesBinding by lazy {
-        FragmentSitesBinding.bind(requireView())
+    private val binding: FragmentSiteZipBinding by lazy {
+        FragmentSiteZipBinding.bind(requireView())
     }
 
-    val viewModel: SiteTypesViewModel by lazy {
-        getStateViewModel<SiteTypesViewModel>(bundle = arguments)
+    val viewModel: SiteZipViewModel by lazy {
+        getStateViewModel<SiteZipViewModel>(bundle = arguments)
     }
 
-    val mainViewModel: MainViewModel by sharedViewModel()
+    private val mainViewModel: MainViewModel by sharedViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.fragment_sites, container, false)
+    ): View = inflater.inflate(R.layout.fragment_site_zip, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -65,7 +65,7 @@ class SiteTypeFragment : BaseFragment() {
             val actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(actionIntent)
         })
-        viewModel.siteType.observe(viewLifecycleOwner, Observer {
+        viewModel.siteZip.observe(viewLifecycleOwner, Observer {
             viewModel.getDisplaySiteType()
         })
         mainViewModel.isFavoriteMode.observe(viewLifecycleOwner, Observer {

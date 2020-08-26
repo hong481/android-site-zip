@@ -5,23 +5,23 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.adapter.FragmentViewHolder
-import kr.co.honga.sitezip.data.local.entity.SiteType
+import kr.co.honga.sitezip.data.local.entity.SiteZip
 
-class SiteTypesAdapter(
+class SiteZipsAdapter(
 
     val fragmentActivity: FragmentActivity
 
 ) : FragmentStateAdapter(fragmentActivity) {
 
-    var siteTypes: MutableList<SiteType> = mutableListOf()
+    var siteZips: MutableList<SiteZip> = mutableListOf()
 
-    override fun getItemCount(): Int = siteTypes.size
+    override fun getItemCount(): Int = siteZips.size
 
     override fun createFragment(position: Int): Fragment =
-        SiteTypeFragment.newInstance(siteType = siteTypes[position])
+        SiteZipFragment.newInstance(siteZip = siteZips[position])
 
-    fun setItems(siteTypes: MutableList<SiteType>) {
-        this.siteTypes = siteTypes
+    fun setItems(siteZips: MutableList<SiteZip>) {
+        this.siteZips = siteZips
         notifyDataSetChanged()
     }
 
@@ -35,9 +35,9 @@ class SiteTypesAdapter(
             it != RecyclerView.NO_POSITION
         } ?: return
 
-        val fragment: SiteTypeFragment =
-            (this.fragmentActivity.supportFragmentManager.findFragmentByTag("f" + holder.itemId) as? SiteTypeFragment) ?: return
+        val fragment: SiteZipFragment =
+            (this.fragmentActivity.supportFragmentManager.findFragmentByTag("f" + holder.itemId) as? SiteZipFragment) ?: return
 
-        fragment.viewModel.onBind(siteTypes[adapterPosition])
+        fragment.viewModel.onBind(siteZips[adapterPosition])
     }
 }

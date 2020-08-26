@@ -8,7 +8,7 @@ import kr.co.honga.sitezip.R
 import kr.co.honga.sitezip.base.livedata.Event
 import kr.co.honga.sitezip.base.viewmodel.BaseViewModel
 import kr.co.honga.sitezip.data.local.entity.Site
-import kr.co.honga.sitezip.data.local.entity.SiteType
+import kr.co.honga.sitezip.data.local.entity.SiteZip
 import kr.co.honga.sitezip.repositories.repository.SiteRepository
 import kr.co.honga.sitezip.util.ClipboardUtil
 import kr.co.honga.sitezip.util.LogUtil
@@ -17,7 +17,7 @@ import kr.co.honga.sitezip.util.extension.notify
 import kr.co.honga.sitezip.util.extension.refresh
 import kr.co.honga.sitezip.util.extension.setValueIfNew
 
-class SiteTypesViewModel(
+class SiteZipViewModel(
 
     savedStateHandle: SavedStateHandle,
     private val siteRepository: SiteRepository,
@@ -28,7 +28,7 @@ class SiteTypesViewModel(
 
 
     object Serializable {
-        const val SITE_TYPE: String = "SitesViewModel.Serializable.SITE_TYPE"
+        const val SITE_ZIP: String = "SitesViewModel.Serializable.SITE_ZIP"
     }
 
     companion object {
@@ -44,15 +44,15 @@ class SiteTypesViewModel(
     /**
      * 사이트 유형.
      */
-    private val _siteType: MutableLiveData<SiteType> =
-        savedStateHandle.getLiveData(Serializable.SITE_TYPE)
-    val siteType: LiveData<SiteType> = _siteType
+    private val _siteZip: MutableLiveData<SiteZip> =
+        savedStateHandle.getLiveData(Serializable.SITE_ZIP)
+    val siteZip: LiveData<SiteZip> = _siteZip
 
     /**
      * 사이트 유형.
      */
-    private val _searchSiteType: MutableLiveData<SiteType> = MutableLiveData()
-    val searchSiteType: LiveData<SiteType> = _searchSiteType
+    private val _searchSiteZip: MutableLiveData<SiteZip> = MutableLiveData()
+    val searchSiteZip: LiveData<SiteZip> = _searchSiteZip
 
     /**
      * 즐겨찾기만 표시 여부.
@@ -65,24 +65,24 @@ class SiteTypesViewModel(
     private val _searchText: MutableLiveData<String> = MutableLiveData()
 
     fun getDisplaySiteType() {
-        val tempSiteType: SiteType = _siteType.value?.copy() ?: return
-        tempSiteType.apply {
+        val tempSiteZip: SiteZip = _siteZip.value?.copy() ?: return
+        tempSiteZip.apply {
             siteList = if (_isFavoriteMode.value == true) {
-                tempSiteType.siteList.filter {
-                    it.isFavorite && (it.siteName.contains(_searchText.value ?: "",ignoreCase = true)
-                            || it.siteLink.contains(_searchText.value ?: "", ignoreCase = true))
+                tempSiteZip.siteList.filter {
+                    it.isFavorite && (it.title.contains(_searchText.value ?: "", ignoreCase = true)
+                            || it.url.contains(_searchText.value ?: "", ignoreCase = true))
                 }.toMutableList()
             } else {
-                tempSiteType.siteList.filter {
-                    it.siteName.contains(_searchText.value ?: "", ignoreCase = true)
-                            || it.siteLink.contains(_searchText.value ?: "", ignoreCase = true)
+                tempSiteZip.siteList.filter {
+                    it.title.contains(_searchText.value ?: "", ignoreCase = true)
+                            || it.url.contains(_searchText.value ?: "", ignoreCase = true)
                 }.toMutableList()
             }
             siteList.sortBy {
                 it.id
             }
         }
-        _searchSiteType.value = tempSiteType
+        _searchSiteZip.value = tempSiteZip
     }
 
     fun setFavoriteMode(isFavorite: Boolean) {
@@ -104,28 +104,28 @@ class SiteTypesViewModel(
     }
 
     override fun chooseFavorite(site: Site) {
-        _siteType.value = setFavoriteSite(site, true)
-        _siteType.refresh(true)
+        _siteZip.value = setFavoriteSite(site, true)
+        _siteZip.refresh(true)
         compositeDisposable += siteRepository.insert(site = site)
     }
 
     override fun releaseFavorite(site: Site) {
-        _siteType.value = setFavoriteSite(site, false)
-        _siteType.refresh(true)
+        _siteZip.value = setFavoriteSite(site, false)
+        _siteZip.refresh(true)
         compositeDisposable += siteRepository.delete(
             primaryKey = site.sitePrimaryKey
         )
     }
 
-    private fun setFavoriteSite(site: Site, isFavorite: Boolean): SiteType? {
-        val tempSiteType = _siteType.value ?: return null
+    private fun setFavoriteSite(site: Site, isFavorite: Boolean): SiteZip? {
+        val tempSiteType = _siteZip.value ?: return null
         tempSiteType.siteList[tempSiteType.siteList.indexOfFirst {
             it.sitePrimaryKey == site.sitePrimaryKey
         }] = site.copy(isFavorite = isFavorite)
         return tempSiteType
     }
 
-    fun onBind(item: SiteType) {
-        _siteType setValueIfNew item
+    fun onBind(item: SiteZip) {
+        _siteZip setValueIfNew item
     }
 }

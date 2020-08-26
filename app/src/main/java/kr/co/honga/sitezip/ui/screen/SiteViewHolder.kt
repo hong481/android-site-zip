@@ -3,8 +3,6 @@ package kr.co.honga.sitezip.ui.screen
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import kr.co.honga.sitezip.R
 import kr.co.honga.sitezip.base.adapter.BaseRecyclerViewHolder
 import kr.co.honga.sitezip.data.local.entity.Site
@@ -24,7 +22,7 @@ class SiteViewHolder(
     }
 
     val imageUrl: LiveData<String> =  item.map {
-        item.value?.siteIconUrl ?: ""
+        item.value?.iconUrl ?: ""
     }
 
     init {

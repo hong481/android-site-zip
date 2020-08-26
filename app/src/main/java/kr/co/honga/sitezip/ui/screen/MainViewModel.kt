@@ -11,7 +11,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import kr.co.honga.sitezip.base.livedata.EmptyEvent
 import kr.co.honga.sitezip.base.viewmodel.BaseViewModel
 import kr.co.honga.sitezip.data.local.entity.Site
-import kr.co.honga.sitezip.data.local.entity.SiteType
+import kr.co.honga.sitezip.data.local.entity.SiteZip
 import kr.co.honga.sitezip.firebase.FireBaseDatabaseUtil
 import kr.co.honga.sitezip.repositories.repository.SiteRepository
 import kr.co.honga.sitezip.util.UrlParserUtil
@@ -29,8 +29,8 @@ class MainViewModel(
         const val TAG: String = "MainViewModel"
     }
 
-    private val _siteTypes: MutableLiveData<MutableList<SiteType>> = MutableLiveData()
-    val siteTypes: LiveData<MutableList<SiteType>> = _siteTypes
+    private val _siteZips: MutableLiveData<MutableList<SiteZip>> = MutableLiveData()
+    val siteZips: LiveData<MutableList<SiteZip>> = _siteZips
 
     /**
      * 검색 이벤트.
@@ -76,10 +76,10 @@ class MainViewModel(
                         .observeOn(Schedulers.io())
                         .subscribeBy(
                             onSuccess = { allSites ->
-                                val siteTypes: ArrayList<SiteType> = arrayListOf()
+                                val siteZips: ArrayList<SiteZip> = arrayListOf()
                                 for (typeSnapshot: DataSnapshot in dataSnapshot.children) {
-                                    val siteType: SiteType? =
-                                        typeSnapshot.getValue(SiteType::class.java).apply {
+                                    val siteType: SiteZip? =
+                                        typeSnapshot.getValue(SiteZip::class.java).apply {
                                             this?.typeName = typeSnapshot.key ?: ""
                                             typeSnapshot.children.forEach { dataSnapshot ->
                                                 val site: Site? =
@@ -90,7 +90,7 @@ class MainViewModel(
 
                                                             val url =
                                                                 urlParserUtil.extractUrlFromText(
-                                                                    this?.siteLink ?: ""
+                                                                    this?.url ?: ""
                                                                 )
                                                             if (url.isNotEmpty()) {
                                                                 val metadata =
@@ -98,8 +98,18 @@ class MainViewModel(
                                                                         url
                                                                     )
                                                                 if (metadata != null) {
-                                                                    this?.siteIconUrl =
-                                                                        metadata.imageUrl
+                                                                    if (metadata.title.isNotEmpty()) {
+                                                                        this?.title =
+                                                                            metadata.title
+                                                                    }
+                                                                    if (metadata.imageUrl.isNotEmpty()) {
+                                                                        this?.iconUrl =
+                                                                            metadata.imageUrl
+                                                                    }
+                                                                    if (metadata.description.isNotEmpty()) {
+                                                                        this?.description =
+                                                                            metadata.description
+                                                                    }
                                                                 }
                                                             }
                                                         }
@@ -117,10 +127,10 @@ class MainViewModel(
                                             }
                                         }
                                     if (siteType != null) {
-                                        siteTypes.add(siteType)
+                                        siteZips.add(siteType)
                                     }
                                 }
-                                _siteTypes.postValue(siteTypes)
+                                _siteZips.postValue(siteZips)
                                 dismissProgress(true)
                             },
                             onError = { throwable ->
