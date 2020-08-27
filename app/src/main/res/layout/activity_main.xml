@@ -35,7 +35,7 @@
             android:id="@+id/layout_app_bar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:visibility="@{viewModel.searchVisibility == true ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.searchVisibility == true ? View.INVISIBLE : View.VISIBLE}"
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible">
 
@@ -147,9 +147,9 @@
             android:id="@+id/layout_search"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:visibility="@{viewModel.searchVisibility == true ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.searchVisibility == true ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="gone">
+            tools:visibility="invisible">
 
             <ImageButton
                 android:id="@+id/btn_close"
@@ -287,7 +287,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_below="@id/tab_layout"
-            android:layout_marginBottom="10dp"
             app:layout_constraintBottom_toTopOf="@+id/ad_view_banner"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
