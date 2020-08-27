@@ -15,8 +15,6 @@ import java.util.*
 
 object OuterActivities {
 
-    const val SPEECH_REQUEST_CODE = 0
-
     const val TAG: String = "OuterActivities"
 
     /**

@@ -20,7 +20,6 @@ class UrlParserUtil(
                 imageUrl = doc.select("meta[property=og:image]")[0].attr("content")
             }
         } catch (e: Exception) {
-            e.printStackTrace()
             null
         }
     }

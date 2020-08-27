@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -18,291 +19,312 @@
         <import type="android.view.View" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_eeeeee"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:orientation="vertical">
 
-        <View
-            android:id="@+id/v_top"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/color_eeeeee"
+            android:theme="@style/AppTheme.NoActionBar">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_app_bar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:visibility="@{viewModel.searchVisibility == true ? View.INVISIBLE : View.VISIBLE}"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible">
-
-            <ImageView
-                android:id="@+id/iv_logo"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginStart="20dp"
-                android:contentDescription="@string/content_description"
-                android:src="@mipmap/ic_launcher"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="@string/site_info"
-                android:textColor="@color/color_ffffff"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/iv_logo"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <View
+            <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorPrimaryDark"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                android:layout_height="wrap_content">
 
-            <ImageButton
-                android:id="@+id/btn_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="110dp"
-                android:background="@drawable/ic_baseline_search_24"
-                android:backgroundTint="@color/color_ffffff"
-                android:contentDescription="@string/content_description"
-                android:onClick="@{() -> viewModel.setSearchVisibility(true)}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/btn_favorites_on"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="65dp"
-                android:background="@drawable/ic_baseline_star_24"
-                android:backgroundTint="@color/color_ffc107"
-                android:contentDescription="@string/content_description"
-                android:onClick="@{() -> viewModel.setFavoriteMode(false)}"
-                android:visibility="@{viewModel.isFavoriteMode() == true ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:visibility="visible" />
-
-            <ImageButton
-                android:id="@+id/btn_favorites_off"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="65dp"
-                android:background="@drawable/ic_baseline_star_24"
-                android:backgroundTint="@color/color_ffffff"
-                android:contentDescription="@string/content_description"
-                android:onClick="@{() -> viewModel.setFavoriteMode(true)}"
-                android:visibility="@{viewModel.isFavoriteMode() == true ? View.GONE : View.VISIBLE}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:visibility="gone" />
-
-            <ImageButton
-                android:id="@+id/btn_more_on"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/ic_baseline_more_vert_24"
-                android:backgroundTint="@color/color_ffc107"
-                android:contentDescription="@string/content_description"
-                android:onClick="@{() -> viewModel.setShowMoreMenu(false)}"
-                android:visibility="@{viewModel.isShowMoreMenu() == true ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:visibility="visible" />
-
-            <ImageButton
-                android:id="@+id/btn_more_off"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/ic_baseline_more_vert_24"
-                android:backgroundTint="@color/color_ffffff"
-                android:contentDescription="@string/content_description"
-                android:onClick="@{() -> viewModel.setShowMoreMenu(true)}"
-                android:visibility="@{viewModel.isShowMoreMenu() == true ? View.GONE : View.VISIBLE}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:visibility="gone" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_search"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:visibility="@{viewModel.searchVisibility == true ? View.VISIBLE : View.INVISIBLE}"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="invisible">
-
-            <ImageButton
-                android:id="@+id/btn_close"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:background="@drawable/ic_arrow_back"
-                android:contentDescription="@string/content_description"
-                android:onClick="@{() -> viewModel.setSearchVisibility(false)}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <EditText
-                android:id="@+id/et_search_text"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="50dp"
-                android:autofillHints="@string/search_hint"
-                android:background="@null"
-                android:hint="@string/search_hint"
-                android:inputType="text"
-                android:maxLines="1"
-                android:paddingHorizontal="5dp"
-                android:text="@={viewModel.searchText}"
-                android:textColor="@color/color_ffffff"
-                android:textColorHint="@color/color_eeeeee"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/btn_close"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/iv_play_voice_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/ic_baseline_mic_24"
-                android:contentDescription="@string/content_description"
-                android:onClick="@{() -> viewModel.playVoiceSearch()}"
-                android:visibility="@{viewModel.isSearchTextChanged() == true ? View.GONE : View.VISIBLE}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/btn_clear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/ic_baseline_clear_24"
-                android:contentDescription="@string/content_description"
-                android:onClick="@{() -> viewModel.setSearchText(``)}"
-                android:visibility="@{viewModel.isSearchTextChanged() == true ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:visibility="gone" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorPrimaryDark"
-                app:layout_constraintBottom_toBottomOf="parent" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_more_menu"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            android:visibility="@{viewModel.isShowMoreMenu() == true ? View.VISIBLE : View.GONE}"
-            app:layout_constraintTop_toBottomOf="@+id/layout_app_bar"
-            tools:visibility="visible">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorPrimaryDark"
-                app:layout_constraintBottom_toBottomOf="parent" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true">
-
-                <Button
-                    android:id="@+id/btn_remove_admob"
+                <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:drawableStart="@drawable/ic_baseline_delete_forever_24"
-                    android:paddingHorizontal="50dp"
-                    android:paddingTop="3dp"
-                    android:text="@string/remove_admob"
-                    android:textColor="@color/color_ffffff"
-                    tools:ignore="ButtonStyle" />
+                    app:contentScrim="@color/colorPrimary"
+                    app:layout_scrollFlags="scroll|snap|enterAlways">
 
-                <Button
-                    android:id="@+id/btn_developer_sponsor"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_collapseMode="parallax"
+                        app:layout_collapseParallaxMultiplier="0.5">
+
+                        <View
+                            android:id="@+id/v_top"
+                            android:layout_width="match_parent"
+                            android:layout_height="?attr/actionBarSize"
+                            android:background="@color/colorPrimary"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/layout_app_bar"
+                            android:layout_width="match_parent"
+                            android:layout_height="?attr/actionBarSize"
+                            android:visibility="@{viewModel.searchVisibility == true ? View.INVISIBLE : View.VISIBLE}"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:visibility="visible">
+
+                            <ImageView
+                                android:id="@+id/iv_logo"
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:layout_marginStart="20dp"
+                                android:contentDescription="@string/content_description"
+                                android:src="@mipmap/ic_launcher"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/site_info"
+                                android:textColor="@color/color_ffffff"
+                                android:textSize="20sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@+id/iv_logo"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/colorPrimaryDark"
+                                app:layout_constraintBottom_toBottomOf="parent" />
+
+                            <ImageButton
+                                android:id="@+id/btn_search"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="110dp"
+                                android:background="@drawable/ic_baseline_search_24"
+                                android:backgroundTint="@color/color_ffffff"
+                                android:contentDescription="@string/content_description"
+                                android:onClick="@{() -> viewModel.setSearchVisibility(true)}"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <ImageButton
+                                android:id="@+id/btn_favorites_on"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="65dp"
+                                android:background="@drawable/ic_baseline_star_24"
+                                android:backgroundTint="@color/color_ffc107"
+                                android:contentDescription="@string/content_description"
+                                android:onClick="@{() -> viewModel.setFavoriteMode(false)}"
+                                android:visibility="@{viewModel.isFavoriteMode() == true ? View.VISIBLE : View.GONE}"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:visibility="visible" />
+
+                            <ImageButton
+                                android:id="@+id/btn_favorites_off"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="65dp"
+                                android:background="@drawable/ic_baseline_star_24"
+                                android:backgroundTint="@color/color_ffffff"
+                                android:contentDescription="@string/content_description"
+                                android:onClick="@{() -> viewModel.setFavoriteMode(true)}"
+                                android:visibility="@{viewModel.isFavoriteMode() == true ? View.GONE : View.VISIBLE}"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:visibility="gone" />
+
+                            <ImageButton
+                                android:id="@+id/btn_more_on"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="20dp"
+                                android:background="@drawable/ic_baseline_more_vert_24"
+                                android:backgroundTint="@color/color_ffc107"
+                                android:contentDescription="@string/content_description"
+                                android:onClick="@{() -> viewModel.setShowMoreMenu(false)}"
+                                android:visibility="@{viewModel.isShowMoreMenu() == true ? View.VISIBLE : View.GONE}"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:visibility="visible" />
+
+                            <ImageButton
+                                android:id="@+id/btn_more_off"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="20dp"
+                                android:background="@drawable/ic_baseline_more_vert_24"
+                                android:backgroundTint="@color/color_ffffff"
+                                android:contentDescription="@string/content_description"
+                                android:onClick="@{() -> viewModel.setShowMoreMenu(true)}"
+                                android:visibility="@{viewModel.isShowMoreMenu() == true ? View.GONE : View.VISIBLE}"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:visibility="gone" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/layout_search"
+                            android:layout_width="match_parent"
+                            android:layout_height="?attr/actionBarSize"
+                            android:visibility="@{viewModel.searchVisibility == true ? View.VISIBLE : View.INVISIBLE}"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:visibility="invisible">
+
+                            <ImageButton
+                                android:id="@+id/btn_close"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="20dp"
+                                android:background="@drawable/ic_arrow_back"
+                                android:contentDescription="@string/content_description"
+                                android:onClick="@{() -> viewModel.setSearchVisibility(false)}"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <EditText
+                                android:id="@+id/et_search_text"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="50dp"
+                                android:autofillHints="@string/search_hint"
+                                android:background="@null"
+                                android:hint="@string/search_hint"
+                                android:inputType="text"
+                                android:maxLines="1"
+                                android:paddingHorizontal="5dp"
+                                android:text="@={viewModel.searchText}"
+                                android:textColor="@color/color_ffffff"
+                                android:textColorHint="@color/color_eeeeee"
+                                android:textSize="14sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/btn_close"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <ImageButton
+                                android:id="@+id/iv_play_voice_search"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="20dp"
+                                android:background="@drawable/ic_baseline_mic_24"
+                                android:contentDescription="@string/content_description"
+                                android:onClick="@{() -> viewModel.playVoiceSearch()}"
+                                android:visibility="@{viewModel.isSearchTextChanged() == true ? View.GONE : View.VISIBLE}"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <ImageButton
+                                android:id="@+id/btn_clear"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="20dp"
+                                android:background="@drawable/ic_baseline_clear_24"
+                                android:contentDescription="@string/content_description"
+                                android:onClick="@{() -> viewModel.setSearchText(``)}"
+                                android:visibility="@{viewModel.isSearchTextChanged() == true ? View.VISIBLE : View.GONE}"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:visibility="gone" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/colorPrimaryDark"
+                                app:layout_constraintBottom_toBottomOf="parent" />
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/layout_more_menu"
+                            android:layout_width="match_parent"
+                            android:layout_height="?attr/actionBarSize"
+                            android:background="@color/colorPrimary"
+                            android:visibility="@{viewModel.isShowMoreMenu() == true ? View.VISIBLE : View.GONE}"
+                            app:layout_constraintTop_toBottomOf="@+id/layout_app_bar"
+                            tools:visibility="visible">
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/colorPrimaryDark"
+                                app:layout_constraintBottom_toBottomOf="parent" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentBottom="true">
+
+                                <Button
+                                    android:id="@+id/btn_remove_admob"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:background="@null"
+                                    android:drawableStart="@drawable/ic_baseline_delete_forever_24"
+                                    android:paddingHorizontal="50dp"
+                                    android:paddingTop="3dp"
+                                    android:text="@string/remove_admob"
+                                    android:textColor="@color/color_ffffff"
+                                    tools:ignore="ButtonStyle" />
+
+                                <Button
+                                    android:id="@+id/btn_developer_sponsor"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:background="@null"
+                                    android:drawableStart="@drawable/ic_baseline_money_24"
+                                    android:paddingHorizontal="50dp"
+                                    android:paddingTop="3dp"
+                                    android:text="@string/developer_sponsor"
+                                    android:textColor="@color/color_ffffff"
+                                    tools:ignore="ButtonStyle" />
+                            </LinearLayout>
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tab_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:drawableStart="@drawable/ic_baseline_money_24"
-                    android:paddingHorizontal="50dp"
-                    android:paddingTop="3dp"
-                    android:text="@string/developer_sponsor"
-                    android:textColor="@color/color_ffffff"
-                    tools:ignore="ButtonStyle" />
-            </LinearLayout>
+                    android:layout_gravity="start"
+                    android:background="@color/colorPrimary"
+                    android:visibility="@{viewModel.siteZips.size() > 0 == true ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintTop_toBottomOf="@id/layout_more_menu"
+                    app:tabSelectedTextColor="@color/colorAccent"
+                    app:tabTextColor="@color/color_ffffff" />
+            </com.google.android.material.appbar.AppBarLayout>
 
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tab_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:background="@color/colorPrimary"
-            android:visibility="@{viewModel.siteZips.size() > 0 == true ? View.VISIBLE : View.GONE}"
-            app:layout_constraintTop_toBottomOf="@id/layout_more_menu"
-            app:tabSelectedTextColor="@color/colorAccent"
-            app:tabTextColor="@color/color_ffffff" />
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_below="@id/tab_layout"
-            app:layout_constraintBottom_toTopOf="@+id/ad_view_banner"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tab_layout" />
-
-        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        <com.google.android.gms.ads.AdView
             android:id="@+id/ad_view_banner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
             android:visibility="@{viewModel.isShowBannerAdmob() == true ? View.VISIBLE : View.GONE}"
             ads:adSize="SMART_BANNER"
             ads:adUnitId="@string/google_admob_banner_id_test"
-            ads:layout_constraintBottom_toBottomOf="parent"
-            tools:visibility="gone" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            tools:visibility="visible" />
+    </LinearLayout>
 </layout>

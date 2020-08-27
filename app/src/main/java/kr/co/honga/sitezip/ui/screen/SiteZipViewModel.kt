@@ -8,7 +8,6 @@ import kr.co.honga.sitezip.R
 import kr.co.honga.sitezip.admob.AdMobManager
 import kr.co.honga.sitezip.base.livedata.Event
 import kr.co.honga.sitezip.base.viewmodel.BaseViewModel
-import kr.co.honga.sitezip.data.BuildProperty
 import kr.co.honga.sitezip.data.local.entity.Site
 import kr.co.honga.sitezip.data.local.entity.SiteZip
 import kr.co.honga.sitezip.repositories.repository.SiteRepository
@@ -26,7 +25,6 @@ class SiteZipViewModel(
     private val siteRepository: SiteRepository,
     private val clipboardUtil: ClipboardUtil,
     private val resourceProvider: ResourceProvider,
-    private val buildProperty: BuildProperty,
     private val adMobManager: AdMobManager
 
 ) : BaseViewModel(), SiteViewHolder.ViewModel {
