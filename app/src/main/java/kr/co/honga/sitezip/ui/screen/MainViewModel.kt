@@ -37,8 +37,14 @@ class MainViewModel(
     /**
      * 검색 이벤트.
      */
-    private val _searchVisibility: MutableLiveData<Boolean> = MutableLiveData()
+    private val _searchVisibility: MutableLiveData<Boolean> = MutableLiveData( false)
     val searchVisibility: LiveData<Boolean> = _searchVisibility
+
+    /**
+     * 기타 메뉴 표시 이벤트.
+     */
+    private val _isShowMoreMenu: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isShowMoreMenu: LiveData<Boolean> = _isShowMoreMenu
 
     /**
      * 검색어.
@@ -187,5 +193,12 @@ class MainViewModel(
      */
     fun setFavoriteMode(isFavoriteMode: Boolean) {
         _isFavoriteMode.value = isFavoriteMode
+    }
+
+    /**
+     * 기타 메뉴 표시 여부.
+     */
+    fun setShowMoreMenu(isShow: Boolean) {
+        _isShowMoreMenu.value = isShow
     }
 }

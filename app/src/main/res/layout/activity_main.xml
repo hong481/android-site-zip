@@ -85,14 +85,14 @@
                 android:id="@+id/btn_favorites_on"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="65dp"
                 android:background="@drawable/ic_baseline_star_24"
                 android:backgroundTint="@color/color_ffc107"
                 android:contentDescription="@string/content_description"
                 android:onClick="@{() -> viewModel.setFavoriteMode(false)}"
                 android:visibility="@{viewModel.isFavoriteMode() == true ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/btn_more"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="visible" />
 
@@ -100,28 +100,46 @@
                 android:id="@+id/btn_favorites_off"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="65dp"
                 android:background="@drawable/ic_baseline_star_24"
                 android:backgroundTint="@color/color_ffffff"
                 android:contentDescription="@string/content_description"
                 android:onClick="@{() -> viewModel.setFavoriteMode(true)}"
                 android:visibility="@{viewModel.isFavoriteMode() == true ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/btn_more"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="gone" />
 
             <ImageButton
-                android:id="@+id/btn_more"
+                android:id="@+id/btn_more_on"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/ic_baseline_more_vert_24"
+                android:backgroundTint="@color/color_ffc107"
+                android:contentDescription="@string/content_description"
+                android:onClick="@{() -> viewModel.setShowMoreMenu(false)}"
+                android:visibility="@{viewModel.isShowMoreMenu() == true ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+
+            <ImageButton
+                android:id="@+id/btn_more_off"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/ic_baseline_more_vert_24"
                 android:backgroundTint="@color/color_ffffff"
                 android:contentDescription="@string/content_description"
+                android:onClick="@{() -> viewModel.setShowMoreMenu(true)}"
+                android:visibility="@{viewModel.isShowMoreMenu() == true ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="gone" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -202,6 +220,57 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_more_menu"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:visibility="@{viewModel.isShowMoreMenu() == true ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toBottomOf="@+id/layout_app_bar"
+            tools:visibility="visible">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryDark"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true">
+
+                <Button
+                    android:id="@+id/btn_remove_admob"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:drawableStart="@drawable/ic_baseline_delete_forever_24"
+                    android:paddingHorizontal="50dp"
+                    android:paddingTop="3dp"
+                    android:text="@string/remove_admob"
+                    android:textColor="@color/color_ffffff"
+                    tools:ignore="ButtonStyle" />
+
+                <Button
+                    android:id="@+id/btn_developer_sponsor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:drawableStart="@drawable/ic_baseline_money_24"
+                    android:paddingHorizontal="50dp"
+                    android:paddingTop="3dp"
+                    android:text="@string/developer_sponsor"
+                    android:textColor="@color/color_ffffff"
+                    tools:ignore="ButtonStyle" />
+            </LinearLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
@@ -209,7 +278,7 @@
             android:layout_gravity="start"
             android:background="@color/colorPrimary"
             android:visibility="@{viewModel.siteZips.size() > 0 == true ? View.VISIBLE : View.GONE}"
-            app:layout_constraintTop_toBottomOf="@id/v_top"
+            app:layout_constraintTop_toBottomOf="@id/layout_more_menu"
             app:tabSelectedTextColor="@color/colorAccent"
             app:tabTextColor="@color/color_ffffff" />
 

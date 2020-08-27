@@ -20,65 +20,69 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="120dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="1dp"
         android:clickable="false"
         android:focusable="false"
+        android:focusableInTouchMode="false"
         app:cardBackgroundColor="@color/color_ffffff"
         app:cardCornerRadius="10dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="120dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:minHeight="120dp">
 
             <FrameLayout
                 android:id="@+id/iv_favorite_off"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="10dp"
                 android:onClick="@{() -> viewModel.chooseFavorite(viewHolder.item)}"
                 android:padding="10dp"
-                android:visibility="@{viewHolder.item.favorite == true ? View.GONE : View.VISIBLE}"
+                android:visibility="@{viewHolder.item.favorite == true ? View.INVISIBLE : View.VISIBLE}"
                 app:layout_constraintBottom_toTopOf="@id/v_bottom"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:visibility="gone">
+                tools:visibility="invisible">
 
-                <ImageButton
+                <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@drawable/ic_baseline_star_24"
-                    android:backgroundTint="@color/color_353535"
-                    android:clickable="false"
-                    android:contentDescription="@string/content_description" />
+                    android:contentDescription="@string/content_description"
+                    android:src="@drawable/ic_baseline_star_24"
+                    app:tint="@color/color_353535"
+                    app:tintMode="src_in" />
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/ic_baseline_star_24"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="10dp"
                 android:onClick="@{() -> viewModel.releaseFavorite(viewHolder.item)}"
                 android:padding="10dp"
-                android:visibility="@{viewHolder.item.favorite == true ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewHolder.item.favorite == true ? View.VISIBLE : View.INVISIBLE}"
                 app:layout_constraintBottom_toTopOf="@id/v_bottom"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="visible">
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/iv_favorite_on"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@drawable/ic_baseline_star_24"
-                    android:backgroundTint="@color/color_ffc107"
-                    android:clickable="false"
                     android:contentDescription="@string/content_description"
-                    android:scaleType="centerInside" />
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_baseline_star_24"
+                    app:tint="@color/color_ffc107"
+                    app:tintMode="src_in" />
             </FrameLayout>
 
             <ImageView

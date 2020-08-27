@@ -1,11 +1,8 @@
 package kr.co.honga.sitezip.ui.screen
 
-import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
-import com.gun0912.tedonactivityresult.TedOnActivityResult
-import com.tedpark.tedpermission.rx2.TedRx2Permission
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kr.co.honga.sitezip.R
 import kr.co.honga.sitezip.admob.AdMobManager
@@ -21,6 +18,7 @@ import kr.co.honga.sitezip.util.ResourceProvider
 import kr.co.honga.sitezip.util.extension.notify
 import kr.co.honga.sitezip.util.extension.refresh
 import kr.co.honga.sitezip.util.extension.setValueIfNew
+import java.util.*
 
 class SiteZipViewModel(
 
@@ -107,10 +105,10 @@ class SiteZipViewModel(
     }
 
     override fun intentUrl(url: String) {
+
+        val num = Random().nextInt(3)
+        adMobManager.showInterstitialAd()
         _intentUrlEvent.notify = url
-        if (buildProperty.useGoogleAdmob) {
-            adMobManager.showInterstitialAd()
-        }
     }
 
     override fun copyLink(label: String, text: String) {
