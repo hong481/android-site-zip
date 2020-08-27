@@ -23,20 +23,19 @@ object ImageBindingAdapter {
         if(url.isNullOrEmpty()) {
             return
         }
-        if (url.contains("http")) {
+        if (url.contains("icons")) {
+            GlideApp.with(imageView.context)
+                .load(FirebaseStorage.getInstance().getReference(url))
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .apply(RequestOptions.bitmapTransform(CircleCrop()))
+                .into(imageView)
+        } else {
             GlideApp.with(imageView.context)
                 .load(url)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .apply(RequestOptions.bitmapTransform(CircleCrop()))
                 .into(imageView)
-        } else {
-            GlideApp.with(imageView.context)
-                .load(FirebaseStorage.getInstance().getReference(url))
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                .apply(RequestOptions.bitmapTransform(CircleCrop()))
-                .into(imageView)
-
         }
     }
 

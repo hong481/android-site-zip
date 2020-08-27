@@ -18,6 +18,9 @@ class UrlParserUtil(
                 title = doc.select("meta[property=og:title]").first().attr("content")
                 description = doc.select("meta[property=og:description]")[0].attr("content")
                 imageUrl = doc.select("meta[property=og:image]")[0].attr("content")
+                if(!imageUrl.startsWith("http://") && !imageUrl.startsWith("https://")) {
+                    imageUrl = "http://$imageUrl"
+                }
             }
         } catch (e: Exception) {
             null
