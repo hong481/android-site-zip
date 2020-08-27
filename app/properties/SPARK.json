@@ -1,3 +1,5 @@
 {
-  "build_type": 1
+  "build_type": 1,
+  "products" : "irlink",
+  "use_google_admob" : true
 }

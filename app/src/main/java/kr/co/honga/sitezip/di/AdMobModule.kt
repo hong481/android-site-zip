@@ -10,6 +10,7 @@ object AdMobModule {
     val INSTANCE: Module = module {
         single {
             AdMobManager(
+                get(),
                 get()
             )
         }

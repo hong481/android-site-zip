@@ -1,6 +1,5 @@
 package kr.co.honga.sitezip.ui.screen
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -16,6 +15,7 @@ import kr.co.honga.sitezip.base.livedata.EventObserver
 import kr.co.honga.sitezip.data.local.entity.SiteZip
 import kr.co.honga.sitezip.databinding.FragmentSiteZipBinding
 import kr.co.honga.sitezip.ui.screen.SiteZipViewModel.Serializable.SITE_ZIP
+import kr.co.honga.sitezip.util.extension.observeBaseViewModelEvent
 import org.koin.androidx.viewmodel.ext.android.getStateViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -76,12 +76,12 @@ class SiteZipFragment : BaseFragment() {
             viewModel.setSearchText(it)
             viewModel.getDisplaySiteType()
         })
+        observeBaseViewModelEvent(viewModel)
     }
 
     /**
      * 녹취 내역 리사이클 뷰 초기화.
      */
-    @SuppressLint("ClickableViewAccessibility")
     private fun initRecordHistoriesRecyclerView() {
         binding.rvSites.setHasFixedSize(true)
         binding.rvSites.itemAnimator = null

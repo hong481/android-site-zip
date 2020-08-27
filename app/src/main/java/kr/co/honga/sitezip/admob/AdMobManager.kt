@@ -5,13 +5,16 @@ import android.util.Log
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
+import kr.co.honga.sitezip.R
+import kr.co.honga.sitezip.util.ResourceProvider
 
 class AdMobManager(
+    resourceProvider: ResourceProvider,
     applicationContext: Context
 ) {
 
     private var interstitialAd: InterstitialAd = InterstitialAd(applicationContext).apply {
-        adUnitId = "ca-app-pub-3940256099942544/1033173712"
+        adUnitId = resourceProvider.getString(R.string.google_admob_interstitial_id_test)
         adListener = object : AdListener() {
             override fun onAdClosed() {
                 loadAd(AdRequest.Builder().build())

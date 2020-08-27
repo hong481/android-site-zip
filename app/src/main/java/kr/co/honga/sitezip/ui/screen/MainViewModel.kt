@@ -10,6 +10,7 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kr.co.honga.sitezip.base.livedata.EmptyEvent
 import kr.co.honga.sitezip.base.viewmodel.BaseViewModel
+import kr.co.honga.sitezip.data.BuildProperty
 import kr.co.honga.sitezip.data.local.entity.Site
 import kr.co.honga.sitezip.data.local.entity.SiteZip
 import kr.co.honga.sitezip.firebase.FireBaseDatabaseUtil
@@ -21,7 +22,8 @@ class MainViewModel(
 
     private val fireBaseDatabaseUtil: FireBaseDatabaseUtil,
     private val siteRepository: SiteRepository,
-    private val urlParserUtil: UrlParserUtil
+    private val urlParserUtil: UrlParserUtil,
+    private val buildProperty: BuildProperty
 
 ) : BaseViewModel() {
 
@@ -62,11 +64,16 @@ class MainViewModel(
     val isFavoriteMode: LiveData<Boolean> = _isFavoriteMode
 
     /**
+     * 애드몹 배너 표시 여부.
+     */
+    val isShowBannerAdmob: LiveData<Boolean> = MutableLiveData(buildProperty.useGoogleAdmob)
+
+    /**
      * 사이트 유형 가져오기.
      */
     fun getSiteTypes() {
         showProgress(true)
-        fireBaseDatabaseUtil.database.getReference(FireBaseDatabaseUtil.SITES_PATH)
+        fireBaseDatabaseUtil.database.getReference("${FireBaseDatabaseUtil.SITES_PATH}/${buildProperty.products}")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     Log.d(TAG, dataSnapshot.childrenCount.toString())

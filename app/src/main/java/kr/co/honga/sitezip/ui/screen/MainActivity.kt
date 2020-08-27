@@ -12,11 +12,14 @@ import com.google.android.material.tabs.TabLayoutMediator
 import kr.co.honga.sitezip.R
 import kr.co.honga.sitezip.base.activity.BaseActivity
 import kr.co.honga.sitezip.base.livedata.EventObserver
+import kr.co.honga.sitezip.data.BuildProperty
 import kr.co.honga.sitezip.databinding.ActivityMainBinding
 import kr.co.honga.sitezip.util.KeyboardUtil
 import kr.co.honga.sitezip.util.LogUtil
 import kr.co.honga.sitezip.util.extension.observeBaseViewModelEvent
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.android.ext.android.inject
+
 
 class MainActivity : BaseActivity() {
 
@@ -51,6 +54,7 @@ class MainActivity : BaseActivity() {
     }
 
     private val viewModel: MainViewModel by viewModel()
+    private val buildProperty: BuildProperty by inject()
 
     private lateinit var keyboardUtil: KeyboardUtil
 
@@ -59,7 +63,10 @@ class MainActivity : BaseActivity() {
         initBinding()
         initViewPager()
         initViewModel()
-        initAdViewBanner()
+
+        if(buildProperty.useGoogleAdmob) {
+            initAdViewBanner()
+        }
     }
 
     private fun initBinding() {

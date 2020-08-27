@@ -18,23 +18,17 @@
 
     <string name="close">닫기</string>
     <string name="setting">설정</string>
-    <string name="install">설치</string>
-
-    <string name="blocking_user_input">유저 입력 차단중</string>
-
-    <string name="download_set_description">다운로드 진행 중</string>
-
-    <string name="notification_service_group_name">서비스 유형</string>
-
-    <string name="notification_service_channel_name">Services</string>
 
     <string name="permission_denied_message">[설정] > [권한]에서 권한을 허용해 주세요</string>
 
-    <string name="update_title">업데이트</string>
-    <string name="update_message">설치된 앱이 최신 버전이 아닙니다.\n업데이트가 필요합니다.</string>
+    <!-- 구글 애드몹 -->
+    <string name="google_admob_app_id">ca-app-pub-7819212431082590~3976385446</string>
+    <string name="google_admob_banner_id">ca-app-pub-7819212431082590/9915764372</string>
+    <string name="google_admob_interstitial_id">ca-app-pub-7819212431082590/8783781575</string>
 
-    <string name="warning">경고</string>>
-    <string name="recording_file_error_message">녹취 파일 생성 실패</string>
+    <string name="google_admob_app_id_test">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="google_admob_banner_id_test">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="google_admob_interstitial_id_test">ca-app-pub-3940256099942544/1033173712</string>
 
 
 </resources>
