@@ -168,15 +168,27 @@
                 android:text="@{viewHolder.item.url}"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="@id/v_bottom"
-                app:layout_constraintEnd_toEndOf="@id/btn_link_copy"
+                app:layout_constraintEnd_toStartOf="@id/btn_link_share"
                 app:layout_constraintStart_toEndOf="@+id/iv_link_icon"
                 app:layout_constraintTop_toTopOf="@id/v_bottom"
                 tools:text="Site Link" />
 
             <Button
+                android:id="@+id/btn_link_share"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/ic_baseline_share_24"
+                android:onClick="@{() -> viewModel.shareLink(viewHolder.item.url)}"
+                app:layout_constraintBottom_toBottomOf="@id/v_bottom"
+                app:layout_constraintEnd_toStartOf="@id/btn_link_copy"
+                app:layout_constraintTop_toTopOf="@id/v_bottom" />
+
+            <Button
                 android:id="@+id/btn_link_copy"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="15dp"
                 android:background="@drawable/ic_baseline_file_copy_24"

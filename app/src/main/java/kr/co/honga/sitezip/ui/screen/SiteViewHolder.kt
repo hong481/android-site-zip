@@ -21,7 +21,7 @@ class SiteViewHolder(
         ItemSiteBinding.bind(itemView)
     }
 
-    val imageUrl: LiveData<String> =  item.map {
+    val imageUrl: LiveData<String> = item.map {
         item.value?.iconUrl ?: ""
     }
 
@@ -35,6 +35,8 @@ class SiteViewHolder(
         fun intentUrl(url: String)
 
         fun copyLink(label: String, text: String)
+
+        fun shareLink(text: String)
 
         fun chooseFavorite(site: Site)
 

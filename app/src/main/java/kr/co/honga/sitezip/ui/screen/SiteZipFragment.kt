@@ -15,15 +15,19 @@ import kr.co.honga.sitezip.base.livedata.EventObserver
 import kr.co.honga.sitezip.data.local.entity.SiteZip
 import kr.co.honga.sitezip.databinding.FragmentSiteZipBinding
 import kr.co.honga.sitezip.ui.screen.SiteZipViewModel.Serializable.SITE_ZIP
+import kr.co.honga.sitezip.util.ResourceProvider
 import kr.co.honga.sitezip.util.extension.observeBaseViewModelEvent
 import org.koin.androidx.viewmodel.ext.android.getStateViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.android.ext.android.inject
 
 
 class SiteZipFragment : BaseFragment() {
 
     companion object {
         const val TAG: String = "SiteTypeFragment"
+
+        const val SHARD_LINK_INTENT_TYPE: String = "text/plain"
 
         fun newInstance(siteZip: SiteZip): SiteZipFragment =
             SiteZipFragment().apply {
@@ -41,6 +45,8 @@ class SiteZipFragment : BaseFragment() {
     }
 
     private val mainViewModel: MainViewModel by sharedViewModel()
+
+    private val resourceProvider: ResourceProvider by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,6 +73,13 @@ class SiteZipFragment : BaseFragment() {
         })
         viewModel.siteZip.observe(viewLifecycleOwner, Observer {
             viewModel.getDisplaySiteType()
+        })
+        viewModel.shareLink.observe(viewLifecycleOwner, EventObserver {
+            val intent = Intent.createChooser(Intent(Intent.ACTION_SEND).apply {
+                type = SHARD_LINK_INTENT_TYPE
+                putExtra(Intent.EXTRA_TEXT, it)
+            }, resourceProvider.getString(R.string.site_link_share))
+            startActivity(intent)
         })
         mainViewModel.isFavoriteMode.observe(viewLifecycleOwner, Observer {
             viewModel.setFavoriteMode(it)

@@ -1,8 +1,11 @@
 package kr.co.honga.sitezip.ui.screen
 
+import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import com.gun0912.tedonactivityresult.TedOnActivityResult
+import com.tedpark.tedpermission.rx2.TedRx2Permission
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kr.co.honga.sitezip.R
 import kr.co.honga.sitezip.admob.AdMobManager
@@ -59,6 +62,12 @@ class SiteZipViewModel(
     val searchSiteZip: LiveData<SiteZip> = _searchSiteZip
 
     /**
+     * 사이트 유형.
+     */
+    private val _shareLink: MutableLiveData<Event<String>> = MutableLiveData()
+    val shareLink: LiveData<Event<String>> = _shareLink
+
+    /**
      * 즐겨찾기만 표시 여부.
      */
     private val _isFavoriteMode: MutableLiveData<Boolean> = MutableLiveData()
@@ -108,6 +117,10 @@ class SiteZipViewModel(
         LogUtil.d(MainViewModel.TAG, "clipBoard. label : $label / text : $text")
         clipboardUtil.copyText(label, text)
         showToast(resourceProvider.getString(R.string.copy_to_link_message))
+    }
+
+    override fun shareLink(text: String) {
+        _shareLink.notify = text
     }
 
     override fun chooseFavorite(site: Site) {
