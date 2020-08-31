@@ -255,9 +255,10 @@ dependencies {
     implementation "com.google.firebase:firebase-database-ktx:${rootProject.ext.databaseVersion}"
     implementation "com.firebaseui:firebase-ui-storage:${rootProject.ext.storageUiVersion}"
 
-    implementation "androidx.viewpager2:viewpager2:1.0.0"
-    implementation "org.jsoup:jsoup:1.12.1"
-    implementation 'com.google.android.gms:play-services-ads:19.3.0'
+    implementation "androidx.viewpager2:viewpager2:${rootProject.ext.viewpager2Version}"
+    implementation "org.jsoup:jsoup:${rootProject.ext.jsoupVersion}"
+    implementation "com.google.android.gms:play-services-ads:${rootProject.ext.googleAdsVersion}"
+
 
     // Test
     testImplementation "junit:junit:${rootProject.ext.junitVersion}"

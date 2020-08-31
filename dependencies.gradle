@@ -35,15 +35,19 @@ ext {
     tedActivityResultVersion = '1.0.8'
 
     junitVersion = '4.12'
-    junitAndroidVersion = '1.1.1'
-    espressoCoreVersion = '3.2.0'
+    junitAndroidVersion = '1.1.2'
+    espressoCoreVersion = '3.3.0'
+
+    viewpager2Version = '1.0.0'
+    jsoupVersion = '1.12.1'
+    googleAdsVersion = '19.3.0'
 
     analyticsVersion = '17.5.0'
     crashlyticsVersion = '17.2.1'
     perfVersion = '19.0.8'
-    storageVersion = '19.1.1'
+    storageVersion = '19.2.0'
     messagingVersion = '20.2.4'
-    databaseVersion = '19.3.1'
+    databaseVersion = '19.4.0'
     storageUiVersion = '4.3.2'
 
     glideVersion = '4.9.0'
