@@ -30,7 +30,8 @@ object ImageBindingAdapter {
                     url
                 }
             )
-            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+            .fitCenter()
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
             .apply(RequestOptions.bitmapTransform(CircleCrop()))
             .into(imageView)
     }
