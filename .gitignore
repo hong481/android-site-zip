@@ -4,6 +4,7 @@
 .apk
 .gradle
 .apk
+.abb
 .json
 .DS_Store
 .externalNativeBuild

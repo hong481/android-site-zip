@@ -12,13 +12,15 @@ import com.google.android.material.tabs.TabLayoutMediator
 import kr.co.honga.sitezip.R
 import kr.co.honga.sitezip.base.activity.BaseActivity
 import kr.co.honga.sitezip.base.livedata.EventObserver
+import kr.co.honga.sitezip.billing.BillingManager
 import kr.co.honga.sitezip.data.BuildProperty
+import kr.co.honga.sitezip.data.local.preference.BillingPreference
 import kr.co.honga.sitezip.databinding.ActivityMainBinding
 import kr.co.honga.sitezip.util.KeyboardUtil
 import kr.co.honga.sitezip.util.LogUtil
 import kr.co.honga.sitezip.util.extension.observeBaseViewModelEvent
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class MainActivity : BaseActivity() {
@@ -55,6 +57,11 @@ class MainActivity : BaseActivity() {
 
     private val viewModel: MainViewModel by viewModel()
     private val buildProperty: BuildProperty by inject()
+    private val billingPref: BillingPreference by inject()
+
+    private val billingManager: BillingManager by lazy {
+        BillingManager(this, billingPref)
+    }
 
     private lateinit var keyboardUtil: KeyboardUtil
 
@@ -63,9 +70,11 @@ class MainActivity : BaseActivity() {
         initBinding()
         initViewPager()
         initViewModel()
-
-        if(buildProperty.useGoogleAdmob) {
-            initAdViewBanner()
+        initBillingManager()
+        if (buildProperty.useGoogleAdmob) {
+            if(!billingPref.removeAds) {
+                initAdViewBanner()
+            }
         }
     }
 
@@ -108,6 +117,9 @@ class MainActivity : BaseActivity() {
                 }
             }
         })
+        viewModel.billingRemoveAds.observe(this, EventObserver {
+            billingManager.processToPurchase()
+        })
         // 뷰모델 기본 옵저버.
         observeBaseViewModelEvent(viewModel)
     }
@@ -135,5 +147,12 @@ class MainActivity : BaseActivity() {
      */
     private fun initAdViewBanner() {
         binding.adViewBanner.loadAd(AdRequest.Builder().build())
+    }
+
+    /**
+     * 인앱 결제 초기화.
+     */
+    private fun initBillingManager() {
+        billingManager.getPurchaseHistory()
     }
 }

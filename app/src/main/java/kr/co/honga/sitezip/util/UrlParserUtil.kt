@@ -3,6 +3,8 @@ package kr.co.honga.sitezip.util
 import kr.co.honga.sitezip.data.Metadata
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import java.net.HttpURLConnection
+import java.net.URL
 
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -45,4 +47,15 @@ class UrlParserUtil(
         }
         return resultUrl
     }
+
+    fun isConnectedToServer(url: String?): Boolean {
+        return try {
+            val connection: HttpURLConnection = URL(url).openConnection() as HttpURLConnection
+            connection.connect()
+            return (connection.responseCode == HttpURLConnection.HTTP_OK);
+        } catch (e: java.lang.Exception) {
+            false
+        }
+    }
+
 }

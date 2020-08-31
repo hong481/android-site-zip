@@ -10,6 +10,7 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kr.co.honga.sitezip.base.livedata.EmptyEvent
 import kr.co.honga.sitezip.base.viewmodel.BaseViewModel
+import kr.co.honga.sitezip.billing.BillingManager
 import kr.co.honga.sitezip.data.BuildProperty
 import kr.co.honga.sitezip.data.local.entity.Site
 import kr.co.honga.sitezip.data.local.entity.SiteZip
@@ -73,6 +74,12 @@ class MainViewModel(
      * 애드몹 배너 표시 여부.
      */
     val isShowBannerAdmob: LiveData<Boolean> = MutableLiveData(buildProperty.useGoogleAdmob)
+
+    /**
+     * 음성 검색 시작 이벤트.
+     */
+    private val _billingRemoveAds: MutableLiveData<EmptyEvent> = MutableLiveData()
+    val billingRemoveAds: LiveData<EmptyEvent> = _billingRemoveAds
 
     /**
      * 사이트 유형 가져오기.
@@ -206,5 +213,13 @@ class MainViewModel(
      */
     fun setShowMoreMenu(isShow: Boolean) {
         _isShowMoreMenu.value = isShow
+    }
+
+
+    /**
+     * 광고제거 청구 (인앱 결제).
+     */
+    fun billingRemoveAds() {
+        _billingRemoveAds.notify()
     }
 }

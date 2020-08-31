@@ -259,6 +259,7 @@ dependencies {
     implementation "org.jsoup:jsoup:${rootProject.ext.jsoupVersion}"
     implementation "com.google.android.gms:play-services-ads:${rootProject.ext.googleAdsVersion}"
 
+    implementation 'com.android.billingclient:billing:2.0.1'
 
     // Test
     testImplementation "junit:junit:${rootProject.ext.junitVersion}"
