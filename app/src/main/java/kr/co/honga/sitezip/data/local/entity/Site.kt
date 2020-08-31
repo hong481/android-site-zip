@@ -54,6 +54,16 @@ data class Site(
      * 사이트 아이콘 url.
      */
     @ColumnInfo(name = "icon_url")
-    var iconUrl: String = ""
+    var iconUrl: String = "",
 
-) : Parcelable, Model
+    /**
+     * http 아이콘 사용여부
+     */
+    @ColumnInfo(name = "is_use_http_icon")
+    var isUseHttpIcon : Boolean = false
+
+) : Parcelable, Model {
+    companion object {
+        const val IS_USE_HTTP_ICON_VAR_NAME : String =  "isUseHttpIcon"
+    }
+}

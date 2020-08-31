@@ -37,7 +37,7 @@ class MainViewModel(
     /**
      * 검색 이벤트.
      */
-    private val _searchVisibility: MutableLiveData<Boolean> = MutableLiveData( false)
+    private val _searchVisibility: MutableLiveData<Boolean> = MutableLiveData(false)
     val searchVisibility: LiveData<Boolean> = _searchVisibility
 
     /**
@@ -98,6 +98,10 @@ class MainViewModel(
                                                 val site: Site? =
                                                     dataSnapshot.getValue(Site::class.java)
                                                         .apply {
+                                                            this?.isUseHttpIcon =
+                                                                dataSnapshot.child(Site.IS_USE_HTTP_ICON_VAR_NAME)
+                                                                    .getValue(Boolean::class.java)
+                                                                    ?: true
                                                             this?.sitePrimaryKey =
                                                                 "${typeSnapshot.key}_${dataSnapshot.key}"
 
@@ -116,8 +120,10 @@ class MainViewModel(
                                                                             metadata.title
                                                                     }
                                                                     if (metadata.imageUrl.isNotEmpty()) {
-                                                                        this?.iconUrl =
-                                                                            metadata.imageUrl
+                                                                        if (this?.isUseHttpIcon == true) {
+                                                                            this.iconUrl =
+                                                                                metadata.imageUrl
+                                                                        }
                                                                     }
                                                                     if (metadata.description.isNotEmpty()) {
                                                                         this?.description =
