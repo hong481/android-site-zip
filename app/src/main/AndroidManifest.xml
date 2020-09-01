@@ -24,6 +24,7 @@
         <!-- MainActivity -->
         <activity
             android:name="kr.co.honga.sitezip.ui.screen.MainActivity"
+            android:theme="@style/SplashTheme"
             android:configChanges="screenSize|orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden">

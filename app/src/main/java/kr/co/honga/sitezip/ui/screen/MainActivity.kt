@@ -66,6 +66,7 @@ class MainActivity : BaseActivity() {
     private lateinit var keyboardUtil: KeyboardUtil
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         initBinding()
         initViewPager()
