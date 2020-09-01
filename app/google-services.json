@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1093481546113:android:0937fd3b28b15ce2dd6880",
+        "mobilesdk_app_id": "1:1093481546113:android:e5f31a170b865e86dd6880",
         "android_client_info": {
-          "package_name": "kr.co.honga.sitezip"
+          "package_name": "kr.co.hongstudio.sitezip"
         }
       },
       "oauth_client": [

@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
 
-        applicationId "kr.co.honga.sitezip"
+        applicationId "kr.co.hongstudio.sitezip"
 
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
@@ -67,7 +67,7 @@ android {
 
         SPARK_ {
             versionCode 1
-            versionName "0.0.0"
+            versionName "0.0.1"
 
             buildConfigField(BUILD_PROPERTIES_TYPE, BUILD_PROPERTIES_NAME, loadProperties(SPARK_PROPERTIES_PATH))
         }
@@ -259,7 +259,8 @@ dependencies {
     implementation "org.jsoup:jsoup:${rootProject.ext.jsoupVersion}"
     implementation "com.google.android.gms:play-services-ads:${rootProject.ext.googleAdsVersion}"
 
-    implementation 'com.android.billingclient:billing:2.0.1'
+    implementation 'com.android.billingclient:billing:3.0.0'
+    implementation 'com.android.billingclient:billing-ktx:3.0.0'
 
     // Test
     testImplementation "junit:junit:${rootProject.ext.junitVersion}"

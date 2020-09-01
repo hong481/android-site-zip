@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="kr.co.honga.sitezip.ui.screen.SiteZipViewModel" />
+            type="kr.co.hongstudio.sitezip.ui.screen.SiteZipViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

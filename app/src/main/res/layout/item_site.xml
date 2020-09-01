@@ -8,11 +8,11 @@
 
         <variable
             name="viewModel"
-            type="kr.co.honga.sitezip.ui.screen.SiteViewHolder.ViewModel" />
+            type="kr.co.hongstudio.sitezip.ui.screen.SiteViewHolder.ViewModel" />
 
         <variable
             name="viewHolder"
-            type="kr.co.honga.sitezip.ui.screen.SiteViewHolder" />
+            type="kr.co.hongstudio.sitezip.ui.screen.SiteViewHolder" />
 
         <import type="android.view.View" />
     </data>
