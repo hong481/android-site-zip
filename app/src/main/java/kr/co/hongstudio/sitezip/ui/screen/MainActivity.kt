@@ -164,4 +164,11 @@ class MainActivity : BaseActivity() {
     private fun initBillingManager() {
         billingManager.connectGooglePlay()
     }
+
+    /**
+     * 뒤로가기 버튼 클릭시 홈으로 이동.
+     */
+    override fun onBackPressed() {
+        moveTaskToBack(true)
+    }
 }
