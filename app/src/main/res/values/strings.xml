@@ -17,6 +17,8 @@
     <string name="not_found_site_message">사이트 정보가 없어요!</string>
     <string name="site_link_share">사이트 주소 공유하기</string>
 
+    <string name="network_disconnect_message">네트워크 연결이 필요해요!</string>
+
     <string name="remove_admob">광고제거</string>
     <string name="developer_sponsor">개발자 후원</string>
 

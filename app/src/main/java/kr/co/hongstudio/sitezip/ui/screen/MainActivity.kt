@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
+import android.util.Log
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
@@ -21,7 +22,6 @@ import kr.co.hongstudio.sitezip.util.LogUtil
 import kr.co.hongstudio.sitezip.util.extension.observeBaseViewModelEvent
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class MainActivity : BaseActivity() {
 
@@ -69,12 +69,6 @@ class MainActivity : BaseActivity() {
         initBinding()
         initViewPager()
         initViewModel()
-        initBillingManager()
-        if (buildProperty.useGoogleAdmob) {
-            if (!billingPref.removeAds) {
-                initAdViewBanner()
-            }
-        }
     }
 
     private fun initBinding() {
@@ -85,14 +79,30 @@ class MainActivity : BaseActivity() {
     private fun initViewModel() {
         // 키보드 리스너 등록.
         keyboardUtil = KeyboardUtil(applicationContext, window)
-        // 사이트 정보 가져오기.
-        viewModel.getSiteTypes()
-
+        // 라이브데이터 옵저버.
+        viewModel.isEnableContents.observe(this, Observer {
+            Log.d(TAG, "isEnableContents : $it")
+            if (it) {
+                viewModel.getSiteTypes()
+            }
+        })
+        // 라이브데이터 옵저버.
+        viewModel.isNetworkAvailable.observe(this, Observer {
+            Log.d(TAG, "isNetworkAvailable : $it")
+            if (it) {
+                initBillingManager()
+                if (buildProperty.useGoogleAdmob) {
+                    if (!billingPref.removeAds) {
+                        initAdViewBanner()
+                    }
+                }
+            }
+            viewModel.setShowNetworkErrorLayout(isShow = !it)
+            viewModel.setShowBannerAds(isShow = it)
+        })
         viewModel.siteZips.observe(this, Observer {
             (binding.viewPager.adapter as? SiteZipsAdapter)?.setItems(it)
         })
-
-        // 라이브데이터 옵저버.
         viewModel.searchVisibility.observe(this, Observer {
             if (it) {
                 binding.etSearchText.requestFocus()

@@ -25,11 +25,15 @@
         android:orientation="vertical">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/layout_contents"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@color/color_eeeeee"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:visibility="@{viewModel.isEnableContents() == true ? View.VISIBLE : View.GONE}"
+            app:initVisibility="@{View.VISIBLE}"
+            tools:visibility="visible">
 
             <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
@@ -323,6 +327,41 @@
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_network_disconnect"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:visibility="@{viewModel.isShowNetworkErrorLayout() == true ? View.VISIBLE : View.GONE}"
+            tools:visibility="gone">
+
+            <ImageView
+                android:id="@+id/iv_wifi_off"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:contentDescription="@string/content_description"
+                android:src="@drawable/ic_baseline_wifi_off_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_network_disconnect_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/network_disconnect_message"
+                android:textColor="@color/color_ffffff"
+                android:textSize="15sp"
+                app:layout_constraintTop_toBottomOf="@id/iv_wifi_off" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <com.google.android.gms.ads.AdView
             android:id="@+id/ad_view_banner"
             android:layout_width="match_parent"
@@ -331,5 +370,6 @@
             ads:adSize="SMART_BANNER"
             ads:adUnitId="@string/google_admob_banner_id_test"
             tools:visibility="visible" />
+
     </LinearLayout>
 </layout>

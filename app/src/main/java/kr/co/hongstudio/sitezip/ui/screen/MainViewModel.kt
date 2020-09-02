@@ -13,17 +13,20 @@ import kr.co.hongstudio.sitezip.base.viewmodel.BaseViewModel
 import kr.co.hongstudio.sitezip.data.BuildProperty
 import kr.co.hongstudio.sitezip.data.local.entity.Site
 import kr.co.hongstudio.sitezip.data.local.entity.SiteZip
-import kr.co.hongstudio.sitezip.firebase.FireBaseDatabaseUtil
+import kr.co.hongstudio.sitezip.firebase.FireBaseDatabaseManager
+import kr.co.hongstudio.sitezip.observer.NetworkObserver
 import kr.co.hongstudio.sitezip.repositories.repository.SiteRepository
 import kr.co.hongstudio.sitezip.util.UrlParserUtil
+import kr.co.hongstudio.sitezip.util.extension.map
 import kr.co.hongstudio.sitezip.util.extension.notify
 
 class MainViewModel(
 
-    private val fireBaseDatabaseUtil: FireBaseDatabaseUtil,
+    private val fireBaseDatabaseManager: FireBaseDatabaseManager,
     private val siteRepository: SiteRepository,
     private val urlParserUtil: UrlParserUtil,
-    private val buildProperty: BuildProperty
+    private val buildProperty: BuildProperty,
+    networkObserver: NetworkObserver
 
 ) : BaseViewModel() {
 
@@ -72,7 +75,8 @@ class MainViewModel(
     /**
      * 애드몹 배너 표시 여부.
      */
-    val isShowBannerAdmob: LiveData<Boolean> = MutableLiveData(buildProperty.useGoogleAdmob)
+    private val _isShowBannerAdMob :MutableLiveData<Boolean> = MutableLiveData(buildProperty.useGoogleAdmob)
+    val isShowBannerAdmob: LiveData<Boolean> = _isShowBannerAdMob
 
     /**
      * 음성 검색 시작 이벤트.
@@ -81,13 +85,37 @@ class MainViewModel(
     val billingRemoveAds: LiveData<EmptyEvent> = _billingRemoveAds
 
     /**
+     * 콘텐츠 활성화 여부.
+     */
+    val isEnableContents: LiveData<Boolean> =
+        fireBaseDatabaseManager.isAvailable.map { isAvailable ->
+            Log.d(TAG, "isAvailable $isAvailable")
+            if (siteZips.value?.size ?: 0 > 0) {
+                return@map true
+            } else {
+                return@map isAvailable
+            }
+        }
+
+    /**
+     * 네트워크 연결 여부.
+     */
+    val isNetworkAvailable: LiveData<Boolean> = networkObserver.isAvailable
+
+    /**
+     * 네트워크 오류 레이아웃 표시 여부.
+     */
+    private val _isShowNetworkErrorLayout: MutableLiveData<Boolean> = MutableLiveData()
+    val isShowNetworkErrorLayout: LiveData<Boolean> = _isShowNetworkErrorLayout
+
+    /**
      * 사이트 유형 가져오기.
      */
     fun getSiteTypes() {
-        showProgress(true)
-        fireBaseDatabaseUtil.database.getReference("${FireBaseDatabaseUtil.SITES_PATH}/${buildProperty.products}")
+        fireBaseDatabaseManager.database.getReference("${FireBaseDatabaseManager.SITES_PATH}/${buildProperty.products}")
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    showProgress(true)
                     Log.d(TAG, dataSnapshot.childrenCount.toString())
                     siteRepository.getAllSites()
                         .firstOrError()
@@ -158,18 +186,23 @@ class MainViewModel(
                                 _siteZips.postValue(siteZips)
                                 dismissProgress(true)
                             },
-                            onError = { throwable ->
-                                throwable.printStackTrace()
+                            onError = { exception ->
+                                Log.d(TAG, exception.toString())
+                                dismissProgress(true)
                             }
                         )
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
-                    Log.w(
-                        FireBaseDatabaseUtil.TAG,
+                    Log.d(
+                        FireBaseDatabaseManager.TAG,
                         "loadPost:onCancelled",
                         databaseError.toException()
                     )
+                    if (isEnableContents.value == false) {
+                        Log.d(TAG, "getSiteTypes.ValueEventListener. network available false.")
+                    }
+                    dismissProgress(true)
                 }
             })
     }
@@ -194,26 +227,45 @@ class MainViewModel(
     }
 
     /**
-     * 검색 레이아웃 활성화 여부.
+     * 검색 레이아웃 활성화 여부 설정.
      */
     fun setSearchVisibility(isEnable: Boolean) {
         _searchVisibility.value = isEnable
     }
 
     /**
-     * 즐겨찾기만 표시 여부.
+     * 즐겨찾기만 표시 여부 설정.
      */
     fun setFavoriteMode(isFavoriteMode: Boolean) {
         _isFavoriteMode.value = isFavoriteMode
     }
 
     /**
-     * 기타 메뉴 표시 여부.
+     * 기타 메뉴 표시 여부 설정.
      */
     fun setShowMoreMenu(isShow: Boolean) {
         _isShowMoreMenu.value = isShow
     }
 
+    /**
+     * 네트워크 에러 레이아웃 표시 여부 설정.
+     */
+    fun setShowNetworkErrorLayout(isShow: Boolean) {
+        if (isEnableContents.value == true) {
+            return
+        }
+        _isShowNetworkErrorLayout.value = isShow
+    }
+
+    /**
+     * 배너 광고 펴시 여부 설정.
+     */
+    fun setShowBannerAds(isShow: Boolean) {
+        if (isEnableContents.value == true) {
+            return
+        }
+        _isShowBannerAdMob.value = isShow
+    }
 
     /**
      * 광고제거 청구 (인앱 결제).

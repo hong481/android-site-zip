@@ -8,6 +8,7 @@ import android.os.Process
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.ads.MobileAds
 import kr.co.hongstudio.sitezip.di.AppModule
+import kr.co.hongstudio.sitezip.observer.NetworkObserver
 import kr.co.hongstudio.sitezip.util.DatabaseDebugUtil
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
@@ -33,12 +34,14 @@ class App : Application() {
     }
 
     private val databaseDebugUtil: DatabaseDebugUtil by inject()
+    private val networkObserver: NetworkObserver by inject()
 
     override fun onCreate() {
         super.onCreate()
         initApp()
         initKoin()
         initMobileAds()
+        initObserver()
         // room 데이터베이스 디버그 활성화.
         debugDatabase()
     }
@@ -58,6 +61,13 @@ class App : Application() {
         androidContext(androidContext = this@App)
         fragmentFactory()
         modules(AppModule.getModules())
+    }
+
+    /**
+     * 옵저버 초기화.
+     */
+    private fun initObserver() {
+        networkObserver.register()
     }
 
     /**

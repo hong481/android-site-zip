@@ -24,6 +24,7 @@ object AppModule {
     fun getModules(): List<Module> = mutableListOf(
         INSTANCE,
         MoshiModule.INSTANCE,
+        ObserverModule.INSTANCE,
         PreferenceModule.INSTANCE,
         UtilModule.INSTANCE,
         DataBaseModule.INSTANCE,
