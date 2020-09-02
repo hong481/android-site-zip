@@ -267,9 +267,9 @@
                                 <Button
                                     android:id="@+id/btn_remove_admob"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="match_parent"
                                     android:layout_weight="1"
-                                    android:background="@null"
+                                    android:background="?attr/selectableItemBackground"
                                     android:drawableStart="@drawable/ic_baseline_delete_forever_24"
                                     android:maxLines="1"
                                     android:onClick="@{() -> viewModel.billingRemoveAds()}"
@@ -283,9 +283,9 @@
                                 <Button
                                     android:id="@+id/btn_developer_sponsor"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="match_parent"
                                     android:layout_weight="1"
-                                    android:background="@null"
+                                    android:background="?attr/selectableItemBackground"
                                     android:drawableStart="@drawable/ic_baseline_money_24"
                                     android:maxLines="1"
                                     android:paddingHorizontal="50dp"
