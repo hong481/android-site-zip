@@ -26,7 +26,7 @@ class MainViewModel(
     private val siteRepository: SiteRepository,
     private val urlParserUtil: UrlParserUtil,
     private val buildProperty: BuildProperty,
-    networkObserver: NetworkObserver
+    private val networkObserver: NetworkObserver
 
 ) : BaseViewModel() {
 
@@ -251,20 +251,30 @@ class MainViewModel(
      * 네트워크 에러 레이아웃 표시 여부 설정.
      */
     fun setShowNetworkErrorLayout(isShow: Boolean) {
-        if (isEnableContents.value == true) {
+        if (!isShow && isEnableContents.value == true) {
             return
         }
         _isShowNetworkErrorLayout.value = isShow
     }
-
+    
     /**
      * 배너 광고 펴시 여부 설정.
      */
     fun setShowBannerAds(isShow: Boolean) {
-        if (isEnableContents.value == true) {
+        if (!isShow && isEnableContents.value == true) {
             return
         }
         _isShowBannerAdMob.value = isShow
+    }
+
+    /**
+     * 초기 네트워크 레이아웃 표시 여부.
+     */
+    fun setViewCheckNetwork(){
+        if(!networkObserver.isNetworkConnected()) {
+            setShowBannerAds(false)
+            setShowNetworkErrorLayout(true)
+        }
     }
 
     /**

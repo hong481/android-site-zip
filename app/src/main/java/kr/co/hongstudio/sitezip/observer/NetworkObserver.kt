@@ -61,7 +61,7 @@ class NetworkObserver(
         _isAvailable.postValue = false
     }
 
-    private fun isNetworkConnected(): Boolean {
+    fun isNetworkConnected(): Boolean {
         val capabilities: NetworkCapabilities? =
             connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
         return capabilities != null && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)

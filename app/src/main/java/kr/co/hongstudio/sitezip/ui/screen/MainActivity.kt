@@ -131,6 +131,8 @@ class MainActivity : BaseActivity() {
         })
         // 뷰모델 기본 옵저버.
         observeBaseViewModelEvent(viewModel)
+        // 뷰 기본 세팅
+        viewModel.setViewCheckNetwork()
     }
 
     /**
