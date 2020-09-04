@@ -11,6 +11,10 @@
         <variable
             name="viewModel"
             type="kr.co.hongstudio.sitezip.ui.screen.SiteZipViewModel" />
+
+        <variable
+            name="mainViewModel"
+            type="kr.co.hongstudio.sitezip.ui.screen.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,8 +27,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingBottom="5dp"
             android:descendantFocusability="blocksDescendants"
+            android:paddingBottom="5dp"
             android:scrollbars="vertical"
             app:items="@{viewModel.searchSiteZip.siteList}" />
 
@@ -34,7 +38,7 @@
             android:layout_height="match_parent"
             android:gravity="center_horizontal|center_vertical"
             android:text="@string/not_found_site_message"
-            android:visibility="@{viewModel.searchSiteZip.siteList.size() == 0 ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.isShowNotFoundSite() == true ? View.VISIBLE : View.GONE}"
             tools:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

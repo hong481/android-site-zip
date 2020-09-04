@@ -9,7 +9,11 @@ import kotlinx.android.parcel.Parcelize
 data class SiteZip (
 
     var typeName: String = "",
-
+    var index: Int = 0,
     var siteList: MutableList<Site> = mutableListOf()
 
-) : Parcelable
+) : Parcelable {
+    companion object {
+        const val INDEX : String =  "index"
+    }
+}

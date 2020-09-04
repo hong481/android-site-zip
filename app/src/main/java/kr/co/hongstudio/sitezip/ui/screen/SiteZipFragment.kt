@@ -18,9 +18,9 @@ import kr.co.hongstudio.sitezip.databinding.FragmentSiteZipBinding
 import kr.co.hongstudio.sitezip.ui.screen.SiteZipViewModel.Serializable.SITE_ZIP
 import kr.co.hongstudio.sitezip.util.ResourceProvider
 import kr.co.hongstudio.sitezip.util.extension.observeBaseViewModelEvent
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.getStateViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.android.ext.android.inject
 
 
 class SiteZipFragment : BaseFragment() {
@@ -53,7 +53,7 @@ class SiteZipFragment : BaseFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.fragment_site_zip, container, false)
+    ): View = inflater.inflate(R.layout.fragment_site_zip, container, true)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -68,6 +68,10 @@ class SiteZipFragment : BaseFragment() {
     }
 
     private fun initViewModel() {
+        // 사이트 정보 가져오기.
+        viewModel.getSite()
+
+        // 라이브데이터 옵저버 세팅.
         viewModel.intentUrlEvent.observe(viewLifecycleOwner, EventObserver { url ->
             try {
                 val actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -77,7 +81,7 @@ class SiteZipFragment : BaseFragment() {
             }
         })
         viewModel.siteZip.observe(viewLifecycleOwner, Observer {
-            viewModel.getDisplaySiteType()
+            viewModel.getDisplaySiteZip()
         })
         viewModel.shareLink.observe(viewLifecycleOwner, EventObserver {
             val intent = Intent.createChooser(Intent(Intent.ACTION_SEND).apply {
@@ -88,11 +92,11 @@ class SiteZipFragment : BaseFragment() {
         })
         mainViewModel.isFavoriteMode.observe(viewLifecycleOwner, Observer {
             viewModel.setFavoriteMode(it)
-            viewModel.getDisplaySiteType()
+            viewModel.getDisplaySiteZip()
         })
         mainViewModel.searchText.observe(viewLifecycleOwner, Observer {
             viewModel.setSearchText(it)
-            viewModel.getDisplaySiteType()
+            viewModel.getDisplaySiteZip()
         })
         observeBaseViewModelEvent(viewModel)
     }

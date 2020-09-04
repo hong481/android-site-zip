@@ -27,6 +27,12 @@ data class Site(
     var sitePrimaryKey: String = "",
 
     /**
+     * 사이트 타입명.
+     */
+    @ColumnInfo(name = "site_type_name")
+    var siteTypeName: String = "",
+
+    /**
      * 사이트 명.
      */
     @ColumnInfo(name = "title")

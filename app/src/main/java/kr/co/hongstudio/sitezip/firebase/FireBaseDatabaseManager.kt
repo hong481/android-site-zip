@@ -3,15 +3,17 @@ package kr.co.hongstudio.sitezip.firebase
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kr.co.hongstudio.sitezip.data.BuildProperty
 import kr.co.hongstudio.sitezip.util.extension.postValue
 
-class FireBaseDatabaseManager {
+class FireBaseDatabaseManager(
+
+    buildProperty: BuildProperty
+
+) {
 
     companion object {
         const val TAG: String = "FireBaseDatabaseManager"
@@ -24,11 +26,15 @@ class FireBaseDatabaseManager {
 
     val database = Firebase.database
 
+    val rootPath = "$SITES_PATH/${buildProperty.products}"
+
+    val rootRef = database.getReference(rootPath)
+
     init {
         database.getReference(CONNECT_REF_PATH).apply {
             addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                   val connected  = snapshot.getValue(Boolean::class.java)
+                    val connected = snapshot.getValue(Boolean::class.java)
                     connected?.let {
                         if (connected) {
                             Log.d(TAG, "connected")
@@ -73,6 +79,13 @@ class FireBaseDatabaseManager {
         val updateMap = HashMap<String, Any>()
         updateMap[uniqueKey] = data
         database.getReference(refPath).updateChildren(updateMap)
+    }
+
+    /**
+     * 루트 ref 리스너 제거.
+     */
+    fun removeRootRefListener(listener: ChildEventListener) {
+        rootRef.removeEventListener(listener)
     }
 
 }

@@ -36,7 +36,9 @@ class SiteZipsAdapter(
         } ?: return
 
         val fragment: SiteZipFragment =
-            (this.fragmentActivity.supportFragmentManager.findFragmentByTag("f" + holder.itemId) as? SiteZipFragment) ?: return
+            (this.fragmentActivity.supportFragmentManager.findFragmentByTag(
+                "f" + holder.itemId
+            ) as? SiteZipFragment) ?: return
 
         fragment.viewModel.onBind(siteZips[adapterPosition])
     }

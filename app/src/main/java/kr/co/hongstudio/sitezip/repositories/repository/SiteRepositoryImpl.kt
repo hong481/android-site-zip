@@ -20,8 +20,10 @@ class SiteRepositoryImpl(
         const val TAG: String = "SiteRepositoryImpl"
     }
 
-    override fun getAllSites(): Flowable<List<Site>> =
-        siteDao.getAllSites().toV3().distinctUntilChanged()
+    override fun getAllSites(
+        siteTypeName: String
+    ): Flowable<List<Site>> =
+        siteDao.getAllSites(siteTypeName).toV3().distinctUntilChanged()
 
     override fun insert(
         site: Site

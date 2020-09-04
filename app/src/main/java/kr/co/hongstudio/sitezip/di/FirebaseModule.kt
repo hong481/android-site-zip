@@ -9,7 +9,9 @@ object FirebaseModule {
     @JvmStatic
     val INSTANCE: Module = module {
         single {
-            FireBaseDatabaseManager()
+            FireBaseDatabaseManager(
+                get()
+            )
         }
     }
 }

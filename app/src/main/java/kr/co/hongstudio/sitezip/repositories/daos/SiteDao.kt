@@ -10,10 +10,10 @@ import kr.co.hongstudio.sitezip.data.local.entity.Site
 interface SiteDao {
 
     /**
-     * 데이터를 반환.
+     * 사이트 유형별 데이터를 반환.
      */
-    @Query("SELECT * FROM Site")
-    fun getAllSites(): Flowable<List<Site>>
+    @Query("SELECT * FROM Site WHERE site_type_name = :siteTypeName")
+    fun getAllSites(siteTypeName: String): Flowable<List<Site>>
 
     /**
      * 사이트 정보 삽입.

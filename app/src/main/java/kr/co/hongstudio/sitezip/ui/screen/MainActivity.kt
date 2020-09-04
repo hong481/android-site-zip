@@ -83,7 +83,7 @@ class MainActivity : BaseActivity() {
         viewModel.isEnableContents.observe(this, Observer {
             Log.d(TAG, "isEnableContents : $it")
             if (it) {
-                viewModel.getSiteTypes()
+                viewModel.getSiteZips()
             }
         })
         // 라이브데이터 옵저버.
@@ -144,6 +144,7 @@ class MainActivity : BaseActivity() {
         )
         binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.viewPager.isUserInputEnabled = false
+        binding.viewPager.offscreenPageLimit = 10
 
         TabLayoutMediator(
             binding.tabLayout,

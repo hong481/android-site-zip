@@ -12,18 +12,19 @@
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:contentDescription="@string/content_description"
             android:background="@drawable/shape_circle"
+            android:backgroundTint="@color/colorPrimary"
+            android:contentDescription="@string/content_description"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:indeterminateTint="@color/colorPrimary"
+            android:indeterminateTint="@color/colorAccent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
