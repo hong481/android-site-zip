@@ -101,7 +101,9 @@ class SiteZipViewModel(
                 siteTypeName = _siteZip.value?.typeName ?: "",
                 onComplete = {
                     for (siteDataSnapshot: DataSnapshot in dataSnapshot.children) {
-                        if (siteDataSnapshot.key == SiteZip.INDEX) {
+                        if (!(siteDataSnapshot.key ?: "").contains(SiteZip.SITE)
+                            || siteDataSnapshot.key == null
+                        ) {
                             continue
                         }
                         val site: Site? = siteDataSnapshot.getValue(Site::class.java).apply {

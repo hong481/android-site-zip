@@ -8,6 +8,8 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kr.co.hongstudio.sitezip.data.BuildProperty
 import kr.co.hongstudio.sitezip.util.extension.postValue
+import java.util.*
+import kotlin.collections.HashMap
 
 class FireBaseDatabaseManager(
 
@@ -26,7 +28,7 @@ class FireBaseDatabaseManager(
 
     val database = Firebase.database
 
-    val rootPath = "$SITES_PATH/${buildProperty.products}"
+    val rootPath = "$SITES_PATH/${buildProperty.products}-${Locale.getDefault().language}"
 
     val rootRef = database.getReference(rootPath)
 

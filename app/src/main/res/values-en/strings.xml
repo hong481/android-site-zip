@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SiteZip</string>
+    <string name="app_eng_name">SiteZip</string>
+    <string name="content_description">ContentDescription</string>
+    <string name="site_list">Site list</string>
+    <string name="search_hint">Search for a site name or link</string>
+    <string name="copy_to_link_message">Copied the link</string>
+    <string name="not_found_site_message">There is no site information!</string>
+    <string name="network_disconnect_message">Network connection required!</string>
+    <string name="site_link_share">" Share a link to your site"</string>
+    <string name="google_admob_interstitial_id_test">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="developer_sponsor">Sponsorship</string>
+    <string name="remove_admob">"Remove ads"</string>
+    <string name="close">Close</string>
+    <string name="setting">Setting</string>
+    <string name="permission_denied_message">Please allow access in Settings> Privileges</string>
+    <string name="google_admob_app_id">ca-app-pub-7819212431082590~3976385446</string>
+    <string name="google_admob_banner_id">ca-app-pub-7819212431082590/9915764372</string>
+    <string name="google_admob_interstitial_id">ca-app-pub-7819212431082590/8783781575</string>
+    <string name="google_admob_app_id_test">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="google_admob_banner_id_test">ca-app-pub-3940256099942544/6300978111</string>
+</resources>

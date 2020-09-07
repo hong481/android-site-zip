@@ -4,18 +4,13 @@
 
     <string name="content_description">ContentDescription</string>
 
-    <string name="tab_one">탭 1</string>
-    <string name="tab_two">탭 2</string>
-    <string name="tab_third">탭 3</string>
+    <string name="site_list">사이트 목록</string>
 
-    <string name="site_info">사이트 정보</string>
-
-    <string name="search_hint">사이트 명 및 주소를 검색하세요</string>
-    <string name="favorites">즐겨찾기</string>
+    <string name="search_hint">사이트명 또는 링크를 검색하세요</string>
 
     <string name="copy_to_link_message">링크를 복사했어요</string>
     <string name="not_found_site_message">사이트 정보가 없어요!</string>
-    <string name="site_link_share">사이트 주소 공유하기</string>
+    <string name="site_link_share">사이트 링크 공유하기</string>
 
     <string name="network_disconnect_message">네트워크 연결이 필요해요!</string>
 

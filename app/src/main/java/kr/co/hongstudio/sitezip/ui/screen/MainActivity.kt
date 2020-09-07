@@ -71,6 +71,11 @@ class MainActivity : BaseActivity() {
         initViewModel()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.adViewBanner.destroy()
+    }
+
     private fun initBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
@@ -150,7 +155,8 @@ class MainActivity : BaseActivity() {
             binding.tabLayout,
             binding.viewPager
         ) { tab, position ->
-            tab.text = (binding.viewPager.adapter as SiteZipsAdapter).siteZips[position].typeName
+            val adapter = (binding.viewPager.adapter as SiteZipsAdapter)
+            tab.text = adapter.siteZips[position].typeName
         }.attach()
     }
 
