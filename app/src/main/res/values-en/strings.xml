@@ -4,6 +4,7 @@
     <string name="app_eng_name">SiteZip</string>
     <string name="content_description">ContentDescription</string>
     <string name="site_list">Site list</string>
+    <string name="all_tab">All</string>
     <string name="search_hint">Search for a site name or link</string>
     <string name="copy_to_link_message">Copied the link</string>
     <string name="not_found_site_message">There is no site information!</string>

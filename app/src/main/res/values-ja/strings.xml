@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SiteZip</string>
+    <string name="app_eng_name">SiteZip</string>
+    <string name="content_description">ContentDescription</string>
+    <string name="site_list">サイトのリスト</string>
+    <string name="all_tab">全体</string>
+    <string name="copy_to_link_message">リンクをコピーしました</string>
+    <string name="search_hint">サイト名またはリンクを検索してください</string>
+    <string name="not_found_site_message">サイト情報がありません！</string>
+    <string name="site_link_share">サイトへのリンクを共有する</string>
+    <string name="network_disconnect_message">ネットワーク接続が必要です！</string>
+    <string name="remove_admob">広告を削除</string>
+    <string name="close">閉じる</string>
+    <string name="developer_sponsor">開発者後援</string>
+    <string name="setting">設定</string>
+    <string name="permission_denied_message">[設定]> [権限]でアクセスを許可してください</string>
+    <string name="google_admob_app_id">ca-app-pub-7819212431082590~3976385446</string>
+    <string name="google_admob_banner_id">ca-app-pub-7819212431082590/9915764372</string>
+    <string name="google_admob_interstitial_id">ca-app-pub-7819212431082590/8783781575</string>
+    <string name="google_admob_app_id_test">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="google_admob_banner_id_test">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="google_admob_interstitial_id_test">ca-app-pub-3940256099942544/1033173712</string>
+</resources>

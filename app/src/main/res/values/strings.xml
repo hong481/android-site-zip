@@ -6,6 +6,8 @@
 
     <string name="site_list">사이트 목록</string>
 
+    <string name="all_tab">전체</string>
+
     <string name="search_hint">사이트명 또는 링크를 검색하세요</string>
 
     <string name="copy_to_link_message">링크를 복사했어요</string>

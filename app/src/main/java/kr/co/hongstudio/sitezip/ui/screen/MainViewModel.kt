@@ -14,7 +14,6 @@ import kr.co.hongstudio.sitezip.firebase.FireBaseDatabaseManager
 import kr.co.hongstudio.sitezip.observer.NetworkObserver
 import kr.co.hongstudio.sitezip.util.extension.map
 import kr.co.hongstudio.sitezip.util.extension.notify
-import java.util.*
 
 class MainViewModel(
 
@@ -103,7 +102,6 @@ class MainViewModel(
      */
     private val _isShowNetworkErrorLayout: MutableLiveData<Boolean> = MutableLiveData()
     val isShowNetworkErrorLayout: LiveData<Boolean> = _isShowNetworkErrorLayout
-
 
     /**
      * 파이어베이스 루트 ref 리스너.
