@@ -18,6 +18,12 @@ data class SiteZip (
      */
     var index: Int = 0,
 
+
+    /**
+     * 탭 아이콘 url.
+     */
+    var tabIconUrl: String = "",
+
     /**
      * 사이트 리스트.
      */

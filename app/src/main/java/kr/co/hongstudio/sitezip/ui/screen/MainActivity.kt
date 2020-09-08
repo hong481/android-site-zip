@@ -2,14 +2,23 @@ package kr.co.hongstudio.sitezip.ui.screen
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.util.Log
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.android.gms.ads.AdRequest
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.storage.FirebaseStorage
 import kr.co.hongstudio.sitezip.R
 import kr.co.hongstudio.sitezip.base.activity.BaseActivity
 import kr.co.hongstudio.sitezip.base.livedata.EventObserver
@@ -17,6 +26,7 @@ import kr.co.hongstudio.sitezip.billing.BillingManager
 import kr.co.hongstudio.sitezip.data.BuildProperty
 import kr.co.hongstudio.sitezip.data.local.preference.BillingPreference
 import kr.co.hongstudio.sitezip.databinding.ActivityMainBinding
+import kr.co.hongstudio.sitezip.util.DisplayUtil
 import kr.co.hongstudio.sitezip.util.KeyboardUtil
 import kr.co.hongstudio.sitezip.util.LogUtil
 import kr.co.hongstudio.sitezip.util.extension.observeBaseViewModelEvent
@@ -60,6 +70,8 @@ class MainActivity : BaseActivity() {
 
     private val billingPref: BillingPreference by inject()
     private val billingManager: BillingManager by inject()
+
+    private val displayUtil: DisplayUtil by inject()
 
     private lateinit var keyboardUtil: KeyboardUtil
 
@@ -150,7 +162,7 @@ class MainActivity : BaseActivity() {
      */
     private fun initViewPager() {
         binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.viewPager.offscreenPageLimit = 10
+        binding.viewPager.offscreenPageLimit = 99
         binding.viewPager.adapter = SiteZipsAdapter(
             fragmentActivity = this
         )
@@ -160,6 +172,26 @@ class MainActivity : BaseActivity() {
             binding.viewPager
         ) { tab, position ->
             val adapter = (binding.viewPager.adapter as SiteZipsAdapter)
+            val tabIconUrl = adapter.siteZips[position].tabIconUrl
+            if (tabIconUrl.isNotEmpty()) {
+                Glide.with(this)
+                    .asBitmap()
+                    .load(
+                        FirebaseStorage.getInstance()
+                            .getReference(adapter.siteZips[position].tabIconUrl)
+                    )
+                    .into(object : CustomTarget<Bitmap>() {
+                        override fun onResourceReady(
+                            bitmap: Bitmap,
+                            transition: Transition<in Bitmap>?
+                        ) {
+                            tab.icon = BitmapDrawable(resources, bitmap)
+                        }
+
+                        override fun onLoadCleared(placeholder: Drawable?) {}
+                    })
+            }
+            (tab.view.getChildAt(1) as TextView).textSize = 10f
             tab.text = adapter.siteZips[position].typeName
         }.attach()
     }

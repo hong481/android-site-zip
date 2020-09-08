@@ -317,8 +317,10 @@
                     android:background="@color/colorPrimary"
                     android:visibility="@{viewModel.siteZips.size() > 0 == true ? View.VISIBLE : View.GONE}"
                     app:layout_constraintTop_toBottomOf="@id/layout_more_menu"
+                    app:tabIconTint="@color/tab_color_selector"
+                    app:tabIndicatorColor="@color/color_ffc107"
                     app:tabMode="auto"
-                    app:tabSelectedTextColor="@color/colorAccent"
+                    app:tabSelectedTextColor="@color/color_ffc107"
                     app:tabTextColor="@color/color_ffffff" />
             </com.google.android.material.appbar.AppBarLayout>
 

@@ -49,5 +49,11 @@ object UtilModule {
                 get()
             )
         }
+
+        single {
+            DisplayUtil(
+                get()
+            )
+        }
     }
 }
