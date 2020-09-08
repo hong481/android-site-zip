@@ -27,7 +27,7 @@ class MainViewModel(
         const val TAG: String = "MainViewModel"
     }
 
-    private val _siteZipList: MutableList<SiteZip> = mutableListOf()
+    private val siteZipList: MutableList<SiteZip> = mutableListOf()
     private val _siteZips: MutableLiveData<MutableList<SiteZip>> = MutableLiveData()
     val siteZips: LiveData<MutableList<SiteZip>> = _siteZips
 
@@ -110,7 +110,7 @@ class MainViewModel(
 
         override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
             Log.d(TAG, "firebaseRootRefListener. onChildAdded. ${snapshot.key ?: ""}}")
-            _siteZipList.let { list ->
+            siteZipList.let { list ->
                 if (list.any { it.typeName == snapshot.key ?: "" }) {
                     return
                 }
@@ -121,16 +121,24 @@ class MainViewModel(
                         ?: 0
                 } ?: return)
             }
-            _siteZips.value = _siteZipList
+            _siteZips.value = siteZipList.apply {
+                sortBy {
+                    it.index
+                }
+            }
         }
 
         override fun onChildRemoved(snapshot: DataSnapshot) {
             Log.d(TAG, "firebaseRootRefListener. onChildRemoved. ${snapshot.key ?: ""}}")
-            val removeIndex = _siteZipList.indexOfFirst {
+            val removeIndex = siteZipList.indexOfFirst {
                 it.typeName == snapshot.key
             }
-            _siteZipList.removeAt(removeIndex)
-            _siteZips.value = _siteZipList
+            siteZipList.removeAt(removeIndex)
+            _siteZips.value = siteZipList.apply {
+                sortBy {
+                    it.index
+                }
+            }
         }
 
         override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
