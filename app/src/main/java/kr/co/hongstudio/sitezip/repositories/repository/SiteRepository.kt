@@ -6,7 +6,7 @@ import kr.co.hongstudio.sitezip.data.local.entity.Site
 
 interface SiteRepository {
 
-    fun getAllSites(siteTypeName : String): Flowable<List<Site>>
+    fun checkFavoriteSite(primaryKey : String): Flowable<Boolean>
 
     fun insert(site: Site): Disposable
 

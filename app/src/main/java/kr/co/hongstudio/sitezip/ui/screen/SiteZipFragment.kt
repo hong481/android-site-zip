@@ -90,6 +90,9 @@ class SiteZipFragment : BaseFragment() {
             }, resourceProvider.getString(R.string.site_link_share))
             startActivity(intent)
         })
+        viewModel.scrollToPositionTop.observe(viewLifecycleOwner, EventObserver {
+            (binding.rvSites.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(0, 0)
+        })
         mainViewModel.isFavoriteMode.observe(viewLifecycleOwner, Observer {
             viewModel.setFavoriteMode(it)
             viewModel.getDisplaySiteZip()

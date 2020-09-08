@@ -10,6 +10,7 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kr.co.hongstudio.sitezip.R
 import kr.co.hongstudio.sitezip.admob.AdMobManager
+import kr.co.hongstudio.sitezip.base.livedata.EmptyEvent
 import kr.co.hongstudio.sitezip.base.livedata.Event
 import kr.co.hongstudio.sitezip.base.viewmodel.BaseViewModel
 import kr.co.hongstudio.sitezip.data.local.entity.Site
@@ -49,6 +50,9 @@ class SiteZipViewModel(
     private val _intentUrlEvent: MutableLiveData<Event<String>> = MutableLiveData()
     val intentUrlEvent: LiveData<Event<String>> = _intentUrlEvent
 
+
+    private val tempSiteZip: SiteZip = SiteZip()
+
     /**
      * 사이트 유형.
      */
@@ -84,6 +88,11 @@ class SiteZipViewModel(
      */
     private val _searchText: MutableLiveData<String> = MutableLiveData()
 
+    /**
+     * 스크롤 뷰를 최상단으로 이동.
+     */
+    private val _scrollToPositionTop: MutableLiveData<EmptyEvent> = MutableLiveData()
+    val scrollToPositionTop: LiveData<EmptyEvent> = _scrollToPositionTop
 
     private var typeRef: DatabaseReference? =
         fireBaseDatabaseManager.database.getReference(
@@ -91,60 +100,89 @@ class SiteZipViewModel(
                     "/${_siteZip.value?.typeName ?: ""}"
         )
 
-    private val firebaseTypeRefInitListener: ValueEventListener = object : ValueEventListener {
-        override fun onDataChange(dataSnapshot: DataSnapshot) {
-            Log.d(TAG, "_siteZip.value?.typeName : ${_siteZip.value?.typeName}")
-            val tempSiteZip: SiteZip = _siteZip.value?.copy() ?: return
-            tempSiteZip.run { this.siteList.clear() }
-            showProgress(true)
-            getLocalDatabaseSite(
-                siteTypeName = _siteZip.value?.typeName ?: "",
-                onComplete = {
-                    for (siteDataSnapshot: DataSnapshot in dataSnapshot.children) {
-                        if (!(siteDataSnapshot.key ?: "").contains(SiteZip.SITE)
-                            || siteDataSnapshot.key == null
-                        ) {
-                            continue
-                        }
-                        val site: Site? = siteDataSnapshot.getValue(Site::class.java).apply {
-                            this?.siteTypeName = _siteZip.value?.typeName ?: ""
-                            this?.isUseHttpIcon =
-                                siteDataSnapshot.child(Site.IS_USE_HTTP_ICON_VAR_NAME)
-                                    .getValue(Boolean::class.java)
-                                    ?: true
-                            this?.sitePrimaryKey =
-                                "${_siteZip.value?.typeName ?: ""}_${siteDataSnapshot.key}"
+    private val firebaseTypeRefListener: ChildEventListener = object : ChildEventListener {
 
+        override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+            Log.d(TAG, "firebaseTypeRefInitListener. onChildMoved. ${snapshot.key}")
+        }
+
+        override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+            Log.d(TAG, "firebaseTypeRefInitListener. onChildChanged. ${snapshot.key}")
+            if (!(snapshot.key ?: "").contains(SiteZip.SITE) || snapshot.key == null) {
+                return
+            }
+            val primaryKey = "${siteZip.value?.typeName ?: ""}_${snapshot.key}"
+            val changeIndex = tempSiteZip.siteList.indexOfFirst {
+                it.sitePrimaryKey == primaryKey
+            }
+            tempSiteZip.siteList[changeIndex] = snapshot.getValue(Site::class.java).apply {
+                this?.siteTypeName = siteZip.value?.typeName ?: ""
+                this?.isUseHttpIcon =
+                    snapshot.child(Site.IS_USE_HTTP_ICON_VAR_NAME).getValue(Boolean::class.java)
+                        ?: true
+                this?.sitePrimaryKey = primaryKey
+                val url: String = urlParserUtil.extractUrlFromText(this?.url ?: "")
+                if (url.isNotEmpty()) {
+                    urlParserUtil.getMetadataFromUrl(url)?.also { metaData ->
+                        if (metaData.title.isNotEmpty()) {
+                            this?.title = metaData.title
+                        }
+                        if (metaData.description.isNotEmpty()) {
+                            this?.description = metaData.description
+                        }
+                        if (metaData.imageUrl.isNotEmpty() && this?.isUseHttpIcon == true) {
+                            this.iconUrl = metaData.imageUrl
+                        }
+                    }
+                }
+            } ?: return
+            _siteZip.value = tempSiteZip.apply {
+                siteList.sortBy {
+                    it.id
+                }
+            }
+        }
+
+        override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+            Log.d(TAG, "firebaseTypeRefInitListener. onChildAdded. ${snapshot.key}")
+            if (!(snapshot.key ?: "").contains(SiteZip.SITE) || snapshot.key == null) {
+                return
+            }
+            val primaryKey = "${siteZip.value?.typeName ?: ""}_${snapshot.key}"
+            showProgress(true)
+            checkLocalFavoriteSite(
+                primaryKey = primaryKey,
+                onComplete = { isFavorite ->
+                    tempSiteZip.siteList.let { list ->
+                        list.add(snapshot.getValue(Site::class.java).apply {
+                            this?.siteTypeName = _siteZip.value?.typeName ?: ""
+                            this?.isUseHttpIcon = snapshot.child(Site.IS_USE_HTTP_ICON_VAR_NAME)
+                                .getValue(Boolean::class.java) ?: true
+                            this?.sitePrimaryKey = primaryKey
                             val url: String = urlParserUtil.extractUrlFromText(this?.url ?: "")
                             if (url.isNotEmpty()) {
                                 urlParserUtil.getMetadataFromUrl(url)?.also { metaData ->
+                                    this?.isFavorite = isFavorite
                                     if (metaData.title.isNotEmpty()) {
                                         this?.title = metaData.title
-                                    }
-                                    if (metaData.imageUrl.isNotEmpty()) {
-                                        if (this?.isUseHttpIcon == true) {
-                                            this.iconUrl = metaData.imageUrl
-                                        }
                                     }
                                     if (metaData.description.isNotEmpty()) {
                                         this?.description = metaData.description
                                     }
+                                    if (metaData.imageUrl.isNotEmpty() && this?.isUseHttpIcon == true) {
+                                        this.iconUrl = metaData.imageUrl
+                                    }
                                 }
                             }
-                        }
-                        for (chooseFavoriteSite: Site in it) {
-                            if (chooseFavoriteSite.sitePrimaryKey == site?.sitePrimaryKey) {
-                                site.isFavorite = true
-                                break
-                            }
-                        }
-                        tempSiteZip.siteList.add(site ?: continue)
+                        } ?: return@checkLocalFavoriteSite)
                     }
-                    Log.d(TAG, "getSite. onDataChange. ${tempSiteZip.siteList.size}")
-                    if (tempSiteZip.siteList.size <= 0) {
-                        return@getLocalDatabaseSite
+                    _siteZip.postValue = tempSiteZip.apply {
+                        typeName = _siteZip.value?.typeName ?: ""
+                        siteList.sortBy {
+                            it.id
+                        }
                     }
-                    _siteZip.postValue = tempSiteZip
+                    _scrollToPositionTop.postNotify()
                     dismissProgress(true)
                 },
                 onError = {
@@ -152,6 +190,20 @@ class SiteZipViewModel(
                     dismissProgress(true)
                 }
             )
+        }
+
+        override fun onChildRemoved(snapshot: DataSnapshot) {
+            Log.d(TAG, "firebaseTypeRefListener. onChildRemoved. ${snapshot.key}")
+            val primaryKey = "${siteZip.value?.typeName ?: ""}_${snapshot.key}"
+            val removeIndex = tempSiteZip.siteList.indexOfFirst {
+                it.sitePrimaryKey == primaryKey
+            }
+            tempSiteZip.siteList.removeAt(removeIndex)
+            _siteZip.value = tempSiteZip.apply {
+                siteList.sortBy {
+                    it.id
+                }
+            }
         }
 
         override fun onCancelled(databaseError: DatabaseError) {
@@ -168,7 +220,10 @@ class SiteZipViewModel(
         val tempSiteZip: SiteZip = (_siteZip.value?.copy() ?: return).apply {
             siteList = if (_isFavoriteMode.value == true) {
                 this.siteList.filter {
-                    it.isFavorite && (it.title.contains(_searchText.value ?: "", ignoreCase = true)
+                    it.isFavorite && (it.title.contains(
+                        _searchText.value ?: "",
+                        ignoreCase = true
+                    )
                             || it.url.contains(_searchText.value ?: "", ignoreCase = true))
                 }.toMutableList()
             } else {
@@ -188,7 +243,7 @@ class SiteZipViewModel(
     /**
      * 사이트 정보 가져오기.
      */
-    fun getSite() = typeRef?.addValueEventListener(firebaseTypeRefInitListener)
+    fun getSite() = typeRef?.addChildEventListener(firebaseTypeRefListener)
 
 
     fun setFavoriteMode(isFavorite: Boolean) {
@@ -237,20 +292,20 @@ class SiteZipViewModel(
     }
 
     /**
-     * 로컬 데이베이스내 사이트 정보 가져오기.
+     * 로컬 데이베이스내 즐겨찾기 사이트인지 조회.
      */
-    private fun getLocalDatabaseSite(
-        siteTypeName: String,
-        onComplete: ((allSite: List<Site>) -> Unit),
+    private fun checkLocalFavoriteSite(
+        primaryKey: String,
+        onComplete: ((isFavorite: Boolean) -> Unit),
         onError: (e: Throwable) -> Unit
     ) {
-        compositeDisposable += siteRepository.getAllSites(siteTypeName)
+        compositeDisposable += siteRepository.checkFavoriteSite(primaryKey)
             .firstOrError()
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .subscribeBy(
-                onSuccess = { allSites ->
-                    onComplete(allSites)
+                onSuccess = { isFavorite ->
+                    onComplete(isFavorite)
                 },
                 onError = {
                     onError(it)
@@ -262,7 +317,7 @@ class SiteZipViewModel(
      * 파이어베이스 typeRef 리스너 제거.
      */
     private fun removeFirebaseListener() {
-        typeRef?.removeEventListener(firebaseTypeRefInitListener)
+        typeRef?.removeEventListener(firebaseTypeRefListener)
     }
 
     fun onBind(item: SiteZip) {
@@ -273,7 +328,7 @@ class SiteZipViewModel(
             fireBaseDatabaseManager.rootPath +
                     "/${item.typeName}"
         )
-        typeRef?.addValueEventListener(firebaseTypeRefInitListener)
+        typeRef?.addChildEventListener(firebaseTypeRefListener)
     }
 
     override fun onCleared() {

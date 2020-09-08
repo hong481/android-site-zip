@@ -10,10 +10,10 @@ import kr.co.hongstudio.sitezip.data.local.entity.Site
 interface SiteDao {
 
     /**
-     * 사이트 유형별 데이터를 반환.
+     * 즐겨찾기 저장 여부 조회.
      */
-    @Query("SELECT * FROM Site WHERE site_type_name = :siteTypeName")
-    fun getAllSites(siteTypeName: String): Flowable<List<Site>>
+    @Query("SELECT EXISTS (SELECT * FROM Site WHERE site_primary_key = :primaryKey)")
+    fun checkFavoriteSite(primaryKey: String): Flowable<Boolean>
 
     /**
      * 사이트 정보 삽입.
