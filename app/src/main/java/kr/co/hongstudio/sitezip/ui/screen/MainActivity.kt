@@ -51,7 +51,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private val binding: ActivityMainBinding by lazy {
+    val binding: ActivityMainBinding by lazy {
         DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
     }
 
@@ -120,6 +120,10 @@ class MainActivity : BaseActivity() {
             LogUtil.d(TAG, "viewModel.searchText.observe.")
             viewModel.searchSites()
         })
+        viewModel.setViewPagerUserInputEnabled.observe(this, Observer {
+            binding.viewPager.isUserInputEnabled = it
+        })
+
         viewModel.playVoiceSearch.observe(this, EventObserver {
             OuterActivities.intentVoiceSearch(this) {
                 if (it.data != null) {
@@ -134,6 +138,7 @@ class MainActivity : BaseActivity() {
         viewModel.billingRemoveAds.observe(this, EventObserver {
             billingManager.processToPurchase()
         })
+
         // 뷰모델 기본 옵저버.
         observeBaseViewModelEvent(viewModel)
         // 뷰 기본 세팅
@@ -144,12 +149,11 @@ class MainActivity : BaseActivity() {
      * 뷰 페이저 초기화.
      */
     private fun initViewPager() {
+        binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        binding.viewPager.offscreenPageLimit = 10
         binding.viewPager.adapter = SiteZipsAdapter(
             fragmentActivity = this
         )
-        binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.viewPager.isUserInputEnabled = false
-        binding.viewPager.offscreenPageLimit = 10
 
         TabLayoutMediator(
             binding.tabLayout,

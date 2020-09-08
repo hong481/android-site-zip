@@ -7,9 +7,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kr.co.hongstudio.sitezip.R
 import kr.co.hongstudio.sitezip.base.fragment.BaseFragment
 import kr.co.hongstudio.sitezip.base.livedata.EventObserver
@@ -65,6 +67,22 @@ class SiteZipFragment : BaseFragment() {
     private fun initBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        binding.rvSites.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                when (newState) {
+                    AbsListView.OnScrollListener.SCROLL_STATE_FLING -> {
+                        mainViewModel.setViewPagerUserInputEnabled(false)
+                    }
+                    AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL -> {
+                        mainViewModel.setViewPagerUserInputEnabled(false)
+                    }
+                    AbsListView.OnScrollListener.SCROLL_STATE_IDLE -> {
+                        mainViewModel.setViewPagerUserInputEnabled(true)
+                    }
+                    else -> Unit
+                }
+            }
+        })
     }
 
     private fun initViewModel() {

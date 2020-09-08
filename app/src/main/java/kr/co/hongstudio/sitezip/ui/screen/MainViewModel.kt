@@ -80,6 +80,12 @@ class MainViewModel(
     val billingRemoveAds: LiveData<EmptyEvent> = _billingRemoveAds
 
     /**
+     * 뷰페이저 사용자 제스처 사용 여부.
+     */
+    private val _setViewPagerUserInputEnabled : MutableLiveData<Boolean> = MutableLiveData()
+    val setViewPagerUserInputEnabled: LiveData<Boolean> = _setViewPagerUserInputEnabled
+
+    /**
      * 콘텐츠 활성화 여부.
      */
     val isEnableContents: LiveData<Boolean> =
@@ -251,6 +257,13 @@ class MainViewModel(
      */
     private fun removeRootRefListener() {
         fireBaseDatabaseManager.removeRootRefListener(firebaseRootRefListener)
+    }
+
+    /**
+     * 뷰페이저 사용자 제스처 사용 여부.
+     */
+    fun setViewPagerUserInputEnabled(isEnable: Boolean) {
+        _setViewPagerUserInputEnabled.value = isEnable
     }
 
     override fun onCleared() {
