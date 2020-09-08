@@ -125,6 +125,7 @@ class MainActivity : BaseActivity() {
                 binding.etSearchText.requestFocus()
                 keyboardUtil.visibleKeyboard(true, binding.etSearchText)
             } else {
+                binding.etSearchText.setText("")
                 keyboardUtil.visibleKeyboard(false, binding.etSearchText)
             }
         })
