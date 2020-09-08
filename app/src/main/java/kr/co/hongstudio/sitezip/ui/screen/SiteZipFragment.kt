@@ -98,7 +98,7 @@ class SiteZipFragment : BaseFragment() {
                 e.printStackTrace()
             }
         })
-        viewModel.siteZip.observe(viewLifecycleOwner, Observer {
+        viewModel.searchSiteZip.observe(viewLifecycleOwner, Observer {
             viewModel.getDisplaySiteZip()
         })
         viewModel.shareLink.observe(viewLifecycleOwner, EventObserver {

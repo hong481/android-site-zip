@@ -139,6 +139,9 @@ class MainViewModel(
             val removeIndex = siteZipList.indexOfFirst {
                 it.typeName == snapshot.key
             }
+            if(removeIndex < 0) {
+                return
+            }
             siteZipList.removeAt(removeIndex)
             _siteZips.value = siteZipList.apply {
                 sortBy {

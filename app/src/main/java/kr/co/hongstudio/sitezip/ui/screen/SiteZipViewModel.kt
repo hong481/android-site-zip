@@ -51,14 +51,10 @@ class SiteZipViewModel(
     val intentUrlEvent: LiveData<Event<String>> = _intentUrlEvent
 
 
-    private val tempSiteZip: SiteZip = SiteZip()
-
     /**
      * 사이트 유형.
      */
-    private val _siteZip: MutableLiveData<SiteZip> =
-        savedStateHandle.getLiveData(Serializable.SITE_ZIP)
-    val siteZip: LiveData<SiteZip> = _siteZip
+    var siteZip: SiteZip = savedStateHandle.get(Serializable.SITE_ZIP) ?: SiteZip()
 
     /**
      * 사이트 유형.
@@ -97,7 +93,7 @@ class SiteZipViewModel(
     private var typeRef: DatabaseReference? =
         fireBaseDatabaseManager.database.getReference(
             fireBaseDatabaseManager.rootPath +
-                    "/${_siteZip.value?.typeName ?: ""}"
+                    "/${siteZip.typeName}"
         )
 
     private val firebaseTypeRefListener: ChildEventListener = object : ChildEventListener {
@@ -111,12 +107,15 @@ class SiteZipViewModel(
             if (!(snapshot.key ?: "").contains(SiteZip.SITE) || snapshot.key == null) {
                 return
             }
-            val primaryKey = "${siteZip.value?.typeName ?: ""}_${snapshot.key}"
-            val changeIndex = tempSiteZip.siteList.indexOfFirst {
+            val primaryKey = "${siteZip.typeName}_${snapshot.key}"
+            val changeIndex = siteZip.siteList.indexOfFirst {
                 it.sitePrimaryKey == primaryKey
             }
-            tempSiteZip.siteList[changeIndex] = snapshot.getValue(Site::class.java).apply {
-                this?.siteTypeName = siteZip.value?.typeName ?: ""
+            if (changeIndex < 0) {
+                return
+            }
+            siteZip.siteList[changeIndex] = snapshot.getValue(Site::class.java).apply {
+                this?.siteTypeName = siteZip.typeName
                 this?.isUseHttpIcon =
                     snapshot.child(Site.IS_USE_HTTP_ICON_VAR_NAME).getValue(Boolean::class.java)
                         ?: true
@@ -136,7 +135,7 @@ class SiteZipViewModel(
                     }
                 }
             } ?: return
-            _siteZip.value = tempSiteZip.apply {
+            _searchSiteZip.postValue = siteZip.apply {
                 siteList.sortBy {
                     it.id
                 }
@@ -148,14 +147,14 @@ class SiteZipViewModel(
             if (!(snapshot.key ?: "").contains(SiteZip.SITE) || snapshot.key == null) {
                 return
             }
-            val primaryKey = "${siteZip.value?.typeName ?: ""}_${snapshot.key}"
+            val primaryKey = "${siteZip.typeName}_${snapshot.key}"
             showProgress(true)
             checkLocalFavoriteSite(
                 primaryKey = primaryKey,
                 onComplete = { isFavorite ->
-                    tempSiteZip.siteList.let { list ->
+                    siteZip.siteList.let { list ->
                         list.add(snapshot.getValue(Site::class.java).apply {
-                            this?.siteTypeName = _siteZip.value?.typeName ?: ""
+                            this?.siteTypeName = siteZip.typeName
                             this?.isUseHttpIcon = snapshot.child(Site.IS_USE_HTTP_ICON_VAR_NAME)
                                 .getValue(Boolean::class.java) ?: true
                             this?.sitePrimaryKey = primaryKey
@@ -176,8 +175,7 @@ class SiteZipViewModel(
                             }
                         } ?: return@checkLocalFavoriteSite)
                     }
-                    _siteZip.postValue = tempSiteZip.apply {
-                        typeName = _siteZip.value?.typeName ?: ""
+                    _searchSiteZip.postValue = siteZip.apply {
                         siteList.sortBy {
                             it.id
                         }
@@ -194,12 +192,15 @@ class SiteZipViewModel(
 
         override fun onChildRemoved(snapshot: DataSnapshot) {
             Log.d(TAG, "firebaseTypeRefListener. onChildRemoved. ${snapshot.key}")
-            val primaryKey = "${siteZip.value?.typeName ?: ""}_${snapshot.key}"
-            val removeIndex = tempSiteZip.siteList.indexOfFirst {
+            val primaryKey = "${siteZip.typeName}_${snapshot.key}"
+            val removeIndex = siteZip.siteList.indexOfFirst {
                 it.sitePrimaryKey == primaryKey
             }
-            tempSiteZip.siteList.removeAt(removeIndex)
-            _siteZip.value = tempSiteZip.apply {
+            if (removeIndex < 0) {
+                return
+            }
+            siteZip.siteList.removeAt(removeIndex)
+            _searchSiteZip.postValue = siteZip.apply {
                 siteList.sortBy {
                     it.id
                 }
@@ -217,7 +218,7 @@ class SiteZipViewModel(
     }
 
     fun getDisplaySiteZip() {
-        val tempSiteZip: SiteZip = (_siteZip.value?.copy() ?: return).apply {
+        val tempSiteZip: SiteZip = siteZip.copy().apply {
             siteList = if (_isFavoriteMode.value == true) {
                 this.siteList.filter {
                     it.isFavorite && (it.title.contains(
@@ -235,7 +236,7 @@ class SiteZipViewModel(
             siteList.sortBy {
                 it.id
             }
-            _isShowNotFoundSite.value = siteZip.value?.siteList?.size ?: 0 > 0 && siteList.size <= 0
+            _isShowNotFoundSite.value = siteZip.siteList.size > 0 && siteList.size <= 0
         }
         _searchSiteZip.setValueIfNew(tempSiteZip)
     }
@@ -270,21 +271,19 @@ class SiteZipViewModel(
     }
 
     override fun chooseFavorite(site: Site) {
-        _siteZip.value = setFavoriteSite(site, true)
-        _siteZip.refresh(true)
+        _searchSiteZip.value = setFavoriteSite(site, true)
         compositeDisposable += siteRepository.insert(site = site)
     }
 
     override fun releaseFavorite(site: Site) {
-        _siteZip.value = setFavoriteSite(site, false)
-        _siteZip.refresh(true)
+        _searchSiteZip.value = setFavoriteSite(site, false)
         compositeDisposable += siteRepository.delete(
             primaryKey = site.sitePrimaryKey
         )
     }
 
-    private fun setFavoriteSite(site: Site, isFavorite: Boolean): SiteZip? {
-        val tempSiteType = _siteZip.value ?: return null
+    private fun setFavoriteSite(site: Site, isFavorite: Boolean): SiteZip {
+        val tempSiteType = siteZip.copy()
         tempSiteType.siteList[tempSiteType.siteList.indexOfFirst {
             it.sitePrimaryKey == site.sitePrimaryKey
         }] = site.copy(isFavorite = isFavorite)
@@ -321,7 +320,8 @@ class SiteZipViewModel(
     }
 
     fun onBind(item: SiteZip) {
-        _siteZip setValueIfNew item
+        siteZip.siteList.clear()
+        siteZip = item
         removeFirebaseListener()
         typeRef = null
         typeRef = fireBaseDatabaseManager.database.getReference(
@@ -332,7 +332,7 @@ class SiteZipViewModel(
     }
 
     override fun onCleared() {
-        removeFirebaseListener()
         super.onCleared()
+        removeFirebaseListener()
     }
 }
