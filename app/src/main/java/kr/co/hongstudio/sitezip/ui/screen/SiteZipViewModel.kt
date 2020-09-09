@@ -78,6 +78,7 @@ class SiteZipViewModel(
      * 즐겨찾기만 표시 여부.
      */
     private val _isFavoriteMode: MutableLiveData<Boolean> = MutableLiveData()
+    val isFavoriteMode: MutableLiveData<Boolean> = _isFavoriteMode
 
     /**
      * 검색 텍스트.

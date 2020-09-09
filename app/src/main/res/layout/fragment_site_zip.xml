@@ -33,11 +33,11 @@
             app:items="@{viewModel.searchSiteZip.siteList}" />
 
         <TextView
-            android:id="@+id/tv_not_found_site_message"
+            android:id="@+id/tv_not_found_site"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal|center_vertical"
-            android:text="@string/not_found_site_message"
+            android:text="@{viewModel.isFavoriteMode() == true ? @string/not_found_favorite_site_message : @string/not_found_site_message}"
             android:visibility="@{viewModel.isShowNotFoundSite() == true ? View.VISIBLE : View.GONE}"
             tools:visibility="gone" />
 

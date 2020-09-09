@@ -14,7 +14,7 @@ class AdMobManager(
 ) {
 
     private var interstitialAd: InterstitialAd = InterstitialAd(applicationContext).apply {
-        adUnitId = resourceProvider.getString(R.string.google_admob_interstitial_id_test)
+        adUnitId = resourceProvider.getString(R.string.google_admob_interstitial_id)
         adListener = object : AdListener() {
             override fun onAdClosed() {
                 loadAd(AdRequest.Builder().build())

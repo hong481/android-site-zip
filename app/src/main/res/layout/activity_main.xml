@@ -68,21 +68,21 @@
 
                             <ImageView
                                 android:id="@+id/iv_logo"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
-                                android:layout_marginStart="20dp"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_marginStart="10dp"
                                 android:contentDescription="@string/content_description"
                                 android:src="@mipmap/ic_launcher"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
 
-
                             <TextView
+                                android:id="@+id/tv_app_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="10dp"
-                                android:text="@string/site_list"
+                                android:text="@{viewModel.appTitle}"
                                 android:textColor="@color/color_ffffff"
                                 android:textSize="20sp"
                                 app:layout_constraintBottom_toBottomOf="parent"
@@ -374,7 +374,7 @@
             android:layout_height="wrap_content"
             android:visibility="@{viewModel.isShowBannerAdmob() == true ? View.VISIBLE : View.GONE}"
             ads:adSize="SMART_BANNER"
-            ads:adUnitId="@string/google_admob_banner_id_test"
+            ads:adUnitId="@string/google_admob_banner_id"
             tools:visibility="visible" />
 
     </LinearLayout>

@@ -26,11 +26,11 @@ class FireBaseDatabaseManager(
     private val _isAvailable: MutableLiveData<Boolean> = MutableLiveData()
     val isAvailable: LiveData<Boolean> = _isAvailable
 
-    val database = Firebase.database
+    val database: FirebaseDatabase = Firebase.database
 
-    val rootPath = "$SITES_PATH/${buildProperty.products}-${Locale.getDefault().language}"
+    val rootPath = "$SITES_PATH/${buildProperty.productName}/${Locale.getDefault().language}"
 
-    val rootRef = database.getReference(rootPath)
+    val rootRef: DatabaseReference = database.getReference(rootPath)
 
     init {
         database.getReference(CONNECT_REF_PATH).apply {

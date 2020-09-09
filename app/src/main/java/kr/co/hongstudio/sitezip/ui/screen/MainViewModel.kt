@@ -27,7 +27,19 @@ class MainViewModel(
         const val TAG: String = "MainViewModel"
     }
 
+    /**
+     * 앱 타이틀.
+     */
+    val appTitle: MutableLiveData<String> =MutableLiveData(buildProperty.appTitleName)
+
+    /**
+     * 사이트집 리스트. (No LiveData)
+     */
     private val siteZipList: MutableList<SiteZip> = mutableListOf()
+
+    /**
+     * 사이트집 라이브데이터.
+     */
     private val _siteZips: MutableLiveData<MutableList<SiteZip>> = MutableLiveData()
     val siteZips: LiveData<MutableList<SiteZip>> = _siteZips
 
