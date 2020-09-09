@@ -321,6 +321,7 @@
                     app:tabIndicatorColor="@color/color_ffc107"
                     app:tabMode="auto"
                     app:tabSelectedTextColor="@color/color_ffc107"
+                    app:tabTextAppearance="@style/tab_text"
                     app:tabTextColor="@color/color_ffffff" />
             </com.google.android.material.appbar.AppBarLayout>
 

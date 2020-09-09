@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.util.Log
+import android.util.TypedValue
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
@@ -32,6 +33,7 @@ import kr.co.hongstudio.sitezip.util.LogUtil
 import kr.co.hongstudio.sitezip.util.extension.observeBaseViewModelEvent
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.lang.Exception
 
 class MainActivity : BaseActivity() {
 
@@ -161,7 +163,7 @@ class MainActivity : BaseActivity() {
     /**
      * 뷰 페이저 초기화.
      */
-    private fun initViewPager() {
+    private fun initViewPager() = try {
         binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.viewPager.offscreenPageLimit = 99
         binding.viewPager.adapter = SiteZipsAdapter(
@@ -172,11 +174,13 @@ class MainActivity : BaseActivity() {
             binding.tabLayout,
             binding.viewPager
         ) { tab, position ->
-            val adapter = (binding.viewPager.adapter as SiteZipsAdapter)
-            val tabIconUrl = adapter.siteZips[position].tabIconUrl
+            val adapter: SiteZipsAdapter = (binding.viewPager.adapter as SiteZipsAdapter)
+            val tabIconUrl: String = adapter.siteZips[position].tabIconUrl
             if (tabIconUrl.isNotEmpty()) {
                 Glide.with(this)
                     .asBitmap()
+                    .fitCenter()
+                    .centerInside()
                     .load(
                         FirebaseStorage.getInstance()
                             .getReference(adapter.siteZips[position].tabIconUrl)
@@ -192,9 +196,17 @@ class MainActivity : BaseActivity() {
                         override fun onLoadCleared(placeholder: Drawable?) {}
                     })
             }
-            (tab.view.getChildAt(1) as TextView).textSize = 10f
+            val padding: Int = displayUtil.dpToPx(3f).toInt()
+            (tab.view.getChildAt(0) as ImageView).setPadding(
+                padding,
+                padding,
+                padding,
+                padding
+            )
             tab.text = adapter.siteZips[position].typeName
         }.attach()
+    } catch (e: Exception) {
+        Log.d(TAG, e.toString())
     }
 
     /**

@@ -14,6 +14,7 @@ import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.fragment.koin.fragmentFactory
+import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import kotlin.system.exitProcess
 
@@ -56,7 +57,7 @@ class App : Application() {
     /**
      * 코인 초기화.
      */
-    private fun initKoin() = startKoin {
+    private fun initKoin(): KoinApplication = startKoin {
         androidLogger()
         androidContext(androidContext = this@App)
         fragmentFactory()

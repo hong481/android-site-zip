@@ -66,8 +66,8 @@ android {
         def SPARK_PROPERTIES_PATH = "./properties/SPARK.json"
 
         SPARK_ {
-            versionCode 1
-            versionName "0.0.1"
+            versionCode 2
+            versionName "0.0.2"
 
             buildConfigField(BUILD_PROPERTIES_TYPE, BUILD_PROPERTIES_NAME, loadProperties(SPARK_PROPERTIES_PATH))
         }
