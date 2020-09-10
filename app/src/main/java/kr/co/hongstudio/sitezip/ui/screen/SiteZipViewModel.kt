@@ -221,28 +221,34 @@ class SiteZipViewModel(
         }
     }
 
-    fun getDisplaySiteZip() {
-        val tempSiteZip: SiteZip = siteZip.copy().apply {
-            siteList = if (_isFavoriteMode.value == true) {
-                this.siteList.filter {
-                    it.isFavorite && (it.title.contains(
-                        _searchText.value ?: "",
-                        ignoreCase = true
-                    )
-                            || it.url.contains(_searchText.value ?: "", ignoreCase = true))
-                }.toMutableList()
-            } else {
-                this.siteList.filter {
-                    it.title.contains(_searchText.value ?: "", ignoreCase = true)
-                            || it.url.contains(_searchText.value ?: "", ignoreCase = true)
-                }.toMutableList()
+    fun getDisplaySiteZip() = try {
+        if (siteZip.siteList.size > 0) {
+            val tempSiteZip: SiteZip = siteZip.copy().apply {
+                siteList = if (_isFavoriteMode.value == true) {
+                    this.siteList.filter {
+                        it.isFavorite && (it.title.contains(
+                            _searchText.value ?: "",
+                            ignoreCase = true
+                        )
+                                || it.url.contains(_searchText.value ?: "", ignoreCase = true))
+                    }.toMutableList()
+                } else {
+                    this.siteList.filter {
+                        it.title.contains(_searchText.value ?: "", ignoreCase = true)
+                                || it.url.contains(_searchText.value ?: "", ignoreCase = true)
+                    }.toMutableList()
+                }
+                siteList.sortBy {
+                    it.id
+                }
+                _isShowNotFoundSite.value = siteZip.siteList.size > 0 && siteList.size <= 0
             }
-            siteList.sortBy {
-                it.id
-            }
-            _isShowNotFoundSite.value = siteZip.siteList.size > 0 && siteList.size <= 0
+            _searchSiteZip.setValueIfNew(tempSiteZip)
+        } else {
+            null
         }
-        _searchSiteZip.setValueIfNew(tempSiteZip)
+    } catch (e: ConcurrentModificationException) {
+        Log.w(TAG, e.toString())
     }
 
     /**
