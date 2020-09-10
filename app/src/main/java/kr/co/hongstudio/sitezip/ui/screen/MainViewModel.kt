@@ -6,10 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import kr.co.hongstudio.sitezip.admob.AdMobManager
 import kr.co.hongstudio.sitezip.base.livedata.EmptyEvent
 import kr.co.hongstudio.sitezip.base.viewmodel.BaseViewModel
 import kr.co.hongstudio.sitezip.data.BuildProperty
 import kr.co.hongstudio.sitezip.data.local.entity.SiteZip
+import kr.co.hongstudio.sitezip.data.local.preference.AdMobPreference
 import kr.co.hongstudio.sitezip.data.local.preference.BillingPreference
 import kr.co.hongstudio.sitezip.firebase.FireBaseDatabaseManager
 import kr.co.hongstudio.sitezip.observer.NetworkObserver
@@ -20,7 +22,9 @@ class MainViewModel(
 
     private val buildProperty: BuildProperty,
     private val billingPref: BillingPreference,
+    private val adMobPref: AdMobPreference,
     private val fireBaseDatabaseManager: FireBaseDatabaseManager,
+    private val adMobManager: AdMobManager,
     private val networkObserver: NetworkObserver
 
 ) : BaseViewModel() {
@@ -289,6 +293,18 @@ class MainViewModel(
      */
     fun setUseAdmob() {
         isUseAdmob.value = buildProperty.useGoogleAdmob && !billingPref.removeAds
+    }
+
+    /**
+     * 전면광고 노출 여부 체크.
+     */
+    fun checkShowInterstitialAd() {
+        if (adMobPref.showInterstitialAdCount >= buildProperty.interstitialAdmobTriggerValue) {
+            adMobPref.showInterstitialAdCount = 0
+            adMobManager.showInterstitialAd()
+        } else {
+            adMobPref.showInterstitialAdCount += 1
+        }
     }
 
     override fun onCleared() {

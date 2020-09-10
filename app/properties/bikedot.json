@@ -1,5 +1,6 @@
 {
   "build_type": 1,
   "product_name" : "bikedot",
-  "use_google_admob" : true
+  "use_google_admob" : true,
+  "interstitial_admob_trigger_value" : 3
 }

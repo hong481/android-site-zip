@@ -13,12 +13,16 @@ data class BuildProperty(
     val productName: String,
 
     @Json(name = Field.USE_GOOGLE_ADMOB)
-    val useGoogleAdmob: Boolean
+    val useGoogleAdmob: Boolean,
+
+    @Json(name = Field.INTERSTITIAL_ADMOB_TRIGGER_VALUE)
+    val interstitialAdmobTriggerValue: Int
 
 ) {
     object Field {
         const val BUILD_TYPE: String = "build_type"
         const val PRODUCT_NAME: String = "product_name"
         const val USE_GOOGLE_ADMOB: String = "use_google_admob"
+        const val INTERSTITIAL_ADMOB_TRIGGER_VALUE: String = "interstitial_admob_trigger_value"
     }
 }

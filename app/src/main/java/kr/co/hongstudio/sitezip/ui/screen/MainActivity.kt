@@ -63,7 +63,6 @@ class MainActivity : BaseActivity() {
     }
 
     private val viewModel: MainViewModel by viewModel()
-
     private val billingManager: BillingManager by inject()
     private val displayUtil: DisplayUtil by inject()
 
@@ -80,6 +79,9 @@ class MainActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.setUseAdmob()
+        
+        // 전면광고 제어
+
     }
 
     override fun onDestroy() {
@@ -152,6 +154,7 @@ class MainActivity : BaseActivity() {
                 viewModel.setShowBannerAds(it)
                 if(it) {
                     initAdViewBanner()
+                    viewModel.checkShowInterstitialAd()
                 }
             }
         })
