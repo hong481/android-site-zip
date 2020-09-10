@@ -63,23 +63,22 @@ android {
         def BUILD_PROPERTIES_TYPE = "String"
         def BUILD_PROPERTIES_NAME = "BUILD_PROPERTIES"
 
-        def DEV_PROPERTIES_PATH = "./properties/DEV.json"
-        def BIKE_DOT_PROPERTIES_PATH = "./properties/BIKE_DOT.json"
+        def DEV_PROPERTIES_PATH = "./properties/dev.json"
+        def BIKE_DOT_PROPERTIES_PATH = "./properties/bikedot.json"
+
 
         /** 개발 **/
-        DEV {
+        dev {
             versionCode 1
             versionName "0.0.1"
             applicationIdSuffix ".dev"
-            resValue "string", "appName", "SiteZip"
             buildConfigField(BUILD_PROPERTIES_TYPE, BUILD_PROPERTIES_NAME, loadProperties(DEV_PROPERTIES_PATH))
         }
-        /** 바이크 닷 **/
-        BIKE_DOT {
+        /** 바이크닷 **/
+        bikedot {
             versionCode 1
             versionName "0.0.1"
             applicationIdSuffix ".bikedot"
-            resValue "string", "appName", "바이크닷"
             buildConfigField(BUILD_PROPERTIES_TYPE, BUILD_PROPERTIES_NAME, loadProperties(BIKE_DOT_PROPERTIES_PATH))
         }
     }

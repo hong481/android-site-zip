@@ -82,7 +82,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="10dp"
-                                android:text="@{viewModel.appTitle}"
+                                android:text="@string/app_name"
                                 android:textColor="@color/color_ffffff"
                                 android:textSize="20sp"
                                 app:layout_constraintBottom_toBottomOf="parent"
@@ -279,10 +279,12 @@
                                     android:maxLines="1"
                                     android:onClick="@{() -> viewModel.billingRemoveAds()}"
                                     android:paddingTop="5dp"
+                                    android:paddingBottom="5dp"
                                     android:singleLine="true"
                                     android:text="@string/remove_admob"
                                     android:textColor="@color/color_ffffff"
                                     android:textSize="12sp"
+                                    android:visibility="@{viewModel.isUseAdmob() == true ? View.VISIBLE : View.GONE}"
                                     tools:ignore="ButtonStyle" />
 
                                 <Button
@@ -296,6 +298,7 @@
                                     android:maxLines="1"
                                     android:paddingTop="5dp"
                                     android:singleLine="true"
+                                    android:paddingBottom="5dp"
                                     android:text="@string/developer_sponsor"
                                     android:textColor="@color/color_ffffff"
                                     android:textSize="12sp"
@@ -344,16 +347,28 @@
             tools:visibility="gone">
 
             <ImageView
-                android:id="@+id/iv_wifi_off"
+                android:id="@+id/iv_wifi_error_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="100dp"
                 android:contentDescription="@string/content_description"
-                android:src="@drawable/ic_baseline_wifi_off_24"
+                android:src="@mipmap/ic_launcher"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_wifi_off"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
+                android:contentDescription="@string/content_description"
+                android:src="@drawable/ic_baseline_wifi_off_24"
+                ads:layout_constraintTop_toBottomOf="@id/iv_wifi_error_logo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/tv_network_disconnect_message"

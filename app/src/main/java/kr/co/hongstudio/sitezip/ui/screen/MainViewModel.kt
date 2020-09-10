@@ -10,6 +10,7 @@ import kr.co.hongstudio.sitezip.base.livedata.EmptyEvent
 import kr.co.hongstudio.sitezip.base.viewmodel.BaseViewModel
 import kr.co.hongstudio.sitezip.data.BuildProperty
 import kr.co.hongstudio.sitezip.data.local.entity.SiteZip
+import kr.co.hongstudio.sitezip.data.local.preference.BillingPreference
 import kr.co.hongstudio.sitezip.firebase.FireBaseDatabaseManager
 import kr.co.hongstudio.sitezip.observer.NetworkObserver
 import kr.co.hongstudio.sitezip.util.extension.map
@@ -17,7 +18,8 @@ import kr.co.hongstudio.sitezip.util.extension.notify
 
 class MainViewModel(
 
-    buildProperty: BuildProperty,
+    private val buildProperty: BuildProperty,
+    private val billingPref: BillingPreference,
     private val fireBaseDatabaseManager: FireBaseDatabaseManager,
     private val networkObserver: NetworkObserver
 
@@ -26,11 +28,6 @@ class MainViewModel(
     companion object {
         const val TAG: String = "MainViewModel"
     }
-
-    /**
-     * 앱 타이틀.
-     */
-    val appTitle: MutableLiveData<String> =MutableLiveData(buildProperty.appTitleName)
 
     /**
      * 사이트집 리스트. (No LiveData)
@@ -79,10 +76,16 @@ class MainViewModel(
     val isFavoriteMode: LiveData<Boolean> = _isFavoriteMode
 
     /**
+     * 애드몹 사용 여부.
+     */
+    val isUseAdmob: MutableLiveData<Boolean> =
+        MutableLiveData(buildProperty.useGoogleAdmob && !billingPref.removeAds)
+
+    /**
      * 애드몹 배너 표시 여부.
      */
     private val _isShowBannerAdMob: MutableLiveData<Boolean> =
-        MutableLiveData(buildProperty.useGoogleAdmob)
+        MutableLiveData(!billingPref.removeAds)
     val isShowBannerAdmob: LiveData<Boolean> = _isShowBannerAdMob
 
     /**
@@ -94,7 +97,7 @@ class MainViewModel(
     /**
      * 뷰페이저 사용자 제스처 사용 여부.
      */
-    private val _setViewPagerUserInputEnabled : MutableLiveData<Boolean> = MutableLiveData()
+    private val _setViewPagerUserInputEnabled: MutableLiveData<Boolean> = MutableLiveData()
     val setViewPagerUserInputEnabled: LiveData<Boolean> = _setViewPagerUserInputEnabled
 
     /**
@@ -151,7 +154,7 @@ class MainViewModel(
             val removeIndex = siteZipList.indexOfFirst {
                 it.typeName == snapshot.key
             }
-            if(removeIndex < 0) {
+            if (removeIndex < 0) {
                 return
             }
             siteZipList.removeAt(removeIndex)
@@ -241,7 +244,7 @@ class MainViewModel(
      * 배너 광고 펴시 여부 설정.
      */
     fun setShowBannerAds(isShow: Boolean) {
-        if (!isShow && isEnableContents.value == true) {
+        if ((!isShow && isEnableContents.value == true && isUseAdmob.value == true)) {
             return
         }
         _isShowBannerAdMob.value = isShow
@@ -255,7 +258,7 @@ class MainViewModel(
             setShowBannerAds(false)
             setShowNetworkErrorLayout(true)
         } else {
-            setShowBannerAds(true)
+            setShowBannerAds(isUseAdmob.value ?: false)
             setShowNetworkErrorLayout(false)
         }
     }
@@ -279,6 +282,13 @@ class MainViewModel(
      */
     fun setViewPagerUserInputEnabled(isEnable: Boolean) {
         _setViewPagerUserInputEnabled.value = isEnable
+    }
+
+    /**
+     * 애드몹 사용 여부 설정
+     */
+    fun setUseAdmob() {
+        isUseAdmob.value = buildProperty.useGoogleAdmob && !billingPref.removeAds
     }
 
     override fun onCleared() {

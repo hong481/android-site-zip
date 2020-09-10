@@ -13,8 +13,10 @@ import kr.co.hongstudio.sitezip.admob.AdMobManager
 import kr.co.hongstudio.sitezip.base.livedata.EmptyEvent
 import kr.co.hongstudio.sitezip.base.livedata.Event
 import kr.co.hongstudio.sitezip.base.viewmodel.BaseViewModel
+import kr.co.hongstudio.sitezip.data.BuildProperty
 import kr.co.hongstudio.sitezip.data.local.entity.Site
 import kr.co.hongstudio.sitezip.data.local.entity.SiteZip
+import kr.co.hongstudio.sitezip.data.local.preference.BillingPreference
 import kr.co.hongstudio.sitezip.firebase.FireBaseDatabaseManager
 import kr.co.hongstudio.sitezip.repositories.repository.SiteRepository
 import kr.co.hongstudio.sitezip.util.ClipboardUtil
@@ -26,10 +28,12 @@ import kr.co.hongstudio.sitezip.util.extension.*
 class SiteZipViewModel(
 
     savedStateHandle: SavedStateHandle,
+    private val buildProperty: BuildProperty,
     private val fireBaseDatabaseManager: FireBaseDatabaseManager,
     private val siteRepository: SiteRepository,
     private val clipboardUtil: ClipboardUtil,
     private val urlParserUtil: UrlParserUtil,
+    private val billingPref: BillingPreference,
     private val resourceProvider: ResourceProvider,
     private val adMobManager: AdMobManager
 
@@ -49,7 +53,6 @@ class SiteZipViewModel(
      */
     private val _intentUrlEvent: MutableLiveData<Event<String>> = MutableLiveData()
     val intentUrlEvent: LiveData<Event<String>> = _intentUrlEvent
-
 
     /**
      * 사이트 유형.
@@ -257,7 +260,9 @@ class SiteZipViewModel(
     }
 
     override fun intentUrl(url: String) {
-        adMobManager.showInterstitialAd()
+        if (buildProperty.useGoogleAdmob && !billingPref.removeAds) {
+            adMobManager.showInterstitialAd()
+        }
         _intentUrlEvent.notify = url
     }
 

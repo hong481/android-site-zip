@@ -12,9 +12,6 @@ data class BuildProperty(
     @Json(name = Field.PRODUCT_NAME)
     val productName: String,
 
-    @Json(name = Field.APP_TITLE_NAME)
-    val appTitleName: String,
-
     @Json(name = Field.USE_GOOGLE_ADMOB)
     val useGoogleAdmob: Boolean
 
@@ -22,7 +19,6 @@ data class BuildProperty(
     object Field {
         const val BUILD_TYPE: String = "build_type"
         const val PRODUCT_NAME: String = "product_name"
-        const val APP_TITLE_NAME: String = "app_title_name"
         const val USE_GOOGLE_ADMOB: String = "use_google_admob"
     }
 }

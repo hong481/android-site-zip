@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import com.android.billingclient.api.*
 import kr.co.hongstudio.sitezip.data.local.preference.BillingPreference
+import kr.co.hongstudio.sitezip.ui.screen.MainActivity
 
 class BillingManager(
 

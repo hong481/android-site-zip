@@ -22,8 +22,6 @@ import kr.co.hongstudio.sitezip.R
 import kr.co.hongstudio.sitezip.base.activity.BaseActivity
 import kr.co.hongstudio.sitezip.base.livedata.EventObserver
 import kr.co.hongstudio.sitezip.billing.BillingManager
-import kr.co.hongstudio.sitezip.data.BuildProperty
-import kr.co.hongstudio.sitezip.data.local.preference.BillingPreference
 import kr.co.hongstudio.sitezip.databinding.ActivityMainBinding
 import kr.co.hongstudio.sitezip.util.DisplayUtil
 import kr.co.hongstudio.sitezip.util.KeyboardUtil
@@ -65,11 +63,8 @@ class MainActivity : BaseActivity() {
     }
 
     private val viewModel: MainViewModel by viewModel()
-    private val buildProperty: BuildProperty by inject()
 
-    private val billingPref: BillingPreference by inject()
     private val billingManager: BillingManager by inject()
-
     private val displayUtil: DisplayUtil by inject()
 
     private lateinit var keyboardUtil: KeyboardUtil
@@ -80,6 +75,11 @@ class MainActivity : BaseActivity() {
         initBinding()
         initViewPager()
         initViewModel()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.setUseAdmob()
     }
 
     override fun onDestroy() {
@@ -107,14 +107,14 @@ class MainActivity : BaseActivity() {
             Log.d(TAG, "isNetworkAvailable : $it")
             if (it) {
                 initBillingManager()
-                if (buildProperty.useGoogleAdmob) {
-                    if (!billingPref.removeAds) {
-                        initAdViewBanner()
-                    }
+                if (viewModel.isUseAdmob.value == true) {
+                    initAdViewBanner()
                 }
             }
             viewModel.setShowNetworkErrorLayout(isShow = !it)
-            viewModel.setShowBannerAds(isShow = it)
+            if (viewModel.isUseAdmob.value == true) {
+                viewModel.setShowBannerAds(isShow = it)
+            }
         })
         viewModel.siteZips.observe(this, Observer {
             (binding.viewPager.adapter as? SiteZipsAdapter)?.setItems(it)
@@ -147,6 +147,14 @@ class MainActivity : BaseActivity() {
                 }
             }
         })
+        viewModel.isUseAdmob.observe(this, Observer {
+            if (viewModel.isNetworkAvailable.value == true) {
+                viewModel.setShowBannerAds(it)
+                if(it) {
+                    initAdViewBanner()
+                }
+            }
+        })
         viewModel.billingRemoveAds.observe(this, EventObserver {
             billingManager.processToPurchase()
         })
@@ -166,7 +174,6 @@ class MainActivity : BaseActivity() {
         binding.viewPager.adapter = SiteZipsAdapter(
             fragmentActivity = this
         )
-
         TabLayoutMediator(
             binding.tabLayout,
             binding.viewPager

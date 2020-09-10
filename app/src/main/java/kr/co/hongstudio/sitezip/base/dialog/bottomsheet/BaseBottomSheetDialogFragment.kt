@@ -78,22 +78,8 @@ abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     protected val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = object : BaseBottomSheetDialog(requireContext(), theme) {
-        override fun onBackPressed() {
-            if (!this@BaseBottomSheetDialogFragment.onBackPressed()) {
-                return
-            }
-            super.onBackPressed()
-        }
-    }
-
-    abstract override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        rootView.background = null
-
-        bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+    protected val bottomSheetCallback: BottomSheetBehavior.BottomSheetCallback =
+        object : BottomSheetBehavior.BottomSheetCallback() {
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 onSlideListener?.let {
@@ -114,7 +100,29 @@ abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragment() {
                     it(bottomSheet, newState)
                 }
             }
-        })
+        }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        object : BaseBottomSheetDialog(requireContext(), theme) {
+            override fun onBackPressed() {
+                if (!this@BaseBottomSheetDialogFragment.onBackPressed()) {
+                    return
+                }
+                super.onBackPressed()
+            }
+        }
+
+    abstract override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View?
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        rootView.background = null
+
+        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
         val instanceState = savedInstanceState ?: arguments ?: Bundle().also {
             arguments = it
         }
@@ -125,14 +133,15 @@ abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragment() {
         super.onDestroyView()
         compositeDisposable.clear()
         compositeDisposable.clear()
-        bottomSheetBehavior.setBottomSheetCallback(null)
+        bottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
     }
 
     @CallSuper
     private fun onSetupInstanceState(savedInstanceState: Bundle) {
         isHideable = savedInstanceState.getBoolean(Extra.IS_HIDEABLE, true)
         state = savedInstanceState.getInt(Extra.STATE, BottomSheetBehavior.STATE_COLLAPSED)
-        peekHeight = savedInstanceState.getInt(Extra.PEEK_HEIGHT, BottomSheetBehavior.PEEK_HEIGHT_AUTO)
+        peekHeight =
+            savedInstanceState.getInt(Extra.PEEK_HEIGHT, BottomSheetBehavior.PEEK_HEIGHT_AUTO)
         dimAmount = savedInstanceState.getFloat(Extra.DIM_AMOUNT, 0.6f)
     }
 

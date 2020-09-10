@@ -15,6 +15,7 @@ object ViewModelModule {
             MainViewModel(
                 get(),
                 get(),
+                get(),
                 get()
             )
         }
@@ -22,6 +23,8 @@ object ViewModelModule {
         viewModel { (stateHandle: SavedStateHandle) ->
             SiteZipViewModel(
                 stateHandle,
+                get(),
+                get(),
                 get(),
                 get(),
                 get(),

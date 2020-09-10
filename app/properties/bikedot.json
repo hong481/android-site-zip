@@ -1,6 +1,5 @@
 {
   "build_type": 1,
   "product_name" : "bikedot",
-  "app_title_name" : "바이크 닷",
   "use_google_admob" : true
 }
