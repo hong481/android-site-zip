@@ -17,6 +17,8 @@
     </style>
 
     <style name="tab_text" parent="TextAppearance.Design.Tab">
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
         <item name="android:textSize">12sp</item>
     </style>
 </resources>

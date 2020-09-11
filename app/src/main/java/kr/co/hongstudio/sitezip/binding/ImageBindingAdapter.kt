@@ -34,6 +34,7 @@ object ImageBindingAdapter {
             )
             .thumbnail(Glide.with(imageView.context).load(R.raw.gif_loading))
             .fitCenter()
+            .centerInside()
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
             .apply(RequestOptions.bitmapTransform(CircleCrop()))
             .into(imageView)

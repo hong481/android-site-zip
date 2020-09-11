@@ -20,10 +20,7 @@ import kr.co.hongstudio.sitezip.data.local.entity.SiteZip
 import kr.co.hongstudio.sitezip.data.local.preference.BillingPreference
 import kr.co.hongstudio.sitezip.firebase.FireBaseDatabaseManager
 import kr.co.hongstudio.sitezip.repositories.repository.SiteRepository
-import kr.co.hongstudio.sitezip.util.ClipboardUtil
-import kr.co.hongstudio.sitezip.util.LogUtil
-import kr.co.hongstudio.sitezip.util.ResourceProvider
-import kr.co.hongstudio.sitezip.util.UrlParserUtil
+import kr.co.hongstudio.sitezip.util.*
 import kr.co.hongstudio.sitezip.util.extension.*
 
 class SiteZipViewModel(
@@ -355,6 +352,7 @@ class SiteZipViewModel(
     private fun removeFirebaseListener() {
         tabRef?.removeEventListener(firebaseTabRefListener)
     }
+
 
     /**
      * 바인딩.

@@ -2,8 +2,6 @@ package kr.co.hongstudio.sitezip.ui.screen
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.speech.RecognizerIntent
@@ -12,7 +10,6 @@ import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.gms.ads.AdRequest
@@ -23,6 +20,7 @@ import kr.co.hongstudio.sitezip.base.activity.BaseActivity
 import kr.co.hongstudio.sitezip.base.livedata.EventObserver
 import kr.co.hongstudio.sitezip.billing.BillingManager
 import kr.co.hongstudio.sitezip.databinding.ActivityMainBinding
+import kr.co.hongstudio.sitezip.glide.GlideApp
 import kr.co.hongstudio.sitezip.util.DisplayUtil
 import kr.co.hongstudio.sitezip.util.KeyboardUtil
 import kr.co.hongstudio.sitezip.util.LogUtil
@@ -79,7 +77,7 @@ class MainActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.setUseAdmob()
-        
+
         // 전면광고 제어
 
     }
@@ -152,7 +150,7 @@ class MainActivity : BaseActivity() {
         viewModel.isUseAdmob.observe(this, Observer {
             if (viewModel.isNetworkAvailable.value == true) {
                 viewModel.setShowBannerAds(it)
-                if(it) {
+                if (it) {
                     initAdViewBanner()
                     viewModel.checkShowInterstitialAd()
                 }
@@ -177,40 +175,30 @@ class MainActivity : BaseActivity() {
         binding.viewPager.adapter = SiteZipsAdapter(
             fragmentActivity = this
         )
-        TabLayoutMediator(
-            binding.tabLayout,
-            binding.viewPager
-        ) { tab, position ->
+
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             val adapter: SiteZipsAdapter = (binding.viewPager.adapter as SiteZipsAdapter)
             val tabIconUrl: String = adapter.siteZips[position].tabIconUrl
-            if (tabIconUrl.isNotEmpty()) {
-                Glide.with(this)
-                    .asBitmap()
-                    .fitCenter()
-                    .centerInside()
-                    .load(
-                        FirebaseStorage.getInstance()
-                            .getReference(adapter.siteZips[position].tabIconUrl)
-                    )
-                    .into(object : CustomTarget<Bitmap>() {
-                        override fun onResourceReady(
-                            bitmap: Bitmap,
-                            transition: Transition<in Bitmap>?
-                        ) {
-                            tab.icon = BitmapDrawable(resources, bitmap)
-                        }
+            val padding: Int = displayUtil.dpToPx(3f).toInt()
+            tab.text = adapter.siteZips[position].typeName
+            (tab.view.getChildAt(0) as ImageView).setPadding(padding, padding, padding, padding)
 
+            Log.d(TAG, "position : $position / tabIconUrl : $tabIconUrl")
+            if (tabIconUrl.isNotEmpty()) {
+                GlideApp.with(applicationContext)
+                    .asDrawable()
+                    .load(FirebaseStorage.getInstance().getReference(tabIconUrl))
+                    .into(object : CustomTarget<Drawable?>() {
+                        override fun onResourceReady(
+                            resource: Drawable,
+                            transition: Transition<in Drawable?>?
+                        ) {
+                            tab.icon = null
+                            tab.icon = resource
+                        }
                         override fun onLoadCleared(placeholder: Drawable?) {}
                     })
             }
-            val padding: Int = displayUtil.dpToPx(3f).toInt()
-            (tab.view.getChildAt(0) as ImageView).setPadding(
-                padding,
-                padding,
-                padding,
-                padding
-            )
-            tab.text = adapter.siteZips[position].typeName
         }.attach()
     } catch (e: Exception) {
         Log.d(TAG, e.toString())

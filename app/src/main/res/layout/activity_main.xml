@@ -297,8 +297,8 @@
                                     android:drawablePadding="5dp"
                                     android:maxLines="1"
                                     android:paddingTop="5dp"
-                                    android:singleLine="true"
                                     android:paddingBottom="5dp"
+                                    android:singleLine="true"
                                     android:text="@string/developer_sponsor"
                                     android:textColor="@color/color_ffffff"
                                     android:textSize="12sp"
@@ -312,17 +312,16 @@
 
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-                <com.google.android.material.tabs.TabLayout
+                <kr.co.hongstudio.sitezip.ui.tablayout.CustomTabLayout
                     android:id="@+id/tab_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="start"
                     android:background="@color/colorPrimary"
                     android:visibility="@{viewModel.siteZips.size() > 0 == true ? View.VISIBLE : View.GONE}"
+                    ads:tabMode="scrollable"
                     app:layout_constraintTop_toBottomOf="@id/layout_more_menu"
                     app:tabIconTint="@color/tab_color_selector"
                     app:tabIndicatorColor="@color/color_ffc107"
-                    app:tabMode="auto"
                     app:tabSelectedTextColor="@color/color_ffc107"
                     app:tabTextAppearance="@style/tab_text"
                     app:tabTextColor="@color/color_ffffff" />
