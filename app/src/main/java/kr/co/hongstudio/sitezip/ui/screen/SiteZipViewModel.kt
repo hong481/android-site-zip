@@ -1,5 +1,6 @@
 package kr.co.hongstudio.sitezip.ui.screen
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -94,20 +95,39 @@ class SiteZipViewModel(
     private val _scrollToPositionTop: MutableLiveData<EmptyEvent> = MutableLiveData()
     val scrollToPositionTop: LiveData<EmptyEvent> = _scrollToPositionTop
 
-    private var typeRef: DatabaseReference? =
+    /**
+     * 탭 단위 파이어베이스 레퍼런스.
+     */
+    private var tabRef: DatabaseReference? = makeTabRef(siteZip)
+
+    /**
+     * 탭 단위 파이어베이스 레퍼런스 생성.
+     */
+    private fun makeTabRef(siteZip: SiteZip): DatabaseReference =
         fireBaseDatabaseManager.database.getReference(
             fireBaseDatabaseManager.rootPath +
-                    "/${siteZip.typeName}"
+                    "/${siteZip.typeName}" +
+                    "/${FireBaseDatabaseManager.SITES_PATH}"
         )
 
-    private val firebaseTypeRefListener: ChildEventListener = object : ChildEventListener {
+    /**
+     * 탭 단위 파이어베이스 레퍼런스 리스너.
+     */
+    @SuppressLint("RestrictedApi")
+    private val firebaseTabRefListener: ChildEventListener = object : ChildEventListener {
 
         override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-            Log.d(TAG, "firebaseTypeRefInitListener. onChildMoved. ${snapshot.key}")
+            Log.d(
+                TAG,
+                "firebaseTabRefListener. onChildMoved. ${snapshot.key} / ${tabRef?.path.toString()}"
+            )
         }
 
         override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-            Log.d(TAG, "firebaseTypeRefInitListener. onChildChanged. ${snapshot.key}")
+            Log.d(
+                TAG,
+                "firebaseTabRefListener. onChildChanged. ${snapshot.key} / ${tabRef?.path.toString()}"
+            )
             if (!(snapshot.key ?: "").contains(SiteZip.SITE) || snapshot.key == null) {
                 return
             }
@@ -147,7 +167,10 @@ class SiteZipViewModel(
         }
 
         override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-            Log.d(TAG, "firebaseTypeRefInitListener. onChildAdded. ${snapshot.key}")
+            Log.d(
+                TAG,
+                "firebaseTabRefListener. onChildAdded. ${snapshot.key} / ${tabRef?.path.toString()}"
+            )
             if (!(snapshot.key ?: "").contains(SiteZip.SITE) || snapshot.key == null) {
                 return
             }
@@ -195,7 +218,10 @@ class SiteZipViewModel(
         }
 
         override fun onChildRemoved(snapshot: DataSnapshot) {
-            Log.d(TAG, "firebaseTypeRefListener. onChildRemoved. ${snapshot.key}")
+            Log.d(
+                TAG,
+                "firebaseTabRefListener. onChildRemoved. ${snapshot.key} / ${tabRef?.path.toString()}"
+            )
             val primaryKey = "${siteZip.typeName}_${snapshot.key}"
             val removeIndex = siteZip.siteList.indexOfFirst {
                 it.sitePrimaryKey == primaryKey
@@ -212,16 +238,15 @@ class SiteZipViewModel(
         }
 
         override fun onCancelled(databaseError: DatabaseError) {
-            Log.d(
-                FireBaseDatabaseManager.TAG,
-                "loadPost:onCancelled",
-                databaseError.toException()
-            )
+            Log.d(TAG, "loadPost:onCancelled", databaseError.toException())
             dismissProgress(true)
         }
     }
 
-    fun getDisplaySiteZip() = try {
+    /**
+     * 탭 단위 뷰 표시. (리사이클러 뷰)
+     */
+    fun displayTabViews() = try {
         if (siteZip.siteList.size > 0) {
             val tempSiteZip: SiteZip = siteZip.copy().apply {
                 siteList = if (_isFavoriteMode.value == true) {
@@ -254,7 +279,7 @@ class SiteZipViewModel(
     /**
      * 사이트 정보 가져오기.
      */
-    fun getSite() = typeRef?.addChildEventListener(firebaseTypeRefListener)
+    fun getSite() = tabRef?.addChildEventListener(firebaseTabRefListener)
 
 
     fun setFavoriteMode(isFavorite: Boolean) {
@@ -328,19 +353,21 @@ class SiteZipViewModel(
      * 파이어베이스 typeRef 리스너 제거.
      */
     private fun removeFirebaseListener() {
-        typeRef?.removeEventListener(firebaseTypeRefListener)
+        tabRef?.removeEventListener(firebaseTabRefListener)
     }
 
+    /**
+     * 바인딩.
+     */
     fun onBind(item: SiteZip) {
         siteZip.siteList.clear()
         siteZip = item
+
         removeFirebaseListener()
-        typeRef = null
-        typeRef = fireBaseDatabaseManager.database.getReference(
-            fireBaseDatabaseManager.rootPath +
-                    "/${item.typeName}"
-        )
-        typeRef?.addChildEventListener(firebaseTypeRefListener)
+
+        tabRef = null
+        tabRef = makeTabRef(item)
+        tabRef?.addChildEventListener(firebaseTabRefListener)
     }
 
     override fun onCleared() {

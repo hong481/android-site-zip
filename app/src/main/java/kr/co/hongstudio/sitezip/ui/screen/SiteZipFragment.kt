@@ -99,7 +99,7 @@ class SiteZipFragment : BaseFragment() {
             }
         })
         viewModel.searchSiteZip.observe(viewLifecycleOwner, Observer {
-            viewModel.getDisplaySiteZip()
+            viewModel.displayTabViews()
         })
         viewModel.shareLink.observe(viewLifecycleOwner, EventObserver {
             val intent = Intent.createChooser(Intent(Intent.ACTION_SEND).apply {
@@ -113,11 +113,11 @@ class SiteZipFragment : BaseFragment() {
         })
         mainViewModel.isFavoriteMode.observe(viewLifecycleOwner, Observer {
             viewModel.setFavoriteMode(it)
-            viewModel.getDisplaySiteZip()
+            viewModel.displayTabViews()
         })
         mainViewModel.searchText.observe(viewLifecycleOwner, Observer {
             viewModel.setSearchText(it)
-            viewModel.getDisplaySiteZip()
+            viewModel.displayTabViews()
         })
         observeBaseViewModelEvent(viewModel)
     }

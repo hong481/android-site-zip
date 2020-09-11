@@ -19,6 +19,7 @@ class FireBaseDatabaseManager(
 
     companion object {
         const val TAG: String = "FireBaseDatabaseManager"
+        const val ZIPS_PATH = "zips"
         const val SITES_PATH = "sites"
         const val CONNECT_REF_PATH = ".info/connected"
     }
@@ -28,7 +29,7 @@ class FireBaseDatabaseManager(
 
     val database: FirebaseDatabase = Firebase.database
 
-    val rootPath = "$SITES_PATH/${buildProperty.productName}/${Locale.getDefault().language}"
+    val rootPath = "$ZIPS_PATH/${buildProperty.productName}/${Locale.getDefault().language}"
 
     val rootRef: DatabaseReference = database.getReference(rootPath)
 
