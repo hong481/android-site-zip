@@ -77,9 +77,6 @@ class MainActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.setUseAdmob()
-
-        // 전면광고 제어
-
     }
 
     override fun onDestroy() {
@@ -99,7 +96,7 @@ class MainActivity : BaseActivity() {
         viewModel.isEnableContents.observe(this, Observer {
             Log.d(TAG, "isEnableContents : $it")
             if (it) {
-                viewModel.getSiteZips()
+                viewModel.registerSiteZipSizeListener()
             }
         })
         // 라이브데이터 옵저버.
@@ -114,6 +111,15 @@ class MainActivity : BaseActivity() {
             viewModel.setShowNetworkErrorLayout(isShow = !it)
             if (viewModel.isUseAdmob.value == true) {
                 viewModel.setShowBannerAds(isShow = it)
+            }
+        })
+        viewModel.siteZipSize.observe(this, Observer {
+            Log.d(TAG, "siteZipSize: $it")
+            (binding.viewPager.adapter as? SiteZipsAdapter)?.setSize(it)
+            if (viewModel.siteZipList.size <= 0) {
+                viewModel.registerSiteZipsListener()
+            } else {
+                viewModel.resetSiteZipData()
             }
         })
         viewModel.siteZips.observe(this, Observer {
@@ -135,7 +141,6 @@ class MainActivity : BaseActivity() {
         viewModel.setViewPagerUserInputEnabled.observe(this, Observer {
             binding.viewPager.isUserInputEnabled = it
         })
-
         viewModel.playVoiceSearch.observe(this, EventObserver {
             OuterActivities.intentVoiceSearch(this) {
                 if (it.data != null) {
@@ -159,7 +164,6 @@ class MainActivity : BaseActivity() {
         viewModel.billingRemoveAds.observe(this, EventObserver {
             billingManager.processToPurchase()
         })
-
         // 뷰모델 기본 옵저버.
         observeBaseViewModelEvent(viewModel)
         // 뷰 기본 세팅
@@ -176,8 +180,19 @@ class MainActivity : BaseActivity() {
             fragmentActivity = this
         )
 
+        val adapter: SiteZipsAdapter = (binding.viewPager.adapter as SiteZipsAdapter)
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            val adapter: SiteZipsAdapter = (binding.viewPager.adapter as SiteZipsAdapter)
+            Log.d(
+                TAG,
+                "adapter.siteZips.size : ${adapter.siteZips.size} " +
+                        "/ " +
+                        "adapter.siteZipsSize: ${adapter.siteZipsSize}"
+            )
+            // 리턴.
+            if (adapter.siteZips.size < adapter.siteZipsSize) {
+                Log.d(TAG, "TabLayoutMediator. return.")
+                return@TabLayoutMediator
+            }
             val tabIconUrl: String = adapter.siteZips[position].tabIconUrl
             val padding: Int = displayUtil.dpToPx(3f).toInt()
             tab.text = adapter.siteZips[position].typeName
@@ -196,6 +211,7 @@ class MainActivity : BaseActivity() {
                             tab.icon = null
                             tab.icon = resource
                         }
+
                         override fun onLoadCleared(placeholder: Drawable?) {}
                     })
             }

@@ -13,6 +13,8 @@ class SiteZipsAdapter(
 
 ) : FragmentStateAdapter(fragmentActivity) {
 
+    var siteZipsSize: Int = 0
+
     var siteZips: MutableList<SiteZip> = mutableListOf()
 
     override fun getItemCount(): Int = siteZips.size
@@ -23,6 +25,10 @@ class SiteZipsAdapter(
     fun setItems(siteZips: MutableList<SiteZip>) {
         this.siteZips = siteZips
         notifyDataSetChanged()
+    }
+
+    fun setSize(size: Int) {
+        siteZipsSize = size
     }
 
     override fun onBindViewHolder(

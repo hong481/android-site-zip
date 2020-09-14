@@ -91,4 +91,11 @@ class FireBaseDatabaseManager(
         rootRef.removeEventListener(listener)
     }
 
+    /**
+     * 루트 ref 리스너 제거.
+     */
+    fun removeRootRefListener(listener: ValueEventListener) {
+        rootRef.removeEventListener(listener)
+    }
+
 }

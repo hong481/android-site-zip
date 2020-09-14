@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import kr.co.hongstudio.sitezip.admob.AdMobManager
 import kr.co.hongstudio.sitezip.base.livedata.EmptyEvent
 import kr.co.hongstudio.sitezip.base.viewmodel.BaseViewModel
@@ -36,13 +37,19 @@ class MainViewModel(
     /**
      * 사이트집 리스트. (No LiveData)
      */
-    private val siteZipList: MutableList<SiteZip> = mutableListOf()
+    val siteZipList: MutableList<SiteZip> = mutableListOf()
 
     /**
      * 사이트집 라이브데이터.
      */
     private val _siteZips: MutableLiveData<MutableList<SiteZip>> = MutableLiveData()
     val siteZips: LiveData<MutableList<SiteZip>> = _siteZips
+
+    /**
+     * 사이트집 개수.
+     */
+    private val _siteZipSize: MutableLiveData<Int> = MutableLiveData()
+    val siteZipSize: LiveData<Int> = _siteZipSize
 
     /**
      * 검색 이벤트.
@@ -128,6 +135,7 @@ class MainViewModel(
     private val _isShowNetworkErrorLayout: MutableLiveData<Boolean> = MutableLiveData()
     val isShowNetworkErrorLayout: LiveData<Boolean> = _isShowNetworkErrorLayout
 
+
     /**
      * 파이어베이스 루트 ref 리스너.
      */
@@ -190,10 +198,49 @@ class MainViewModel(
     }
 
     /**
-     * 사이트 유형 가져오기.
+     * 파이어베이스 탭 개수 리스너.
      */
-    fun getSiteZips(): ChildEventListener =
+    private val firebaseZipSizeRefListener: ValueEventListener = object : ValueEventListener {
+
+        override fun onDataChange(snapshot: DataSnapshot) {
+            _siteZipSize.value = snapshot.children.count()
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            Log.d(
+                FireBaseDatabaseManager.TAG,
+                "loadPost:onCancelled",
+                error.toException()
+            )
+            if (isEnableContents.value == false) {
+                Log.d(TAG, "getSiteTypes.ValueEventListener. network available false.")
+            }
+        }
+    }
+
+    /**
+     * 사이트집 사이즈 가져오기.
+     */
+    fun registerSiteZipSizeListener() {
+        fireBaseDatabaseManager.rootRef.addValueEventListener(firebaseZipSizeRefListener)
+    }
+
+    /**
+     * 사이트 집 리스트 가져오기.
+     */
+    fun registerSiteZipsListener() {
         fireBaseDatabaseManager.rootRef.addChildEventListener(firebaseRootRefListener)
+    }
+
+    /**
+     * 사이트 집 데이터 리셋.
+     */
+    fun resetSiteZipData() {
+        unregisterRootRefListener()
+        siteZipList.clear()
+        _siteZips.value?.clear()
+        registerSiteZipSizeListener()
+    }
 
     /**
      * 사이트 검색.
@@ -275,9 +322,16 @@ class MainViewModel(
     }
 
     /**
-     * 파이어베이스 루트 ref 리스너 제거.
+     * 파이어베이스 Zip Site 리스너 제거.
      */
-    private fun removeRootRefListener() {
+    private fun unregisterSiteZipSizeRefListener() {
+        fireBaseDatabaseManager.removeRootRefListener(firebaseZipSizeRefListener)
+    }
+
+    /**
+     * 파이어베이스 Root ref 리스너 제거.
+     */
+    private fun unregisterRootRefListener() {
         fireBaseDatabaseManager.removeRootRefListener(firebaseRootRefListener)
     }
 
@@ -309,6 +363,7 @@ class MainViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        removeRootRefListener()
+        unregisterSiteZipSizeRefListener()
+        unregisterRootRefListener()
     }
 }
