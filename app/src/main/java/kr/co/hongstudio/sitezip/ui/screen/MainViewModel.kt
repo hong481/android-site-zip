@@ -144,11 +144,11 @@ class MainViewModel(
         override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
             Log.d(TAG, "firebaseRootRefListener. onChildAdded. ${snapshot.key ?: ""}}")
             siteZipList.let { list ->
-                if (list.any { it.typeName == snapshot.key ?: "" }) {
+                if (list.any { it.tabName == snapshot.key ?: "" }) {
                     return
                 }
                 list.add(snapshot.getValue(SiteZip::class.java).apply {
-                    this?.typeName = snapshot.key ?: ""
+                    this?.tabName = snapshot.key ?: ""
                     this?.index = snapshot.child(SiteZip.INDEX)
                         .getValue(Int::class.java)
                         ?: 0
@@ -164,7 +164,7 @@ class MainViewModel(
         override fun onChildRemoved(snapshot: DataSnapshot) {
             Log.d(TAG, "firebaseRootRefListener. onChildRemoved. ${snapshot.key ?: ""}}")
             val removeIndex = siteZipList.indexOfFirst {
-                it.typeName == snapshot.key
+                it.tabName == snapshot.key
             }
             if (removeIndex < 0) {
                 return
@@ -304,22 +304,19 @@ class MainViewModel(
     /**
      * 초기 네트워크 레이아웃 표시 여부.
      */
-    fun setViewCheckNetwork() {
-        if (!networkObserver.isNetworkConnected()) {
-            setShowBannerAds(false)
-            setShowNetworkErrorLayout(true)
-        } else {
-            setShowBannerAds(isUseAdmob.value ?: false)
-            setShowNetworkErrorLayout(false)
-        }
+    fun setViewCheckNetwork() = if (!networkObserver.isNetworkConnected()) {
+        setShowBannerAds(false)
+        setShowNetworkErrorLayout(true)
+    } else {
+        setShowBannerAds(isUseAdmob.value ?: false)
+        setShowNetworkErrorLayout(false)
     }
+
 
     /**
      * 광고제거 청구 (인앱 결제).
      */
-    fun billingRemoveAds() {
-        _billingRemoveAds.notify()
-    }
+    fun billingRemoveAds() = _billingRemoveAds.notify()
 
     /**
      * 파이어베이스 Zip Site 리스너 제거.

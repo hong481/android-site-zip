@@ -1,4 +1,4 @@
-package kr.co.hongstudio.sitezip.ui.screen
+package kr.co.hongstudio.sitezip.ui.screen.site
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -20,6 +20,7 @@ import kr.co.hongstudio.sitezip.data.local.entity.SiteZip
 import kr.co.hongstudio.sitezip.data.local.preference.BillingPreference
 import kr.co.hongstudio.sitezip.firebase.FireBaseDatabaseManager
 import kr.co.hongstudio.sitezip.repositories.repository.SiteRepository
+import kr.co.hongstudio.sitezip.ui.screen.MainViewModel
 import kr.co.hongstudio.sitezip.util.*
 import kr.co.hongstudio.sitezip.util.extension.*
 
@@ -103,7 +104,7 @@ class SiteZipViewModel(
     private fun makeTabRef(siteZip: SiteZip): DatabaseReference =
         fireBaseDatabaseManager.database.getReference(
             fireBaseDatabaseManager.rootPath +
-                    "/${siteZip.typeName}" +
+                    "/${siteZip.tabName}" +
                     "/${FireBaseDatabaseManager.SITES_PATH}"
         )
 
@@ -128,7 +129,7 @@ class SiteZipViewModel(
             if (!(snapshot.key ?: "").contains(SiteZip.SITE) || snapshot.key == null) {
                 return
             }
-            val primaryKey = "${siteZip.typeName}_${snapshot.key}"
+            val primaryKey = "${siteZip.tabName}_${snapshot.key}"
             val changeIndex = siteZip.siteList.indexOfFirst {
                 it.sitePrimaryKey == primaryKey
             }
@@ -136,7 +137,7 @@ class SiteZipViewModel(
                 return
             }
             siteZip.siteList[changeIndex] = snapshot.getValue(Site::class.java).apply {
-                this?.siteTypeName = siteZip.typeName
+                this?.siteTypeName = siteZip.tabName
                 this?.isUseHttpIcon =
                     snapshot.child(Site.IS_USE_HTTP_ICON_VAR_NAME).getValue(Boolean::class.java)
                         ?: true
@@ -171,14 +172,14 @@ class SiteZipViewModel(
             if (!(snapshot.key ?: "").contains(SiteZip.SITE) || snapshot.key == null) {
                 return
             }
-            val primaryKey = "${siteZip.typeName}_${snapshot.key}"
+            val primaryKey = "${siteZip.tabName}_${snapshot.key}"
             showProgress(true)
             checkLocalFavoriteSite(
                 primaryKey = primaryKey,
                 onComplete = { isFavorite ->
                     siteZip.siteList.let { list ->
                         list.add(snapshot.getValue(Site::class.java).apply {
-                            this?.siteTypeName = siteZip.typeName
+                            this?.siteTypeName = siteZip.tabName
                             this?.isUseHttpIcon = snapshot.child(Site.IS_USE_HTTP_ICON_VAR_NAME)
                                 .getValue(Boolean::class.java) ?: true
                             this?.sitePrimaryKey = primaryKey
@@ -219,7 +220,7 @@ class SiteZipViewModel(
                 TAG,
                 "firebaseTabRefListener. onChildRemoved. ${snapshot.key} / ${tabRef?.path.toString()}"
             )
-            val primaryKey = "${siteZip.typeName}_${snapshot.key}"
+            val primaryKey = "${siteZip.tabName}_${snapshot.key}"
             val removeIndex = siteZip.siteList.indexOfFirst {
                 it.sitePrimaryKey == primaryKey
             }

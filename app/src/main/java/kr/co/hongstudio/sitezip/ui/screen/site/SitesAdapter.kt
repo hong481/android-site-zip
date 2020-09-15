@@ -1,4 +1,4 @@
-package kr.co.hongstudio.sitezip.ui.screen
+package kr.co.hongstudio.sitezip.ui.screen.site
 
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
@@ -17,7 +17,12 @@ class SitesAdapter (
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): BaseRecyclerViewHolder<Site> = SiteViewHolder(parent, viewModel, lifecycleOwner)
+    ): BaseRecyclerViewHolder<Site> =
+        SiteViewHolder(
+            parent,
+            viewModel,
+            lifecycleOwner
+        )
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val adapterPosition: Int = holder.adapterPosition.takeIf {

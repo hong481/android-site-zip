@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="kr.co.hongstudio.sitezip.ui.screen.SiteZipViewModel" />
+            type="kr.co.hongstudio.sitezip.ui.screen.site.SiteZipViewModel" />
 
         <variable
             name="mainViewModel"

@@ -9,6 +9,8 @@ interface Model {
         const val FALSE: Int = 0
     }
 
+    var index: Int?
+
     var id: Long?
 }
 

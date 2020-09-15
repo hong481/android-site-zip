@@ -21,6 +21,11 @@ data class Site(
     override var id: Long? = 0L,
 
     /**
+     * 순서.
+     */
+    override var index: Int? = 0,
+
+    /**
      * 사이트 고유 키값.
      */
     @ColumnInfo(name = "site_primary_key")

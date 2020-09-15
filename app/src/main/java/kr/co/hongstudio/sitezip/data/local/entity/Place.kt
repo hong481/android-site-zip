@@ -7,7 +7,7 @@ import kr.co.hongstudio.sitezip.base.model.Model
 
 @IgnoreExtraProperties
 @Parcelize
-data class SiteZip(
+data class Place(
 
     /**
      * 아이디.
@@ -20,23 +20,13 @@ data class SiteZip(
     override var index: Int? = 0,
 
     /**
-     * 탭 이름.
+     * 유형.
      */
-    var tabName: String = "",
+    var typeName: String = "",
 
     /**
      * 탭 아이콘 url.
      */
-    var tabIconUrl: String = "",
+    var tabIconUrl: String = ""
 
-    /**
-     * 사이트 리스트.
-     */
-    var siteList: MutableList<Site> = mutableListOf()
-
-) : Parcelable, Model {
-    companion object {
-        const val INDEX: String = "index"
-        const val SITE: String = "site"
-    }
-}
+) : Parcelable, Model

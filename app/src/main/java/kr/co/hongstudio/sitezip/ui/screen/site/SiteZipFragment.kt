@@ -1,9 +1,10 @@
-package kr.co.hongstudio.sitezip.ui.screen
+package kr.co.hongstudio.sitezip.ui.screen.site
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +18,8 @@ import kr.co.hongstudio.sitezip.base.fragment.BaseFragment
 import kr.co.hongstudio.sitezip.base.livedata.EventObserver
 import kr.co.hongstudio.sitezip.data.local.entity.SiteZip
 import kr.co.hongstudio.sitezip.databinding.FragmentSiteZipBinding
-import kr.co.hongstudio.sitezip.ui.screen.SiteZipViewModel.Serializable.SITE_ZIP
+import kr.co.hongstudio.sitezip.ui.screen.MainViewModel
+import kr.co.hongstudio.sitezip.ui.screen.site.SiteZipViewModel.Serializable.SITE_ZIP
 import kr.co.hongstudio.sitezip.util.ResourceProvider
 import kr.co.hongstudio.sitezip.util.extension.observeBaseViewModelEvent
 import org.koin.android.ext.android.inject
@@ -86,6 +88,7 @@ class SiteZipFragment : BaseFragment() {
     }
 
     private fun initViewModel() {
+        Log.d(TAG, "initViewModel. fragment.tag : ${this.tag}")
         // 사이트 정보 가져오기.
         viewModel.getSite()
 
@@ -103,7 +106,8 @@ class SiteZipFragment : BaseFragment() {
         })
         viewModel.shareLink.observe(viewLifecycleOwner, EventObserver {
             val intent = Intent.createChooser(Intent(Intent.ACTION_SEND).apply {
-                type = SHARD_LINK_INTENT_TYPE
+                type =
+                    SHARD_LINK_INTENT_TYPE
                 putExtra(Intent.EXTRA_TEXT, it)
             }, resourceProvider.getString(R.string.site_link_share))
             startActivity(intent)
@@ -129,6 +133,7 @@ class SiteZipFragment : BaseFragment() {
         binding.rvSites.setHasFixedSize(true)
         binding.rvSites.itemAnimator = null
         binding.rvSites.layoutManager = LinearLayoutManager(activity)
-        binding.rvSites.adapter = SitesAdapter(this, viewModel)
+        binding.rvSites.adapter =
+            SitesAdapter(this, viewModel)
     }
 }

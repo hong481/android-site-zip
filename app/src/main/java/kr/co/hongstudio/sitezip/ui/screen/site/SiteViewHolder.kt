@@ -1,4 +1,4 @@
-package kr.co.hongstudio.sitezip.ui.screen
+package kr.co.hongstudio.sitezip.ui.screen.site
 
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner

@@ -18,7 +18,9 @@ import com.google.firebase.storage.FirebaseStorage
 import kr.co.hongstudio.sitezip.R
 import kr.co.hongstudio.sitezip.base.activity.BaseActivity
 import kr.co.hongstudio.sitezip.base.livedata.EventObserver
+import kr.co.hongstudio.sitezip.base.model.Model
 import kr.co.hongstudio.sitezip.billing.BillingManager
+import kr.co.hongstudio.sitezip.data.local.entity.SiteZip
 import kr.co.hongstudio.sitezip.databinding.ActivityMainBinding
 import kr.co.hongstudio.sitezip.glide.GlideApp
 import kr.co.hongstudio.sitezip.util.DisplayUtil
@@ -115,7 +117,7 @@ class MainActivity : BaseActivity() {
         })
         viewModel.siteZipSize.observe(this, Observer {
             Log.d(TAG, "siteZipSize: $it")
-            (binding.viewPager.adapter as? SiteZipsAdapter)?.setSize(it)
+            (binding.viewPager.adapter as? FragmentAdapter)?.setSize(it)
             if (viewModel.siteZipList.size <= 0) {
                 viewModel.registerSiteZipsListener()
             } else {
@@ -123,7 +125,10 @@ class MainActivity : BaseActivity() {
             }
         })
         viewModel.siteZips.observe(this, Observer {
-            (binding.viewPager.adapter as? SiteZipsAdapter)?.setItems(it)
+            val models: MutableList<Model> = it.toMutableList()
+            (binding.viewPager.adapter as? FragmentAdapter)?.setItems(
+                items = models.apply { sortBy { model -> model.index } }
+            )
         })
         viewModel.searchVisibility.observe(this, Observer {
             if (it) {
@@ -176,26 +181,27 @@ class MainActivity : BaseActivity() {
     private fun initViewPager() = try {
         binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.viewPager.offscreenPageLimit = 99
-        binding.viewPager.adapter = SiteZipsAdapter(
-            fragmentActivity = this
-        )
+        binding.viewPager.adapter =
+            FragmentAdapter(
+                fragmentActivity = this
+            )
 
-        val adapter: SiteZipsAdapter = (binding.viewPager.adapter as SiteZipsAdapter)
+        val adapter: FragmentAdapter = (binding.viewPager.adapter as FragmentAdapter)
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             Log.d(
                 TAG,
-                "adapter.siteZips.size : ${adapter.siteZips.size} " +
+                "adapter.siteZips.size : ${adapter.adapterItems.size} " +
                         "/ " +
-                        "adapter.siteZipsSize: ${adapter.siteZipsSize}"
+                        "adapter.siteZipsSize: ${adapter.adapterItemsSize}"
             )
             // 리턴.
-            if (adapter.siteZips.size < adapter.siteZipsSize) {
+            if (adapter.adapterItems.size < adapter.adapterItemsSize) {
                 Log.d(TAG, "TabLayoutMediator. return.")
                 return@TabLayoutMediator
             }
-            val tabIconUrl: String = adapter.siteZips[position].tabIconUrl
+            val tabIconUrl: String = (adapter.adapterItems[position] as SiteZip).tabIconUrl
             val padding: Int = displayUtil.dpToPx(3f).toInt()
-            tab.text = adapter.siteZips[position].typeName
+            tab.text = (adapter.adapterItems[position] as SiteZip).tabName
             (tab.view.getChildAt(0) as ImageView).setPadding(padding, padding, padding, padding)
 
             Log.d(TAG, "position : $position / tabIconUrl : $tabIconUrl")

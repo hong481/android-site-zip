@@ -2,7 +2,7 @@ package kr.co.hongstudio.sitezip.di
 
 import androidx.lifecycle.SavedStateHandle
 import kr.co.hongstudio.sitezip.ui.screen.MainViewModel
-import kr.co.hongstudio.sitezip.ui.screen.SiteZipViewModel
+import kr.co.hongstudio.sitezip.ui.screen.site.SiteZipViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
 import org.koin.dsl.module
