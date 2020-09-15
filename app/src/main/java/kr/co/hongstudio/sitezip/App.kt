@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.os.Process
 import android.util.Log
 import androidx.core.app.ActivityCompat
@@ -35,6 +36,15 @@ class App : Application() {
         fun exit(activity: Activity? = null) {
             activity?.let { ActivityCompat.finishAffinity(it) }
             Process.killProcess(Process.myPid())
+            exitProcess(0)
+        }
+
+        @JvmStatic
+        fun restart(activity: Activity? = null,
+            intent : Intent
+        ) {
+            activity?.let { ActivityCompat.finishAffinity(it) }
+            context.startActivity(intent)
             exitProcess(0)
         }
     }

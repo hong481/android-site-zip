@@ -15,11 +15,13 @@ import com.bumptech.glide.request.transition.Transition
 import com.google.android.gms.ads.AdRequest
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.storage.FirebaseStorage
+import kr.co.hongstudio.sitezip.App
 import kr.co.hongstudio.sitezip.R
 import kr.co.hongstudio.sitezip.base.activity.BaseActivity
 import kr.co.hongstudio.sitezip.base.livedata.EventObserver
 import kr.co.hongstudio.sitezip.base.model.Model
 import kr.co.hongstudio.sitezip.billing.BillingManager
+import kr.co.hongstudio.sitezip.data.local.entity.Place
 import kr.co.hongstudio.sitezip.data.local.entity.SiteZip
 import kr.co.hongstudio.sitezip.databinding.ActivityMainBinding
 import kr.co.hongstudio.sitezip.glide.GlideApp
@@ -98,7 +100,7 @@ class MainActivity : BaseActivity() {
         viewModel.isEnableContents.observe(this, Observer {
             Log.d(TAG, "isEnableContents : $it")
             if (it) {
-                viewModel.registerSiteZipSizeListener()
+                viewModel.registerZipSizeListener()
             }
         })
         // 라이브데이터 옵저버.
@@ -115,19 +117,21 @@ class MainActivity : BaseActivity() {
                 viewModel.setShowBannerAds(isShow = it)
             }
         })
-        viewModel.siteZipSize.observe(this, Observer {
+        viewModel.zipSize.observe(this, Observer {
             Log.d(TAG, "siteZipSize: $it")
             (binding.viewPager.adapter as? FragmentAdapter)?.setSize(it)
-            if (viewModel.siteZipList.size <= 0) {
-                viewModel.registerSiteZipsListener()
+            if (viewModel.zipList.size <= 0) {
+                viewModel.registerZipsListener()
             } else {
-                viewModel.resetSiteZipData()
+                App.restart(this, createIntent(applicationContext))
             }
         })
-        viewModel.siteZips.observe(this, Observer {
+        viewModel.zips.observe(this, Observer {
             val models: MutableList<Model> = it.toMutableList()
             (binding.viewPager.adapter as? FragmentAdapter)?.setItems(
-                items = models.apply { sortBy { model -> model.index } }
+                items = models.apply {
+                    sortBy { model -> model.index }
+                }
             )
         })
         viewModel.searchVisibility.observe(this, Observer {
@@ -199,11 +203,19 @@ class MainActivity : BaseActivity() {
                 Log.d(TAG, "TabLayoutMediator. return.")
                 return@TabLayoutMediator
             }
-            val tabIconUrl: String = (adapter.adapterItems[position] as SiteZip).tabIconUrl
+            val itemModel: Model = adapter.adapterItems[position]
+            val tabIconUrl: String = if (itemModel is Place) {
+                itemModel.tabIconUrl
+            } else {
+                (itemModel as SiteZip).tabIconUrl
+            }
+            tab.text = if (itemModel is Place) {
+                itemModel.tabName
+            } else {
+                (itemModel as SiteZip).tabName
+            }
             val padding: Int = displayUtil.dpToPx(3f).toInt()
-            tab.text = (adapter.adapterItems[position] as SiteZip).tabName
             (tab.view.getChildAt(0) as ImageView).setPadding(padding, padding, padding, padding)
-
             Log.d(TAG, "position : $position / tabIconUrl : $tabIconUrl")
             if (tabIconUrl.isNotEmpty()) {
                 GlideApp.with(applicationContext)

@@ -317,7 +317,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/colorPrimary"
-                    android:visibility="@{viewModel.siteZips.size() > 0 == true ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.zips.size() > 0 == true ? View.VISIBLE : View.GONE}"
                     ads:tabMode="scrollable"
                     app:layout_constraintTop_toBottomOf="@id/layout_more_menu"
                     app:tabIconTint="@color/tab_color_selector"

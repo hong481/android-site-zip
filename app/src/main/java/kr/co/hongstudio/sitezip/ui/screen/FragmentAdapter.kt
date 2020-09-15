@@ -24,7 +24,7 @@ class FragmentAdapter(
     override fun getItemCount(): Int = adapterItems.size
 
     override fun createFragment(position: Int): Fragment = when {
-        adapterItems[position].javaClass.isInstance(Place::class.java) -> {
+        adapterItems[position] is Place -> {
             PlaceListFragment.newInstance(place = adapterItems[position] as Place)
         }
         else -> {
@@ -52,13 +52,13 @@ class FragmentAdapter(
         } ?: return
 
         when {
-            adapterItems[position].javaClass.isInstance(Place::class.java) -> {
+            adapterItems[position] is Place -> {
                 val fragment: PlaceListFragment =
                     (this.fragmentActivity.supportFragmentManager.findFragmentByTag(
                         "f" + holder.itemId
                     ) as? PlaceListFragment) ?: return
             }
-            adapterItems[position].javaClass.isInstance(SiteZip::class.java) -> {
+            adapterItems[position] is SiteZip -> {
                 val fragment: SiteZipFragment =
                     (this.fragmentActivity.supportFragmentManager.findFragmentByTag(
                         "f" + holder.itemId

@@ -9,8 +9,10 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import kr.co.hongstudio.sitezip.admob.AdMobManager
 import kr.co.hongstudio.sitezip.base.livedata.EmptyEvent
+import kr.co.hongstudio.sitezip.base.model.Model
 import kr.co.hongstudio.sitezip.base.viewmodel.BaseViewModel
 import kr.co.hongstudio.sitezip.data.BuildProperty
+import kr.co.hongstudio.sitezip.data.local.entity.Place
 import kr.co.hongstudio.sitezip.data.local.entity.SiteZip
 import kr.co.hongstudio.sitezip.data.local.preference.AdMobPreference
 import kr.co.hongstudio.sitezip.data.local.preference.BillingPreference
@@ -35,21 +37,21 @@ class MainViewModel(
     }
 
     /**
-     * 사이트집 리스트. (No LiveData)
+     * Model zip 리스트. (No LiveData)
      */
-    val siteZipList: MutableList<SiteZip> = mutableListOf()
+    val zipList: MutableList<Model> = mutableListOf()
 
     /**
-     * 사이트집 라이브데이터.
+     * Model zip 라이브데이터.
      */
-    private val _siteZips: MutableLiveData<MutableList<SiteZip>> = MutableLiveData()
-    val siteZips: LiveData<MutableList<SiteZip>> = _siteZips
+    private val _zips: MutableLiveData<MutableList<Model>> = MutableLiveData()
+    val zips: LiveData<MutableList<Model>> = _zips
 
     /**
-     * 사이트집 개수.
+     * Model zip 개수.
      */
-    private val _siteZipSize: MutableLiveData<Int> = MutableLiveData()
-    val siteZipSize: LiveData<Int> = _siteZipSize
+    private val _zipSize: MutableLiveData<Int> = MutableLiveData()
+    val zipSize: LiveData<Int> = _zipSize
 
     /**
      * 검색 이벤트.
@@ -117,7 +119,7 @@ class MainViewModel(
     val isEnableContents: LiveData<Boolean> =
         fireBaseDatabaseManager.isAvailable.map { isAvailable ->
             Log.d(TAG, "isAvailable $isAvailable")
-            if (siteZips.value?.size ?: 0 > 0) {
+            if (zips.value?.size ?: 0 > 0) {
                 return@map true
             } else {
                 return@map isAvailable
@@ -142,19 +144,38 @@ class MainViewModel(
     private val firebaseRootRefListener: ChildEventListener = object : ChildEventListener {
 
         override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-            Log.d(TAG, "firebaseRootRefListener. onChildAdded. ${snapshot.key ?: ""}}")
-            siteZipList.let { list ->
-                if (list.any { it.tabName == snapshot.key ?: "" }) {
+            Log.d(TAG, "firebaseRootRefListener. onChildAdded. ${snapshot.key ?: ""}")
+
+            zipList.let { list ->
+                if (list.any {
+                        if (it is Place) it.tabName == snapshot.key ?: ""
+                        else (it as SiteZip).tabName == snapshot.key ?: ""
+                    }) {
                     return
                 }
-                list.add(snapshot.getValue(SiteZip::class.java).apply {
-                    this?.tabName = snapshot.key ?: ""
-                    this?.index = snapshot.child(SiteZip.INDEX)
-                        .getValue(Int::class.java)
-                        ?: 0
-                } ?: return)
+                list.add(snapshot.getValue(
+                    if (snapshot.child(Model.TYPE).getValue(String::class.java).equals(Place.PLACE)
+                    ) {
+                        Place::class.java
+                    } else {
+                        SiteZip::class.java
+                    }
+                ).apply {
+                    if (this is Place) {
+                        this.tabName = snapshot.key ?: ""
+                        this.index = snapshot.child(Model.INDEX)
+                            .getValue(Int::class.java)
+                            ?: 0
+                    } else {
+                        (this as SiteZip).tabName = snapshot.key ?: ""
+                        this.index = snapshot.child(Model.INDEX)
+                            .getValue(Int::class.java)
+                            ?: 0
+                    }
+                } as Model? ?: return)
             }
-            _siteZips.value = siteZipList.apply {
+
+            _zips.value = zipList.apply {
                 sortBy {
                     it.index
                 }
@@ -162,15 +183,20 @@ class MainViewModel(
         }
 
         override fun onChildRemoved(snapshot: DataSnapshot) {
-            Log.d(TAG, "firebaseRootRefListener. onChildRemoved. ${snapshot.key ?: ""}}")
-            val removeIndex = siteZipList.indexOfFirst {
-                it.tabName == snapshot.key
+            Log.d(TAG, "firebaseRootRefListener. onChildRemoved. ${snapshot.key ?: ""}")
+            val removeIndex = zipList.indexOfFirst {
+                if (it is Place) {
+                    it.tabName == snapshot.key
+                } else {
+                    (it as SiteZip).tabName == snapshot.key
+                }
             }
             if (removeIndex < 0) {
                 return
             }
-            siteZipList.removeAt(removeIndex)
-            _siteZips.value = siteZipList.apply {
+            zipList.removeAt(removeIndex)
+
+            _zips.value = zipList.apply {
                 sortBy {
                     it.index
                 }
@@ -203,7 +229,7 @@ class MainViewModel(
     private val firebaseZipSizeRefListener: ValueEventListener = object : ValueEventListener {
 
         override fun onDataChange(snapshot: DataSnapshot) {
-            _siteZipSize.value = snapshot.children.count()
+            _zipSize.value = snapshot.children.count()
         }
 
         override fun onCancelled(error: DatabaseError) {
@@ -219,27 +245,17 @@ class MainViewModel(
     }
 
     /**
-     * 사이트집 사이즈 가져오기.
+     * Model Zip 사이즈 리스너 등록.
      */
-    fun registerSiteZipSizeListener() {
+    fun registerZipSizeListener() {
         fireBaseDatabaseManager.rootRef.addValueEventListener(firebaseZipSizeRefListener)
     }
 
     /**
-     * 사이트 집 리스트 가져오기.
+     * Model Zip 리스트 리스너 등록.
      */
-    fun registerSiteZipsListener() {
+    fun registerZipsListener() {
         fireBaseDatabaseManager.rootRef.addChildEventListener(firebaseRootRefListener)
-    }
-
-    /**
-     * 사이트 집 데이터 리셋.
-     */
-    fun resetSiteZipData() {
-        unregisterRootRefListener()
-        siteZipList.clear()
-        _siteZips.value?.clear()
-        registerSiteZipSizeListener()
     }
 
     /**

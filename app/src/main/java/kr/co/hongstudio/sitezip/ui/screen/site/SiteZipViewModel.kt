@@ -54,12 +54,12 @@ class SiteZipViewModel(
     val intentUrlEvent: LiveData<Event<String>> = _intentUrlEvent
 
     /**
-     * 사이트 유형.
+     * 사이트 Zip.
      */
     var siteZip: SiteZip = savedStateHandle.get(Serializable.SITE_ZIP) ?: SiteZip()
 
     /**
-     * 사이트 유형.
+     * 사이트 Zip.
      */
     private val _searchSiteZip: MutableLiveData<SiteZip> = MutableLiveData()
     val searchSiteZip: LiveData<SiteZip> = _searchSiteZip
@@ -353,7 +353,6 @@ class SiteZipViewModel(
     private fun removeFirebaseListener() {
         tabRef?.removeEventListener(firebaseTabRefListener)
     }
-
 
     /**
      * 바인딩.

@@ -7,6 +7,9 @@ interface Model {
 
         const val TRUE: Int = 1
         const val FALSE: Int = 0
+
+        const val INDEX: String = "index"
+        const val TYPE: String = "type"
     }
 
     var index: Int?

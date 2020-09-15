@@ -22,11 +22,18 @@ data class Place(
     /**
      * 유형.
      */
-    var typeName: String = "",
+    var tabName: String = "",
 
     /**
      * 탭 아이콘 url.
      */
     var tabIconUrl: String = ""
 
-) : Parcelable, Model
+) : Parcelable, Model {
+
+    companion object {
+        const val INDEX: String = "index"
+        const val PLACE: String = "place"
+    }
+
+}

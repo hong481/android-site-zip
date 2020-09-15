@@ -36,7 +36,6 @@ data class SiteZip(
 
 ) : Parcelable, Model {
     companion object {
-        const val INDEX: String = "index"
         const val SITE: String = "site"
     }
 }
