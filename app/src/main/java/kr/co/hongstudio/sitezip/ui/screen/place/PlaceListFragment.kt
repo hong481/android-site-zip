@@ -7,15 +7,14 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import kr.co.hongstudio.sitezip.R
 import kr.co.hongstudio.sitezip.base.fragment.BaseFragment
+import kr.co.hongstudio.sitezip.base.livedata.EventObserver
 import kr.co.hongstudio.sitezip.data.local.entity.Place
 import kr.co.hongstudio.sitezip.databinding.FragmentPlaceListBinding
-import kr.co.hongstudio.sitezip.ui.screen.MainViewModel
 import kr.co.hongstudio.sitezip.ui.screen.place.PlaceListViewModel.Serializable.PLACE
-import kr.co.hongstudio.sitezip.util.ResourceProvider
+import kr.co.hongstudio.sitezip.util.PermissionUtil
 import kr.co.hongstudio.sitezip.util.extension.observeBaseViewModelEvent
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.getStateViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class PlaceListFragment : BaseFragment() {
 
@@ -37,9 +36,7 @@ class PlaceListFragment : BaseFragment() {
         getStateViewModel<PlaceListViewModel>(bundle = arguments)
     }
 
-    private val mainViewModel: MainViewModel by sharedViewModel()
-
-    private val resourceProvider: ResourceProvider by inject()
+    private val permissionUtil: PermissionUtil by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,6 +48,18 @@ class PlaceListFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         initBinding()
         initViewModel()
+
+        /**
+         * 권한 요청.
+         */
+        permissionUtil.checkPermission(this,
+            onGranted = {
+                viewModel.setPermissionGranted(true)
+            },
+            onDenied = {
+                viewModel.setPermissionGranted(false)
+            }
+        )
     }
 
     private fun initBinding() {
@@ -59,6 +68,13 @@ class PlaceListFragment : BaseFragment() {
     }
 
     private fun initViewModel() {
+        viewModel.permissionGranted.observe(viewLifecycleOwner, EventObserver {
+            if (it) {
+                viewModel.registerLocationCallback()
+            } else {
+                viewModel.unregisterLocationCallback()
+            }
+        })
         observeBaseViewModelEvent(viewModel)
     }
 }

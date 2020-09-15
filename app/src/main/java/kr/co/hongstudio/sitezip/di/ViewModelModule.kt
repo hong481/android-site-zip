@@ -38,7 +38,9 @@ object ViewModelModule {
         }
 
         viewModel {
-            PlaceListViewModel()
+            PlaceListViewModel(
+                get()
+            )
         }
     }
 }

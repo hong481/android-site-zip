@@ -12,6 +12,9 @@ object UtilModule {
 
     val INSTANCE: Module = module {
         single {
+            PermissionUtil()
+        }
+        single {
             ResourceProviderImpl(
                 get()
             )
@@ -52,6 +55,12 @@ object UtilModule {
 
         single {
             DisplayUtil(
+                get()
+            )
+        }
+
+        single {
+            LocationUtil(
                 get()
             )
         }

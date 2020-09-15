@@ -51,6 +51,11 @@ ext {
     databaseVersion = '19.4.0'
     storageUiVersion = '4.3.2'
 
+    billingVersion = '3.0.0'
+
+    googleMapsVersion = '17.0.0'
+    googleLocationVersion = '17.0.0'
+
     glideVersion = '4.11.0'
 
     swipeRecyclerViewVersion = '28.0.0'

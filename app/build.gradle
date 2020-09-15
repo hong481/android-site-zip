@@ -265,12 +265,22 @@ dependencies {
     implementation "com.google.firebase:firebase-database-ktx:${rootProject.ext.databaseVersion}"
     implementation "com.firebaseui:firebase-ui-storage:${rootProject.ext.storageUiVersion}"
 
+    // viewpager2
     implementation "androidx.viewpager2:viewpager2:${rootProject.ext.viewpager2Version}"
+
+    // jsoup
     implementation "org.jsoup:jsoup:${rootProject.ext.jsoupVersion}"
+
+    // google ads
     implementation "com.google.android.gms:play-services-ads:${rootProject.ext.googleAdsVersion}"
 
-    implementation 'com.android.billingclient:billing:3.0.0'
-    implementation 'com.android.billingclient:billing-ktx:3.0.0'
+    // google billing
+    implementation "com.android.billingclient:billing:${rootProject.ext.billingVersion}"
+    implementation "com.android.billingclient:billing-ktx:${rootProject.ext.billingVersion}"
+
+    // google gps
+    implementation "com.google.android.gms:play-services-maps:${rootProject.ext.googleMapsVersion}"
+    implementation "com.google.android.gms:play-services-location:${rootProject.ext.googleLocationVersion}"
 
     // Test
     testImplementation "junit:junit:${rootProject.ext.junitVersion}"
