@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.lifecycle.Observer
 import kr.co.hongstudio.sitezip.R
 import kr.co.hongstudio.sitezip.base.fragment.BaseFragment
 import kr.co.hongstudio.sitezip.base.livedata.EventObserver
+import kr.co.hongstudio.sitezip.base.model.Model
 import kr.co.hongstudio.sitezip.data.local.entity.Place
 import kr.co.hongstudio.sitezip.databinding.FragmentPlaceListBinding
 import kr.co.hongstudio.sitezip.ui.screen.place.PlaceListViewModel.Serializable.PLACE
@@ -19,7 +21,7 @@ import org.koin.androidx.viewmodel.ext.android.getStateViewModel
 class PlaceListFragment : BaseFragment() {
 
     companion object {
-        const val TAG: String = "PlacesFragment"
+        const val TAG: String = "PlaceListFragment"
 
         fun newInstance(place: Place): PlaceListFragment =
             PlaceListFragment().apply {
@@ -38,6 +40,7 @@ class PlaceListFragment : BaseFragment() {
 
     private val permissionUtil: PermissionUtil by inject()
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,19 +51,8 @@ class PlaceListFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         initBinding()
         initViewModel()
-
-        /**
-         * 권한 요청.
-         */
-        permissionUtil.checkPermission(this,
-            onGranted = {
-                viewModel.setPermissionGranted(true)
-            },
-            onDenied = {
-                viewModel.setPermissionGranted(false)
-            }
-        )
     }
+
 
     private fun initBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
@@ -68,6 +60,22 @@ class PlaceListFragment : BaseFragment() {
     }
 
     private fun initViewModel() {
+        viewModel.place.observe(viewLifecycleOwner, Observer { place ->
+            if (place.state == Model.TRUE) {
+                // 권한 요청
+                permissionUtil.checkPermission(this,
+                    onGranted = {
+                        viewModel.setPermissionGranted(true)
+                    },
+                    onDenied = {
+                        viewModel.setPermissionGranted(false)
+                    }
+                )
+            }
+        })
+        viewModel.location.observe(viewLifecycleOwner, Observer { location ->
+            viewModel.setAddress(location)
+        })
         viewModel.permissionGranted.observe(viewLifecycleOwner, EventObserver {
             if (it) {
                 viewModel.registerLocationCallback()

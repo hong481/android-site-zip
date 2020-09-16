@@ -53,12 +53,12 @@ class BillingManager(
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     Log.d(TAG, "구글 결제 서버에 접속을 성공하였습니다.")
+                    billingPref.removeAds = false
                     getSkuDetailList()
                     // 소모가 안된 상품 존재시 - 리스트에 아이템이 존재하게 된다
                     val purchases: MutableList<Purchase> = billingClient.queryPurchases(BillingClient.SkuType.INAPP).purchasesList ?: mutableListOf()
                     if (purchases.size <= 0) {
                         billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP) { _, purchaseHistories ->
-                            billingPref.removeAds = false
                             for (item: PurchaseHistoryRecord in purchaseHistories ?: mutableListOf()) {
                                 if (item.sku == REMOVE_ADS) {
                                     billingPref.removeAds = true

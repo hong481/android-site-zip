@@ -25,6 +25,10 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/google_admob_app_id" />
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBBAw8I5RPfEeKC-3rfz-jGuVpE_jQzMJ4"/>
+
         <!-- MainActivity -->
         <activity
             android:name="kr.co.hongstudio.sitezip.ui.screen.MainActivity"

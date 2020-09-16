@@ -41,7 +41,6 @@ ext {
 
     viewpager2Version = '1.0.0'
     jsoupVersion = '1.12.1'
-    googleAdsVersion = '19.3.0'
 
     analyticsVersion = '17.5.0'
     crashlyticsVersion = '17.2.1'
@@ -53,6 +52,7 @@ ext {
 
     billingVersion = '3.0.0'
 
+    googleAdsVersion = '19.4.0'
     googleMapsVersion = '17.0.0'
     googleLocationVersion = '17.0.0'
 

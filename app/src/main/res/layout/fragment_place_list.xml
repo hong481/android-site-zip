@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -21,18 +22,19 @@
         android:layout_height="match_parent"
         android:descendantFocusability="blocksDescendants">
 
+
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:gravity="center"
-            android:text="@{viewModel.location.toString()}"
+            android:text="@{viewModel.address.toString()}"
             android:visibility="@{viewModel.isComingSoon() == true ? View.GONE : View.VISIBLE}"
             tools:visibility="visible" />
 
         <TextView
             android:id="@+id/tv_state_ready"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:gravity="center_horizontal|center_vertical"
             android:text="@string/coming_soon_message"
             android:visibility="@{viewModel.isComingSoon() == true ? View.VISIBLE : View.GONE}"

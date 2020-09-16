@@ -40,6 +40,7 @@ object ViewModelModule {
         viewModel { (stateHandle: SavedStateHandle) ->
             PlaceListViewModel(
                 stateHandle,
+                get(),
                 get()
             )
         }
