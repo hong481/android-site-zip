@@ -76,8 +76,8 @@ android {
         }
         /** 바이크닷 **/
         bikedot {
-            versionCode 3
-            versionName "0.0.3"
+            versionCode 4
+            versionName "0.0.4"
             applicationIdSuffix ".bikedot"
             buildConfigField(BUILD_PROPERTIES_TYPE, BUILD_PROPERTIES_NAME, loadProperties(BIKE_DOT_PROPERTIES_PATH))
         }
