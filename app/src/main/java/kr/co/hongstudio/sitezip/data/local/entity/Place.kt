@@ -20,7 +20,12 @@ data class Place(
     override var index: Int? = 0,
 
     /**
-     * 유형.
+     * 상태.
+     */
+    override var state: Int? = 0,
+
+    /**
+     * 탭 이름.
      */
     var tabName: String = "",
 

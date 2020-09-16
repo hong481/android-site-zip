@@ -13,6 +13,7 @@ import kr.co.hongstudio.sitezip.R
 import kr.co.hongstudio.sitezip.admob.AdMobManager
 import kr.co.hongstudio.sitezip.base.livedata.EmptyEvent
 import kr.co.hongstudio.sitezip.base.livedata.Event
+import kr.co.hongstudio.sitezip.base.model.Model
 import kr.co.hongstudio.sitezip.base.viewmodel.BaseViewModel
 import kr.co.hongstudio.sitezip.data.BuildProperty
 import kr.co.hongstudio.sitezip.data.local.entity.Site
@@ -75,6 +76,13 @@ class SiteZipViewModel(
      */
     private val _isShowNotFoundSite: MutableLiveData<Boolean> = MutableLiveData()
     val isShowNotFoundSite: LiveData<Boolean> = _isShowNotFoundSite
+
+    /**
+     * 준비중 표시.
+     */
+    val isComingSoon: LiveData<Boolean> = searchSiteZip.map {
+        it?.state == Model.FALSE
+    }
 
     /**
      * 즐겨찾기만 표시 여부.

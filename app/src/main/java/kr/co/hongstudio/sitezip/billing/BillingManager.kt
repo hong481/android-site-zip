@@ -5,7 +5,6 @@ import android.content.Context
 import android.util.Log
 import com.android.billingclient.api.*
 import kr.co.hongstudio.sitezip.data.local.preference.BillingPreference
-import kr.co.hongstudio.sitezip.ui.screen.MainActivity
 
 class BillingManager(
 
@@ -19,6 +18,7 @@ class BillingManager(
         const val TAG: String = "BillingManager"
 
         const val REMOVE_ADS: String = "remove_ads"
+        const val SPONSOR: String = "sponsor"
     }
 
     private lateinit var billingClient: BillingClient
@@ -35,8 +35,7 @@ class BillingManager(
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP) { _, purchaseHistoryRecordList ->
-                        billingPref.removeAds =
-                            purchaseHistoryRecordList != null && purchaseHistoryRecordList.size > 0
+                        billingPref.removeAds = purchaseHistoryRecordList != null && purchaseHistoryRecordList.size > 0
                     }
                     Log.d(
                         TAG,
@@ -59,7 +58,7 @@ class BillingManager(
     /**
      * 구매 진행.
      */
-    fun processToPurchase() {
+    fun processToPurchase(activity: Activity) {
         Log.d(TAG, "processToPurchase.")
         val skuList = ArrayList<String>().apply {
             add(REMOVE_ADS)
@@ -69,14 +68,17 @@ class BillingManager(
                 val params = SkuDetailsParams.newBuilder()
                 params.setSkusList(skuList)
                 params.setType(BillingClient.SkuType.INAPP)
-                launchBillingFlow(params)
+                launchBillingFlow(activity, params)
             }
 
             override fun onBillingServiceDisconnected() {}
         })
     }
 
-    private fun launchBillingFlow(params: SkuDetailsParams.Builder) {
+    private fun launchBillingFlow(
+        activity: Activity,
+        params: SkuDetailsParams.Builder
+    ) {
         billingClient.querySkuDetailsAsync(params.build()) { billingResult, skuDetailsList ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                 Log.d(TAG, "launchBillingFlow. BillingClient.BillingResponseCode.OK.")
@@ -86,7 +88,7 @@ class BillingManager(
                             .setSkuDetails(skuDetailsList[0])
                             .build()
                         val responseCode = billingClient.launchBillingFlow(
-                            applicationContext as Activity,
+                            activity,
                             flowParams
                         )
                         Log.d(TAG, "launchBillingFlow. responseCode : $responseCode")

@@ -20,6 +20,11 @@ data class SiteZip(
     override var index: Int? = 0,
 
     /**
+     * 상태.
+     */
+    override var state: Int? = 0,
+
+    /**
      * 탭 이름.
      */
     var tabName: String = "",

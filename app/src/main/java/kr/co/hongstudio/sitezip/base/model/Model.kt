@@ -10,9 +10,12 @@ interface Model {
 
         const val INDEX: String = "index"
         const val TYPE: String = "type"
+        const val STATE: String = "state"
     }
 
     var index: Int?
+
+    var state: Int?
 
     var id: Long?
 }

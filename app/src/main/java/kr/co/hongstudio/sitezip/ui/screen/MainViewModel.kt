@@ -163,14 +163,12 @@ class MainViewModel(
                 ).apply {
                     if (this is Place) {
                         this.tabName = snapshot.key ?: ""
-                        this.index = snapshot.child(Model.INDEX)
-                            .getValue(Int::class.java)
-                            ?: 0
+                        this.index = snapshot.child(Model.INDEX).getValue(Int::class.java) ?: 0
+                        this.state = snapshot.child(Model.STATE).getValue(Int::class.java) ?: 0
                     } else {
                         (this as SiteZip).tabName = snapshot.key ?: ""
-                        this.index = snapshot.child(Model.INDEX)
-                            .getValue(Int::class.java)
-                            ?: 0
+                        this.index = snapshot.child(Model.INDEX).getValue(Int::class.java) ?: 0
+                        this.state = snapshot.child(Model.STATE).getValue(Int::class.java) ?: 0
                     }
                 } as Model? ?: return)
             }
@@ -208,7 +206,49 @@ class MainViewModel(
         }
 
         override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-            Log.d(TAG, "firebaseRootRefListener. onChildChanged.")
+            val primaryKey = "${snapshot.key}"
+            var findModel: Model? = null
+            for (model: Model in zipList) {
+                if (model is Place) {
+                    if (model.tabName == primaryKey) {
+                        findModel = model
+                        break
+                    }
+                } else {
+                    if ((model as SiteZip).tabName == primaryKey) {
+                        findModel = model
+                        break
+                    }
+                }
+            }
+            val changeIndex = zipList.indexOf(findModel)
+            if (changeIndex < 0) {
+                return
+            }
+            zipList[changeIndex] = snapshot.getValue(
+                if (snapshot.child(Model.TYPE).getValue(String::class.java).equals(Place.PLACE)
+                ) {
+                    Place::class.java
+                } else {
+                    SiteZip::class.java
+                }
+            ).apply {
+                if (this is Place) {
+                    this.tabName = snapshot.key ?: ""
+                    this.index = snapshot.child(Model.INDEX).getValue(Int::class.java) ?: 0
+                    this.state = snapshot.child(Model.STATE).getValue(Int::class.java) ?: 0
+                } else {
+                    (this as SiteZip).tabName = snapshot.key ?: ""
+                    this.index = snapshot.child(Model.INDEX).getValue(Int::class.java) ?: 0
+                    this.state = snapshot.child(Model.STATE).getValue(Int::class.java) ?: 0
+                }
+            } as Model? ?: return
+
+            _zips.value = zipList.apply {
+                sortBy {
+                    it.index
+                }
+            }
         }
 
         override fun onCancelled(error: DatabaseError) {

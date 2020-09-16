@@ -26,7 +26,17 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@{viewModel.location.toString()}"
-            tools:text="테스트" />
+            android:visibility="@{viewModel.isComingSoon() == true ? View.GONE : View.VISIBLE}"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tv_state_ready"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/coming_soon_message"
+            android:visibility="@{viewModel.isComingSoon() == true ? View.VISIBLE : View.GONE}"
+            tools:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

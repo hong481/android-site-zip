@@ -57,6 +57,7 @@ class FragmentAdapter(
                     (this.fragmentActivity.supportFragmentManager.findFragmentByTag(
                         "f" + holder.itemId
                     ) as? PlaceListFragment) ?: return
+                fragment.viewModel.onBind(adapterItems[adapterPosition] as Place)
             }
             adapterItems[position] is SiteZip -> {
                 val fragment: SiteZipFragment =

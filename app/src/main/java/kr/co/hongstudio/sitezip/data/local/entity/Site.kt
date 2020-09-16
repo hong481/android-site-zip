@@ -10,7 +10,7 @@ import kr.co.hongstudio.sitezip.base.model.Model
 
 @IgnoreExtraProperties
 @Parcelize
-@Entity
+@Entity (ignoredColumns = ["index", "state"])
 data class Site(
 
     /**
@@ -24,6 +24,11 @@ data class Site(
      * 순서.
      */
     override var index: Int? = 0,
+
+    /**
+     * 상태.
+     */
+    override var state: Int? = 0,
 
     /**
      * 사이트 고유 키값.

@@ -30,6 +30,7 @@
             android:descendantFocusability="blocksDescendants"
             android:paddingBottom="5dp"
             android:scrollbars="vertical"
+            android:visibility="@{viewModel.isComingSoon() == true ? View.GONE : View.VISIBLE}"
             app:items="@{viewModel.searchSiteZip.siteList}" />
 
         <TextView
@@ -38,7 +39,16 @@
             android:layout_height="match_parent"
             android:gravity="center_horizontal|center_vertical"
             android:text="@{viewModel.isFavoriteMode() == true ? @string/not_found_favorite_site_message : @string/not_found_site_message}"
-            android:visibility="@{viewModel.isShowNotFoundSite() == true ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.isShowNotFoundSite() == true &amp;&amp;viewModel.isComingSoon() == true  ? View.VISIBLE : View.GONE}"
+            tools:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_state_ready"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/coming_soon_message"
+            android:visibility="@{viewModel.isComingSoon() == true ? View.VISIBLE : View.GONE}"
             tools:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

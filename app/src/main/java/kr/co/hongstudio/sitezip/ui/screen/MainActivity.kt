@@ -171,7 +171,7 @@ class MainActivity : BaseActivity() {
             }
         })
         viewModel.billingRemoveAds.observe(this, EventObserver {
-            billingManager.processToPurchase()
+            billingManager.processToPurchase(this)
         })
         // 뷰모델 기본 옵저버.
         observeBaseViewModelEvent(viewModel)
