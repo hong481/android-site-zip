@@ -102,10 +102,16 @@ class MainViewModel(
     val isShowBannerAdmob: LiveData<Boolean> = _isShowBannerAdMob
 
     /**
-     * 음성 검색 시작 이벤트.
+     * 광고제거 결제 이벤트.
      */
     private val _billingRemoveAds: MutableLiveData<EmptyEvent> = MutableLiveData()
     val billingRemoveAds: LiveData<EmptyEvent> = _billingRemoveAds
+
+    /**
+     * 서포트 결제 이벤트.
+     */
+    private val _billingSponsor: MutableLiveData<EmptyEvent> = MutableLiveData()
+    val billingSponsor: LiveData<EmptyEvent> = _billingSponsor
 
     /**
      * 뷰페이저 사용자 제스처 사용 여부.
@@ -373,6 +379,11 @@ class MainViewModel(
      * 광고제거 청구 (인앱 결제).
      */
     fun billingRemoveAds() = _billingRemoveAds.notify()
+
+    /**
+     * 스폰서 청구 (인앱 결제).
+     */
+    fun billingSponsor() = _billingSponsor.notify()
 
     /**
      * 파이어베이스 Zip Site 리스너 제거.

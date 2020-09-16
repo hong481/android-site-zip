@@ -296,6 +296,7 @@
                                     android:drawableTop="@drawable/ic_baseline_supervisor_account_24"
                                     android:drawablePadding="5dp"
                                     android:maxLines="1"
+                                    android:onClick="@{() -> viewModel.billingSponsor()}"
                                     android:paddingTop="5dp"
                                     android:paddingBottom="5dp"
                                     android:singleLine="true"
