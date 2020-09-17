@@ -36,6 +36,12 @@ class DirectoryManagerImpl(
         get() = obtainLogDir()
 
     /**
+     * {root}/cache/retrofit dir.
+     */
+    override val okHttpDir: File
+        get() = obtainOkHttpDir()
+
+    /**
      * {root}/files/database dir.
      */
     val databaseDir: File
@@ -117,4 +123,9 @@ interface DirectoryManager {
      * 로그 파일 저장소.
      */
     val logDir: File
+
+    /**
+     * OkHttp 캐시 저장소.
+     */
+    val okHttpDir: File
 }

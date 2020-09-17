@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="kr.co.hongstudio.sitezip.ui.screen.place.PlaceZipViewModel" />
+
+        <variable
+            name="mainViewModel"
+            type="kr.co.hongstudio.sitezip.ui.screen.MainViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants">
+
+
+        <!--        <TextView-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:gravity="center"-->
+        <!--            android:text="@{viewModel.address.toString()}"-->
+        <!--            android:visibility="@{viewModel.isComingSoon() == true ? View.GONE : View.VISIBLE}"-->
+        <!--            app:layout_constraintBottom_toTopOf="@id/btn_test"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            tools:visibility="visible" />-->
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/tv_state_ready"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:gravity="center_horizontal|center_vertical"-->
+        <!--            android:text="@string/coming_soon_message"-->
+        <!--            android:visibility="@{viewModel.isComingSoon() == true ? View.VISIBLE : View.GONE}"-->
+        <!--            app:layout_constraintBottom_toTopOf="@id/btn_test"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            tools:visibility="gone" />-->
+
+        <Button
+            android:id="@+id/btn_test"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:onClick="@{() -> viewModel.useCaseTest()}"
+            android:text="스마트플레이스 API"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

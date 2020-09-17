@@ -8,19 +8,22 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import io.reactivex.rxjava3.kotlin.plusAssign
 import kr.co.hongstudio.sitezip.base.livedata.Event
 import kr.co.hongstudio.sitezip.base.model.Model
 import kr.co.hongstudio.sitezip.base.viewmodel.BaseViewModel
-import kr.co.hongstudio.sitezip.data.local.entity.Place
+import kr.co.hongstudio.sitezip.data.local.entity.PlaceZip
+import kr.co.hongstudio.sitezip.domain.GetPlacesUseCase
 import kr.co.hongstudio.sitezip.util.LocationUtil
 import kr.co.hongstudio.sitezip.util.extension.map
 import kr.co.hongstudio.sitezip.util.extension.notify
 import java.lang.Exception
 
-class PlaceListViewModel(
+class PlaceZipViewModel(
 
     savedStateHandle: SavedStateHandle,
     private val applicationContext: Context,
+    private val getPlacesUseCase: GetPlacesUseCase,
     private val locationUtil: LocationUtil
 
 ) : BaseViewModel() {
@@ -30,13 +33,13 @@ class PlaceListViewModel(
     }
 
     object Serializable {
-        const val PLACE: String = "PlaceListViewModel.Serializable.PLACE"
+        const val PLACE_ZIP: String = "PlaceListViewModel.Serializable.PLACE_ZIP"
     }
 
     /**
-     * Place.
+     * Place Zip.
      */
-    val place: MutableLiveData<Place> = savedStateHandle.getLiveData(Serializable.PLACE)
+    val placeZip: MutableLiveData<PlaceZip> = savedStateHandle.getLiveData(Serializable.PLACE_ZIP)
 
     /**
      * 권한 허용 여부.
@@ -47,7 +50,7 @@ class PlaceListViewModel(
     /**
      * 준비중 표시.
      */
-    val isComingSoon: LiveData<Boolean> = place.map {
+    val isComingSoon: LiveData<Boolean> = placeZip.map {
         it?.state == Model.FALSE
     }
 
@@ -76,6 +79,19 @@ class PlaceListViewModel(
         locationUtil.unregisterLocationCallback()
     }
 
+    fun useCaseTest(){
+        compositeDisposable += getPlacesUseCase.request(
+            GetPlacesUseCase.Request(
+                "1",
+                "1000",
+                "컴퓨터",
+                "reviewCount"
+            )
+        ) {
+
+        }
+    }
+
     /**
      * 위치 설정.
      */
@@ -98,8 +114,8 @@ class PlaceListViewModel(
     /**
      * 바인딩.
      */
-    fun onBind(item: Place) {
-        place.value = item
+    fun onBind(item: PlaceZip) {
+        placeZip.value = item
     }
 
     /**

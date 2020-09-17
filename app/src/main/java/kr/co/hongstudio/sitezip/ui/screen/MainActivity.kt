@@ -21,7 +21,7 @@ import kr.co.hongstudio.sitezip.base.activity.BaseActivity
 import kr.co.hongstudio.sitezip.base.livedata.EventObserver
 import kr.co.hongstudio.sitezip.base.model.Model
 import kr.co.hongstudio.sitezip.billing.BillingManager
-import kr.co.hongstudio.sitezip.data.local.entity.Place
+import kr.co.hongstudio.sitezip.data.local.entity.PlaceZip
 import kr.co.hongstudio.sitezip.data.local.entity.SiteZip
 import kr.co.hongstudio.sitezip.databinding.ActivityMainBinding
 import kr.co.hongstudio.sitezip.glide.GlideApp
@@ -207,12 +207,12 @@ class MainActivity : BaseActivity() {
                 return@TabLayoutMediator
             }
             val itemModel: Model = adapter.adapterItems[position]
-            val tabIconUrl: String = if (itemModel is Place) {
+            val tabIconUrl: String = if (itemModel is PlaceZip) {
                 itemModel.tabIconUrl
             } else {
                 (itemModel as SiteZip).tabIconUrl
             }
-            tab.text = if (itemModel is Place) {
+            tab.text = if (itemModel is PlaceZip) {
                 itemModel.tabName
             } else {
                 (itemModel as SiteZip).tabName

@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.adapter.FragmentViewHolder
 import kr.co.hongstudio.sitezip.base.model.Model
-import kr.co.hongstudio.sitezip.data.local.entity.Place
+import kr.co.hongstudio.sitezip.data.local.entity.PlaceZip
 import kr.co.hongstudio.sitezip.data.local.entity.SiteZip
-import kr.co.hongstudio.sitezip.ui.screen.place.PlaceListFragment
+import kr.co.hongstudio.sitezip.ui.screen.place.PlaceZipFragment
 import kr.co.hongstudio.sitezip.ui.screen.site.SiteZipFragment
 
 class FragmentAdapter(
@@ -24,8 +24,8 @@ class FragmentAdapter(
     override fun getItemCount(): Int = adapterItems.size
 
     override fun createFragment(position: Int): Fragment = when {
-        adapterItems[position] is Place -> {
-            PlaceListFragment.newInstance(place = adapterItems[position] as Place)
+        adapterItems[position] is PlaceZip -> {
+            PlaceZipFragment.newInstance(placeZip = adapterItems[position] as PlaceZip)
         }
         else -> {
             SiteZipFragment.newInstance(siteZip = adapterItems[position] as SiteZip)
@@ -52,12 +52,12 @@ class FragmentAdapter(
         } ?: return
 
         when {
-            adapterItems[position] is Place -> {
-                val fragment: PlaceListFragment =
+            adapterItems[position] is PlaceZip -> {
+                val fragment: PlaceZipFragment =
                     (this.fragmentActivity.supportFragmentManager.findFragmentByTag(
                         "f" + holder.itemId
-                    ) as? PlaceListFragment) ?: return
-                fragment.viewModel.onBind(adapterItems[adapterPosition] as Place)
+                    ) as? PlaceZipFragment) ?: return
+                fragment.viewModel.onBind(adapterItems[adapterPosition] as PlaceZip)
             }
             adapterItems[position] is SiteZip -> {
                 val fragment: SiteZipFragment =

@@ -12,7 +12,7 @@ import kr.co.hongstudio.sitezip.base.livedata.EmptyEvent
 import kr.co.hongstudio.sitezip.base.model.Model
 import kr.co.hongstudio.sitezip.base.viewmodel.BaseViewModel
 import kr.co.hongstudio.sitezip.data.BuildProperty
-import kr.co.hongstudio.sitezip.data.local.entity.Place
+import kr.co.hongstudio.sitezip.data.local.entity.PlaceZip
 import kr.co.hongstudio.sitezip.data.local.entity.SiteZip
 import kr.co.hongstudio.sitezip.data.local.preference.AdMobPreference
 import kr.co.hongstudio.sitezip.data.local.preference.BillingPreference
@@ -154,20 +154,20 @@ class MainViewModel(
 
             zipList.let { list ->
                 if (list.any {
-                        if (it is Place) it.tabName == snapshot.key ?: ""
+                        if (it is PlaceZip) it.tabName == snapshot.key ?: ""
                         else (it as SiteZip).tabName == snapshot.key ?: ""
                     }) {
                     return
                 }
                 list.add(snapshot.getValue(
-                    if (snapshot.child(Model.TYPE).getValue(String::class.java).equals(Place.PLACE)
+                    if (snapshot.child(Model.TYPE).getValue(String::class.java).equals(PlaceZip.PLACE)
                     ) {
-                        Place::class.java
+                        PlaceZip::class.java
                     } else {
                         SiteZip::class.java
                     }
                 ).apply {
-                    if (this is Place) {
+                    if (this is PlaceZip) {
                         this.tabName = snapshot.key ?: ""
                         this.index = snapshot.child(Model.INDEX).getValue(Int::class.java) ?: 0
                         this.state = snapshot.child(Model.STATE).getValue(Int::class.java) ?: 0
@@ -189,7 +189,7 @@ class MainViewModel(
         override fun onChildRemoved(snapshot: DataSnapshot) {
             Log.d(TAG, "firebaseRootRefListener. onChildRemoved. ${snapshot.key ?: ""}")
             val removeIndex = zipList.indexOfFirst {
-                if (it is Place) {
+                if (it is PlaceZip) {
                     it.tabName == snapshot.key
                 } else {
                     (it as SiteZip).tabName == snapshot.key
@@ -215,7 +215,7 @@ class MainViewModel(
             val primaryKey = "${snapshot.key}"
             var findModel: Model? = null
             for (model: Model in zipList) {
-                if (model is Place) {
+                if (model is PlaceZip) {
                     if (model.tabName == primaryKey) {
                         findModel = model
                         break
@@ -232,14 +232,14 @@ class MainViewModel(
                 return
             }
             zipList[changeIndex] = snapshot.getValue(
-                if (snapshot.child(Model.TYPE).getValue(String::class.java).equals(Place.PLACE)
+                if (snapshot.child(Model.TYPE).getValue(String::class.java).equals(PlaceZip.PLACE)
                 ) {
-                    Place::class.java
+                    PlaceZip::class.java
                 } else {
                     SiteZip::class.java
                 }
             ).apply {
-                if (this is Place) {
+                if (this is PlaceZip) {
                     this.tabName = snapshot.key ?: ""
                     this.index = snapshot.child(Model.INDEX).getValue(Int::class.java) ?: 0
                     this.state = snapshot.child(Model.STATE).getValue(Int::class.java) ?: 0

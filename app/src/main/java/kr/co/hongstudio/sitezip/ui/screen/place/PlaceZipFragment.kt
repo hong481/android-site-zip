@@ -10,32 +10,32 @@ import kr.co.hongstudio.sitezip.R
 import kr.co.hongstudio.sitezip.base.fragment.BaseFragment
 import kr.co.hongstudio.sitezip.base.livedata.EventObserver
 import kr.co.hongstudio.sitezip.base.model.Model
-import kr.co.hongstudio.sitezip.data.local.entity.Place
-import kr.co.hongstudio.sitezip.databinding.FragmentPlaceListBinding
-import kr.co.hongstudio.sitezip.ui.screen.place.PlaceListViewModel.Serializable.PLACE
+import kr.co.hongstudio.sitezip.data.local.entity.PlaceZip
+import kr.co.hongstudio.sitezip.databinding.FragmentPlaceZipBinding
+import kr.co.hongstudio.sitezip.ui.screen.place.PlaceZipViewModel.Serializable.PLACE_ZIP
 import kr.co.hongstudio.sitezip.util.PermissionUtil
 import kr.co.hongstudio.sitezip.util.extension.observeBaseViewModelEvent
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.getStateViewModel
 
-class PlaceListFragment : BaseFragment() {
+class PlaceZipFragment : BaseFragment() {
 
     companion object {
         const val TAG: String = "PlaceListFragment"
 
-        fun newInstance(place: Place): PlaceListFragment =
-            PlaceListFragment().apply {
+        fun newInstance(placeZip: PlaceZip): PlaceZipFragment =
+            PlaceZipFragment().apply {
                 arguments = bundleOf()
-                arguments?.putParcelable(PLACE, place)
+                arguments?.putParcelable(PLACE_ZIP, placeZip)
             }
     }
 
-    private val binding: FragmentPlaceListBinding by lazy {
-        FragmentPlaceListBinding.bind(requireView())
+    private val binding: FragmentPlaceZipBinding by lazy {
+        FragmentPlaceZipBinding.bind(requireView())
     }
 
-    val viewModel: PlaceListViewModel by lazy {
-        getStateViewModel<PlaceListViewModel>(bundle = arguments)
+    val viewModel: PlaceZipViewModel by lazy {
+        getStateViewModel<PlaceZipViewModel>(bundle = arguments)
     }
 
     private val permissionUtil: PermissionUtil by inject()
@@ -45,7 +45,7 @@ class PlaceListFragment : BaseFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.fragment_place_list, container, true)
+    ): View = inflater.inflate(R.layout.fragment_place_zip, container, true)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -60,7 +60,7 @@ class PlaceListFragment : BaseFragment() {
     }
 
     private fun initViewModel() {
-        viewModel.place.observe(viewLifecycleOwner, Observer { place ->
+        viewModel.placeZip.observe(viewLifecycleOwner, Observer { place ->
             if (place.state == Model.TRUE) {
                 // 권한 요청
                 permissionUtil.checkPermission(this,
