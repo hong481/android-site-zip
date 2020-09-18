@@ -22,37 +22,29 @@
         android:layout_height="match_parent"
         android:descendantFocusability="blocksDescendants">
 
-
-        <!--        <TextView-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="0dp"-->
-        <!--            android:gravity="center"-->
-        <!--            android:text="@{viewModel.address.toString()}"-->
-        <!--            android:visibility="@{viewModel.isComingSoon() == true ? View.GONE : View.VISIBLE}"-->
-        <!--            app:layout_constraintBottom_toTopOf="@id/btn_test"-->
-        <!--            app:layout_constraintTop_toTopOf="parent"-->
-        <!--            tools:visibility="visible" />-->
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/tv_state_ready"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="0dp"-->
-        <!--            android:gravity="center_horizontal|center_vertical"-->
-        <!--            android:text="@string/coming_soon_message"-->
-        <!--            android:visibility="@{viewModel.isComingSoon() == true ? View.VISIBLE : View.GONE}"-->
-        <!--            app:layout_constraintBottom_toTopOf="@id/btn_test"-->
-        <!--            app:layout_constraintTop_toTopOf="parent"-->
-        <!--            tools:visibility="gone" />-->
-
-        <Button
-            android:id="@+id/btn_test"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_places"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:onClick="@{() -> viewModel.useCaseTest()}"
-            android:text="스마트플레이스 API"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:descendantFocusability="blocksDescendants"
+            android:paddingBottom="5dp"
+            android:scrollbars="vertical"
+            android:visibility="@{viewModel.isComingSoon() == true ? View.GONE : View.VISIBLE}"
+            app:items="@{viewModel.placeZip.places}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_state_ready"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/coming_soon_message"
+            android:visibility="@{viewModel.isComingSoon() == true ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

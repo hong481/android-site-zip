@@ -2,11 +2,13 @@ package kr.co.hongstudio.sitezip.data.local.entity
 
 import android.os.Parcelable
 import com.google.firebase.database.IgnoreExtraProperties
+import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
 import kr.co.hongstudio.sitezip.base.model.Model
 
 @IgnoreExtraProperties
 @Parcelize
+@JsonClass(generateAdapter = true)
 data class PlaceZip(
 
     /**
@@ -32,12 +34,23 @@ data class PlaceZip(
     /**
      * 탭 아이콘 url.
      */
-    var tabIconUrl: String = ""
+    var tabIconUrl: String = "",
+
+
+    /**
+     * 기본 쿼리.
+     */
+    var defaultQuery: String = "",
+
+    /**
+     * 장소 리스트.
+     */
+    var places: MutableList<Place> = mutableListOf()
 
 ) : Parcelable, Model {
 
     companion object {
-        const val INDEX: String = "index"
+        const val DEFAULT_QUERY = "defaultQuery"
         const val PLACE: String = "place"
     }
 

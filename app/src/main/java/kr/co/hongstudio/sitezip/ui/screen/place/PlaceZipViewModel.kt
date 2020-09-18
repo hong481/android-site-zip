@@ -26,7 +26,7 @@ class PlaceZipViewModel(
     private val getPlacesUseCase: GetPlacesUseCase,
     private val locationUtil: LocationUtil
 
-) : BaseViewModel() {
+) : BaseViewModel(), PlacesHolder.ViewModel {
 
     companion object {
         const val TAG: String = "PlaceListViewModel"
@@ -79,16 +79,37 @@ class PlaceZipViewModel(
         locationUtil.unregisterLocationCallback()
     }
 
-    fun useCaseTest(){
+    /**
+     * 초기 장소 정보 가져오기. (위치 기반)
+     */
+    fun getInitPlaces(query: String) {
+        if(placeZip.value?.places?.size ?: return <= 0) {
+            getPlaces(query)
+        }
+    }
+
+    /**
+     * 장소 정보 가져오기.
+     */
+    fun getPlaces(query: String) {
+        Log.d(TAG, "query: $query")
         compositeDisposable += getPlacesUseCase.request(
             GetPlacesUseCase.Request(
                 "1",
                 "1000",
-                "컴퓨터",
-                "reviewCount"
+                query
             )
-        ) {
-
+        ) { response ->
+            Log.d(TAG, "total: ${response.total} items:${response.items}")
+            val tempPlaceZip = placeZip.value?.copy()
+            tempPlaceZip?.apply {
+                places = response.items.filter {
+                    it.category != null && (it.category ?: "").contains(
+                        placeZip.value?.defaultQuery ?: ""
+                    )
+                }.toMutableList()
+            }
+            placeZip.value = tempPlaceZip
         }
     }
 

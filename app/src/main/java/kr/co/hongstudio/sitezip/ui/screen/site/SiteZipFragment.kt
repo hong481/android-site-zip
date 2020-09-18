@@ -66,6 +66,14 @@ class SiteZipFragment : BaseFragment() {
         initRecordHistoriesRecyclerView()
     }
 
+    override fun onResume() {
+        super.onResume()
+        mainViewModel.setSearchText("")
+        mainViewModel.setSearchVisibility(false)
+        mainViewModel.setSearchButtonVisible(true)
+        mainViewModel.setFavoriteButtonVisible(true)
+    }
+
     private fun initBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
@@ -106,8 +114,7 @@ class SiteZipFragment : BaseFragment() {
         })
         viewModel.shareLink.observe(viewLifecycleOwner, EventObserver {
             val intent = Intent.createChooser(Intent(Intent.ACTION_SEND).apply {
-                type =
-                    SHARD_LINK_INTENT_TYPE
+                type = SHARD_LINK_INTENT_TYPE
                 putExtra(Intent.EXTRA_TEXT, it)
             }, resourceProvider.getString(R.string.site_link_share))
             startActivity(intent)
@@ -127,7 +134,7 @@ class SiteZipFragment : BaseFragment() {
     }
 
     /**
-     * 녹취 내역 리사이클 뷰 초기화.
+     * 사이트 리사이클 뷰 초기화.
      */
     private fun initRecordHistoriesRecyclerView() {
         binding.rvSites.setHasFixedSize(true)

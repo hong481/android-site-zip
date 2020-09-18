@@ -15,108 +15,93 @@ data class Place(
     /**
      * 아이디.
      */
-    @Json(name = "id")
-    override var id: Long? = 0L,
+    override var id: Long? = null,
 
     /**
      * 순서.
      */
-    override var index: Int? = 0,
+    override var index: Int? = null,
 
     /**
      * 상태.
      */
-    override var state: Int? = 0,
+    override var state: Int? = null,
 
     /**
      * 장소명.
      */
     @Json(name = "name")
-    var name: String = "",
+    var name: String? = null,
 
     /**
      * 카테고리.
      */
-    @Json(name = "category")
-    var category: String = "",
+    var category: String? = null,
 
     /**
-     * 이미지 소스 url
+     * 이미지 소스 url.
      */
-    @Json(name = "imageSrc")
-    var imageSrc: String = "",
+    var imageSrc: String? = null,
 
     /**
      * 인터넷 전화번호.
      */
-    @Json(name = "virtualPhone")
-    var virtualPhone: String = "",
+    var virtualPhone: String? = null,
 
     /**
      * 일반 전화번호.
      */
-    @Json(name = "phone")
-    var phone: String = "",
+    var phone: String? = null,
 
     /**
      * 맵 url.
      */
-    @Json(name = "routeUrl")
-    var routeUrl: String = "",
+    var routeUrl: String? = null,
 
     /**
      * 로드뷰 url.
      */
-    @Json(name = "streetViewUrl")
-    var streetViewUrl: String = "",
+    var streetViewUrl: String? = null,
 
     /**
      * 도로명.
      */
-    @Json(name = "roadAddr")
-    var roadAddr: String = "",
+    var roadAddr: String? = null,
 
     /**
      * 현재 주소.
      */
-    @Json(name = "commonAddr")
-    var commonAddr: String = "",
+    var commonAddr: String? = null,
 
     /**
      * 일반 주소.
      */
-    @Json(name = "addr")
-    var addr: String = "",
+    var addr: String? = null,
 
     /**
      * 고객 리뷰 수.
      */
-    @Json(name = "visitorReviewCount")
-    var visitorReviewCount: String = "",
+    var visitorReviewCount: String? = null,
 
     /**
      * 고객 리뷰 점수.
      */
-    @Json(name = "visitorReviewScore")
-    var visitorReviewScore: String = "",
+    var visitorReviewScore: String? = null,
 
     /**
-     * 영업 시간
+     * 영업 시간.
      */
-    @Json(name = "bizHourInfo")
-    var bizHourInfo: String = "",
+    var bizHourInfo: String? = null,
 
     /**
      * 위도 좌표값.
      */
-    @Json(name = "x")
-    var x: Long = 0L,
+    var x: String? = null,
 
     /**
      * 경도 좌표값.
      */
-    @Json(name = "y")
-    var y: Long = 0L
+    var y: String? = null
 
 
 ) : Parcelable, Model

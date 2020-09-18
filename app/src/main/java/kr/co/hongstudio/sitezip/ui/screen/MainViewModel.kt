@@ -89,6 +89,18 @@ class MainViewModel(
     val isFavoriteMode: LiveData<Boolean> = _isFavoriteMode
 
     /**
+     * 검색 버튼 표시 여부.
+     */
+    private val _isSearchButtonVisible: MutableLiveData<Boolean> = MutableLiveData()
+    val isSearchButtonVisible: LiveData<Boolean> = _isSearchButtonVisible
+
+    /**
+     * 줄겨찾기 버튼 표시 여부.
+     */
+    private val _isFavoriteButtonVisible: MutableLiveData<Boolean> = MutableLiveData()
+    val isFavoriteButtonVisible: LiveData<Boolean> = _isFavoriteButtonVisible
+
+    /**
      * 애드몹 사용 여부.
      */
     val isUseAdmob: MutableLiveData<Boolean> =
@@ -160,7 +172,8 @@ class MainViewModel(
                     return
                 }
                 list.add(snapshot.getValue(
-                    if (snapshot.child(Model.TYPE).getValue(String::class.java).equals(PlaceZip.PLACE)
+                    if (snapshot.child(Model.TYPE).getValue(String::class.java)
+                            .equals(PlaceZip.PLACE)
                     ) {
                         PlaceZip::class.java
                     } else {
@@ -169,6 +182,9 @@ class MainViewModel(
                 ).apply {
                     if (this is PlaceZip) {
                         this.tabName = snapshot.key ?: ""
+                        this.defaultQuery =
+                            snapshot.child(PlaceZip.DEFAULT_QUERY).getValue(String::class.java)
+                                ?: ""
                         this.index = snapshot.child(Model.INDEX).getValue(Int::class.java) ?: 0
                         this.state = snapshot.child(Model.STATE).getValue(Int::class.java) ?: 0
                     } else {
@@ -374,6 +390,19 @@ class MainViewModel(
         setShowNetworkErrorLayout(false)
     }
 
+    /**
+     * 검색 버튼 표시 설정.
+     */
+    fun setSearchButtonVisible(isVisible: Boolean) {
+        _isSearchButtonVisible.value = isVisible
+    }
+
+    /**
+     * 즐겨 찾기 버튼 표시 설정.
+     */
+    fun setFavoriteButtonVisible(isVisible: Boolean) {
+        _isFavoriteButtonVisible.value = isVisible
+    }
 
     /**
      * 광고제거 청구 (인앱 결제).

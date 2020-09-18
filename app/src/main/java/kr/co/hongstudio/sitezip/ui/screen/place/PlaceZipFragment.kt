@@ -1,22 +1,26 @@
 package kr.co.hongstudio.sitezip.ui.screen.place
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import kr.co.hongstudio.sitezip.R
 import kr.co.hongstudio.sitezip.base.fragment.BaseFragment
 import kr.co.hongstudio.sitezip.base.livedata.EventObserver
 import kr.co.hongstudio.sitezip.base.model.Model
 import kr.co.hongstudio.sitezip.data.local.entity.PlaceZip
 import kr.co.hongstudio.sitezip.databinding.FragmentPlaceZipBinding
+import kr.co.hongstudio.sitezip.ui.screen.MainViewModel
 import kr.co.hongstudio.sitezip.ui.screen.place.PlaceZipViewModel.Serializable.PLACE_ZIP
 import kr.co.hongstudio.sitezip.util.PermissionUtil
 import kr.co.hongstudio.sitezip.util.extension.observeBaseViewModelEvent
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.getStateViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class PlaceZipFragment : BaseFragment() {
 
@@ -38,8 +42,9 @@ class PlaceZipFragment : BaseFragment() {
         getStateViewModel<PlaceZipViewModel>(bundle = arguments)
     }
 
-    private val permissionUtil: PermissionUtil by inject()
+    private val mainViewModel: MainViewModel by sharedViewModel()
 
+    private val permissionUtil: PermissionUtil by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,12 +56,31 @@ class PlaceZipFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         initBinding()
         initViewModel()
+        initPlacesRecyclerView()
     }
 
 
     private fun initBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.d(TAG, "onRestart.")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG, "onStart.")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mainViewModel.setSearchText("")
+        mainViewModel.setSearchVisibility(false)
+        mainViewModel.setSearchButtonVisible(false)
+        mainViewModel.setFavoriteButtonVisible(false)
     }
 
     private fun initViewModel() {
@@ -76,6 +100,11 @@ class PlaceZipFragment : BaseFragment() {
         viewModel.location.observe(viewLifecycleOwner, Observer { location ->
             viewModel.setAddress(location)
         })
+        viewModel.address.observe(viewLifecycleOwner, Observer { address ->
+            Log.d(TAG, "address: $address")
+            val query = "${address.thoroughfare}+${viewModel.placeZip.value?.defaultQuery}"
+            viewModel.getInitPlaces(query)
+        })
         viewModel.permissionGranted.observe(viewLifecycleOwner, EventObserver {
             if (it) {
                 viewModel.registerLocationCallback()
@@ -84,5 +113,15 @@ class PlaceZipFragment : BaseFragment() {
             }
         })
         observeBaseViewModelEvent(viewModel)
+    }
+
+    /**
+     * 장소 리사이클 뷰 초기화.
+     */
+    private fun initPlacesRecyclerView() {
+        binding.rvPlaces.setHasFixedSize(true)
+        binding.rvPlaces.itemAnimator = null
+        binding.rvPlaces.layoutManager = LinearLayoutManager(activity)
+        binding.rvPlaces.adapter = PlacesAdapter(this, viewModel)
     }
 }
