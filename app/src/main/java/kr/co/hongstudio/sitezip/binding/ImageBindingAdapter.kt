@@ -19,8 +19,8 @@ object ImageBindingAdapter {
     }
 
     @JvmStatic
-    @BindingAdapter("loadImage")
-    fun loadImage(imageView: ImageView, url: String?) {
+    @BindingAdapter("loadIcon")
+    fun loadIcon(imageView: ImageView, url: String?) {
         if (url.isNullOrEmpty()) {
             return
         }
@@ -37,6 +37,19 @@ object ImageBindingAdapter {
             .centerInside()
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
             .apply(RequestOptions.bitmapTransform(CircleCrop()))
+            .into(imageView)
+    }
+
+    @JvmStatic
+    @BindingAdapter("loadImage")
+    fun loadImage(imageView: ImageView, url: String?) {
+        if (url.isNullOrEmpty()) {
+            return
+        }
+        GlideApp.with(imageView.context)
+            .load(url)
+            .thumbnail(Glide.with(imageView.context).load(R.raw.gif_loading))
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
             .into(imageView)
     }
 

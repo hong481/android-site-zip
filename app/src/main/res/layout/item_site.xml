@@ -94,7 +94,7 @@
                 app:layout_constraintBottom_toTopOf="@id/v_bottom"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:loadImage="@{viewHolder.imageUrl}" />
+                app:loadIcon="@{viewHolder.imageUrl}" />
 
             <TextView
                 android:id="@+id/tv_site_name"

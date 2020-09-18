@@ -39,18 +39,18 @@
 
             <TextView
                 android:id="@+id/tv_place_name"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="40dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@{viewHolder.item.name}"
+                android:textColor="@color/colorPrimary"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_goneMarginStart="50dp"
@@ -61,55 +61,115 @@
                 android:id="@+id/iv_review_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/ic_baseline_star_12"
                 android:backgroundTint="@color/color_ffc107"
                 android:contentDescription="@string/content_description"
-                app:layout_constraintStart_toStartOf="@id/tv_place_name"
-                app:layout_constraintTop_toBottomOf="@id/tv_place_name" />
+                android:visibility="@{viewHolder.item.visitorReviewScore == null ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="@id/tv_place_name"
+                app:layout_constraintStart_toEndOf="@id/tv_place_name"
+                app:layout_constraintTop_toTopOf="@id/tv_place_name" />
 
             <TextView
                 android:id="@+id/tv_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewHolder.item.visitorReviewScore}"
                 android:layout_marginStart="5dp"
+                android:text="@{viewHolder.item.visitorReviewScore}"
                 android:textSize="12sp"
+                android:visibility="@{viewHolder.item.visitorReviewScore == null ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_review_score"
                 app:layout_constraintStart_toEndOf="@id/iv_review_score"
                 app:layout_constraintTop_toTopOf="@id/iv_review_score"
-                tools:text="0.0"/>
+                tools:text="0.0" />
 
-                        <TextView
-                            android:id="@+id/tv_phone"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:layout_marginEnd="20dp"
-                            android:ellipsize="end"
-                            android:maxLines="2"
-                            android:text="@{viewHolder.item.phone}"
-                            android:textSize="12sp"
-                            app:layout_constraintStart_toStartOf="@id/iv_review_score"
-                            app:layout_constraintTop_toBottomOf="@+id/iv_review_score"
-                            tools:text="02-xxxx-xxxx" />
+            <TextView
+                android:id="@+id/tv_road_address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/road_address"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/tv_place_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_place_name" />
 
+            <TextView
+                android:id="@+id/tv_road_address_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="20dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{viewHolder.item.roadAddr}"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_road_address"
+                app:layout_constraintEnd_toStartOf="@id/iv_icon"
+                app:layout_constraintStart_toEndOf="@id/tv_road_address"
+                app:layout_constraintTop_toTopOf="@id/tv_road_address"
+                tools:text="road address" />
 
-                        <TextView
-                            android:id="@+id/tv_address"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginTop="3dp"
-                            android:layout_marginEnd="20dp"
-                            android:ellipsize="end"
-                            android:maxLines="2"
-                            android:text="@{viewHolder.item.roadAddr}"
-                            android:textSize="12sp"
-                            app:layout_constraintStart_toEndOf="@id/tv_phone"
-                            app:layout_constraintTop_toTopOf="@+id/tv_phone"
-                            app:layout_constraintBottom_toBottomOf="@id/tv_phone"
-                            tools:text="address" />
+            <TextView
+                android:id="@+id/tv_address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginEnd="20dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/address"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/tv_place_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_road_address" />
+
+            <TextView
+                android:id="@+id/tv_address_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="20dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{viewHolder.item.addr}"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_address"
+                app:layout_constraintEnd_toStartOf="@id/iv_icon"
+                app:layout_constraintStart_toEndOf="@id/tv_address"
+                app:layout_constraintTop_toTopOf="@id/tv_address"
+                tools:text="address" />
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/tv_phone"-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="3dp"-->
+            <!--                android:layout_marginEnd="20dp"-->
+            <!--                android:ellipsize="end"-->
+            <!--                android:maxLines="2"-->
+            <!--                android:text="@{viewHolder.item.phone}"-->
+            <!--                android:textSize="12sp"-->
+            <!--                app:layout_constraintStart_toStartOf="@id/iv_review_score"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/iv_review_score"-->
+            <!--                tools:text="02-xxxx-xxxx" />-->
+
+            <ImageView
+                android:id="@+id/iv_icon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="20dp"
+                android:background="@color/color_eeeeee"
+                android:contentDescription="@string/content_description"
+                android:visibility="@{viewHolder.item.imageSrc == null ? View.INVISIBLE : View.VISIBLE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_place_name"
+                app:loadImage="@{viewHolder.item.imageSrc}" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

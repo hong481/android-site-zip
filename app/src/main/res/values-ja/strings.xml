@@ -23,4 +23,6 @@
     <string name="google_admob_interstitial_id_test">ca-app-pub-3940256099942544/1033173712</string>
     <string name="not_found_favorite_site_message">お気に入りしたサイトの情報がありません</string>
     <string name="coming_soon_message">準備中です。</string>
+    <string name="address">地区</string>
+    <string name="road_address">道路名</string>
 </resources>
