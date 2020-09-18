@@ -23,6 +23,8 @@ class GetPlacesUseCase(
     companion object {
         const val TAG: String = "GetPlacesUseCase"
 
+        const val START = "1"
+        const val DISPLAY = "1000"
         const val SORTING_ORDER = "reviewCount"
     }
 
@@ -30,8 +32,8 @@ class GetPlacesUseCase(
         request: Request,
         onResponse: (Response) -> Unit
     ): Disposable = smartPlaceApi.getSmartPlaces(
-        start = request.start,
-        display = request.display,
+        start = START,
+        display =DISPLAY,
         query = request.query,
         sortingOrder = SORTING_ORDER
     ).onBackpressureBuffer()
@@ -48,8 +50,6 @@ class GetPlacesUseCase(
         )
 
     data class Request(
-        var start: String,
-        var display: String,
         var query: String
     )
 

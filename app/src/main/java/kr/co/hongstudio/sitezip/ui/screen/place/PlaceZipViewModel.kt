@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kr.co.hongstudio.sitezip.base.livedata.EmptyEvent
 import kr.co.hongstudio.sitezip.base.livedata.Event
 import kr.co.hongstudio.sitezip.base.model.Model
 import kr.co.hongstudio.sitezip.base.viewmodel.BaseViewModel
@@ -66,6 +67,29 @@ class PlaceZipViewModel(
     val address: MutableLiveData<Address> = _address
 
     /**
+     * URL 이동 이벤트.
+     */
+    private val _intentUrlEvent: MutableLiveData<Event<String>> = MutableLiveData()
+    val intentUrlEvent: LiveData<Event<String>> = _intentUrlEvent
+
+    /**
+     * 검색어.
+     */
+    val searchText: MutableLiveData<String> = MutableLiveData()
+
+    /**
+     * 음성 검색 시작 이벤트.
+     */
+    private val _playVoiceSearch: MutableLiveData<EmptyEvent> = MutableLiveData()
+    val playVoiceSearch: LiveData<EmptyEvent> = _playVoiceSearch
+
+    /**
+     * 검색 텍스트 변경 여부.
+     */
+    private val _isSearchTextChanged: MutableLiveData<Boolean> = MutableLiveData()
+    val isSearchTextChanged: LiveData<Boolean> = _isSearchTextChanged
+
+    /**
      * 위치 콜백 등록.
      */
     fun registerLocationCallback() {
@@ -83,8 +107,9 @@ class PlaceZipViewModel(
      * 초기 장소 정보 가져오기. (위치 기반)
      */
     fun getInitPlaces(query: String) {
-        if(placeZip.value?.places?.size ?: return <= 0) {
+        if (placeZip.value?.places?.size ?: return <= 0) {
             getPlaces(query)
+            setSearchText(query)
         }
     }
 
@@ -92,14 +117,7 @@ class PlaceZipViewModel(
      * 장소 정보 가져오기.
      */
     fun getPlaces(query: String) {
-        Log.d(TAG, "query: $query")
-        compositeDisposable += getPlacesUseCase.request(
-            GetPlacesUseCase.Request(
-                "1",
-                "1000",
-                query
-            )
-        ) { response ->
+        compositeDisposable += getPlacesUseCase.request(GetPlacesUseCase.Request(query)) { response ->
             Log.d(TAG, "total: ${response.total} items:${response.items}")
             val tempPlaceZip = placeZip.value?.copy()
             tempPlaceZip?.apply {
@@ -133,6 +151,20 @@ class PlaceZipViewModel(
     }
 
     /**
+     * 검색 텍스트 설정.
+     */
+    fun setSearchText(text: String = "") {
+        searchText.value = text
+    }
+
+    /**
+     * 음성 검색 시작.
+     */
+    fun playVoiceSearch() {
+        _playVoiceSearch.notify()
+    }
+
+    /**
      * 바인딩.
      */
     fun onBind(item: PlaceZip) {
@@ -144,5 +176,14 @@ class PlaceZipViewModel(
      */
     fun setPermissionGranted(isGranted: Boolean) {
         _permissionGranted.notify = isGranted
+    }
+
+    /**
+     * 장소 페이지로 이동.
+     */
+    override fun intentPlacePage(placeId: Long?) {
+        placeId?.let {
+            _intentUrlEvent.notify = "${placeZip.value?.placeUrl}$it"
+        }
     }
 }

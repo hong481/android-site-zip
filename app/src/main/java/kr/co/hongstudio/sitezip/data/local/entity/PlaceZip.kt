@@ -43,6 +43,11 @@ data class PlaceZip(
     var defaultQuery: String = "",
 
     /**
+     * 장소 웹페이지 url.
+     */
+    var placeUrl: String = "",
+
+    /**
      * 장소 리스트.
      */
     var places: MutableList<Place> = mutableListOf()

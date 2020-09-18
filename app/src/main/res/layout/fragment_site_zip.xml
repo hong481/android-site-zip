@@ -39,7 +39,7 @@
             android:layout_height="match_parent"
             android:gravity="center_horizontal|center_vertical"
             android:text="@{viewModel.isFavoriteMode() == true ? @string/not_found_favorite_site_message : @string/not_found_site_message}"
-            android:visibility="@{viewModel.isShowNotFoundSite() == true &amp;&amp;viewModel.isComingSoon() == true  ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.isShowNotFoundSite() == true &amp;&amp; viewModel.isComingSoon() == false ? View.VISIBLE : View.GONE}"
             tools:visibility="gone" />
 
         <TextView

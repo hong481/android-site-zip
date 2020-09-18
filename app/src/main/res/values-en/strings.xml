@@ -8,6 +8,7 @@
     <string name="search_hint">Search for a site name or link</string>
     <string name="copy_to_link_message">Copied the link</string>
     <string name="not_found_site_message">There is no site information!</string>
+    <string name="not_found_place_message">There is no place information!</string>
     <string name="network_disconnect_message">Network connection required!</string>
     <string name="site_link_share">" Share a link to your site"</string>
     <string name="google_admob_interstitial_id_test">ca-app-pub-3940256099942544/1033173712</string>
@@ -25,4 +26,6 @@
     <string name="not_found_favorite_site_message">There is no  favorite site information!</string>
     <string name="road_address">Road</string>
     <string name="address">Lot address</string>
+    <string name="phone_number">Phone number</string>
+    <string name="place_search_hint">Enter the name of the city, Gun-gu, Eup, Myeon-dong, Li, company name, and business name</string>
 </resources>

@@ -30,9 +30,6 @@ object ViewModelModule {
                 get(),
                 get(),
                 get(),
-                get(),
-                get(),
-                get(),
                 get()
             )
         }

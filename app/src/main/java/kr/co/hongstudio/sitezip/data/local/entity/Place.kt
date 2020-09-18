@@ -2,7 +2,6 @@ package kr.co.hongstudio.sitezip.data.local.entity
 
 import android.os.Parcelable
 import com.google.firebase.database.IgnoreExtraProperties
-import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
 import kr.co.hongstudio.sitezip.base.model.Model
@@ -30,7 +29,6 @@ data class Place(
     /**
      * 장소명.
      */
-    @Json(name = "name")
     var name: String? = null,
 
     /**

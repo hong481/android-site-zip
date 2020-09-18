@@ -25,4 +25,8 @@
     <string name="coming_soon_message">準備中です。</string>
     <string name="address">地区</string>
     <string name="road_address">道路名</string>
+    <string name="phone_number">電話番号</string>
+    <string name="place_search_hint">市郡区、邑面洞、リー、会社名、商号を入力してください</string>
+    <string name="not_found_place_message">場所情報がありません！</string>
+
 </resources>
