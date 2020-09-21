@@ -27,5 +27,5 @@
     <string name="road_address">Road</string>
     <string name="address">Lot address</string>
     <string name="phone_number">Phone number</string>
-    <string name="place_search_hint">Enter the name of the city, Gun-gu, Eup, Myeon-dong, Li, company name, and business name</string>
+    <string name="place_search_hint">City Township. company name. Please enter your trade name</string>
 </resources>

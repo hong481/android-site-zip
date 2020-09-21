@@ -19,8 +19,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:descendantFocusability="blocksDescendants">
+        android:layout_height="match_parent">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/layout_search"
@@ -29,7 +28,6 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
-            android:focusableInTouchMode="false"
             android:visibility="@{viewModel.isComingSoon() == true ? View.GONE : View.VISIBLE}"
             app:cardBackgroundColor="@color/colorPrimary"
             app:cardCornerRadius="10dp"
@@ -40,14 +38,13 @@
                 android:layout_height="match_parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <ImageButton
-                    android:id="@+id/btn_close"
+                <ImageView
+                    android:id="@+id/iv_search_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:background="@drawable/ic_baseline_search_24"
+                    android:layout_marginStart="15dp"
+                    android:background="@drawable/ic_baseline_place_24"
                     android:contentDescription="@string/content_description"
-                    android:onClick="@{() -> viewModel.getPlaces(viewModel.searchText)}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -57,10 +54,11 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
-                    android:layout_marginEnd="50dp"
+                    android:layout_marginEnd="10dp"
                     android:autofillHints="@string/place_search_hint"
                     android:background="@null"
                     android:hint="@string/place_search_hint"
+                    android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:maxLines="1"
                     android:paddingHorizontal="5dp"
@@ -69,15 +67,29 @@
                     android:textColorHint="@color/color_eeeeee"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/btn_close"
+                    app:layout_constraintEnd_toStartOf="@id/iv_search"
+                    app:layout_constraintStart_toEndOf="@id/iv_search_icon"
                     app:layout_constraintTop_toTopOf="parent" />
+
+
+                <ImageButton
+                    android:id="@+id/iv_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/ic_baseline_search_24"
+                    android:contentDescription="@string/content_description"
+                    android:onClick="@{() -> viewModel.getPlaces(viewModel.searchText)}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/iv_play_voice_search"
+                    app:layout_constraintTop_toTopOf="parent" />
+
 
                 <ImageButton
                     android:id="@+id/iv_play_voice_search"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginEnd="15dp"
                     android:background="@drawable/ic_baseline_mic_24"
                     android:contentDescription="@string/content_description"
                     android:onClick="@{() -> viewModel.playVoiceSearch()}"
@@ -85,6 +97,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
 
                 <ImageButton
                     android:id="@+id/btn_clear"
@@ -100,13 +113,6 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:visibility="gone" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/colorPrimaryDark"
-                    app:layout_constraintBottom_toBottomOf="parent" />
-
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
@@ -117,7 +123,6 @@
             android:layout_height="0dp"
             android:layout_marginTop="5dp"
             android:clipToPadding="false"
-            android:descendantFocusability="blocksDescendants"
             android:paddingBottom="5dp"
             android:scrollbars="vertical"
             android:visibility="@{viewModel.isComingSoon() == true ? View.GONE : View.VISIBLE}"
@@ -146,7 +151,7 @@
             android:visibility="@{viewModel.isComingSoon() == true ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="gone" />
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

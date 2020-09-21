@@ -6,9 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -87,9 +85,18 @@ class PlaceZipFragment : BaseFragment() {
         mainViewModel.setSearchVisibility(false)
         mainViewModel.setSearchButtonVisible(false)
         mainViewModel.setFavoriteButtonVisible(false)
+        binding.etSearchText.requestFocus()
     }
 
     private fun initViewModel() {
+        binding.etSearchText.setOnEditorActionListener { _, actionId, _ ->
+            when (actionId) {
+                KeyEvent.KEYCODE_SEARCH -> viewModel.getPlaces(
+                    viewModel.searchText.value ?: return@setOnEditorActionListener false
+                )
+            }
+            true
+        }
         viewModel.placeZip.observe(viewLifecycleOwner, Observer { place ->
             if (place.state == Model.TRUE) {
                 // 권한 요청

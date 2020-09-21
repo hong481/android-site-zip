@@ -10,7 +10,7 @@
 
     <string name="search_hint">사이트명 또는 링크를 검색하세요</string>
 
-    <string name="place_search_hint">시군구, 읍면동, 리, 업체명, 상호명을 입력하세요</string>
+    <string name="place_search_hint">시군구.업체명.상호명을 입력하세요</string>
 
     <string name="copy_to_link_message">링크를 복사했어요</string>
     <string name="not_found_site_message">사이트 정보가 없어요!</string>
