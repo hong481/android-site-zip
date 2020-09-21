@@ -129,16 +129,24 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_site_name"
                 tools:text="Site Name" />
 
-            <Button
+            <FrameLayout
                 android:id="@+id/btn_open_link"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/ic_baseline_open_in_new_24"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="10dp"
                 android:onClick="@{() -> viewModel.intentUrl(viewHolder.item.url)}"
+                android:padding="10dp"
                 app:layout_constraintBottom_toTopOf="@id/v_bottom"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/ic_baseline_open_in_new_24"
+                    android:contentDescription="@string/content_description"
+                    android:scaleType="centerInside" />
+            </FrameLayout>
 
             <View
                 android:id="@+id/v_bottom"
