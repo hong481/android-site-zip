@@ -17,6 +17,8 @@
     <string name="remove_admob">"Remove ads"</string>
     <string name="close">Close</string>
     <string name="setting">Setting</string>
+    <string name="cancel">Cancel</string>
+    <string name="opening_hours">Opening hours</string>
     <string name="permission_denied_message">Please allow access in Settings> Privileges</string>
     <string name="google_admob_app_id">ca-app-pub-7819212431082590~3976385446</string>
     <string name="google_admob_banner_id">ca-app-pub-7819212431082590/9915764372</string>
@@ -28,4 +30,6 @@
     <string name="address">Lot address</string>
     <string name="phone_number">Phone number</string>
     <string name="place_search_hint">City Township. company name. Please enter your trade name</string>
+    <string name="location_service_activation_title">Disable location services</string>
+    <string name="location_service_activation_message">Location services are required to use the app.\nClick the Settings button to change the location settings.</string>
 </resources>

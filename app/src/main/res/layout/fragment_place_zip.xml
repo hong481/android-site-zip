@@ -93,7 +93,7 @@
                     android:background="@drawable/ic_baseline_mic_24"
                     android:contentDescription="@string/content_description"
                     android:onClick="@{() -> viewModel.playVoiceSearch()}"
-                    android:visibility="@{viewModel.isSearchTextChanged() == true ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{viewModel.isSearchTextChanged() == true ? View.INVISIBLE : View.VISIBLE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -106,12 +106,12 @@
                     android:layout_marginEnd="20dp"
                     android:background="@drawable/ic_baseline_clear_24"
                     android:contentDescription="@string/content_description"
-                    android:onClick="@{() -> viewModel.setSearchText(``)}"
-                    android:visibility="@{viewModel.isSearchTextChanged() == true ? View.VISIBLE : View.GONE}"
+                    android:onClick="@{() -> viewModel.setSearchText(``, false)}"
+                    android:visibility="@{viewModel.isSearchTextChanged() == true ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:visibility="gone" />
+                    tools:visibility="invisible" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -121,7 +121,6 @@
             android:id="@+id/rv_places"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="5dp"
             android:clipToPadding="false"
             android:paddingBottom="5dp"
             android:scrollbars="vertical"
@@ -150,7 +149,10 @@
             android:text="@string/coming_soon_message"
             android:visibility="@{viewModel.isComingSoon() == true ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
             tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

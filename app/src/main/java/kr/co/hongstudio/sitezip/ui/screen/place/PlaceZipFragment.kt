@@ -1,5 +1,6 @@
 package kr.co.hongstudio.sitezip.ui.screen.place
 
+import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
@@ -21,6 +22,7 @@ import kr.co.hongstudio.sitezip.ui.screen.OuterActivities
 import kr.co.hongstudio.sitezip.ui.screen.place.PlaceZipViewModel.Serializable.PLACE_ZIP
 import kr.co.hongstudio.sitezip.util.LogUtil
 import kr.co.hongstudio.sitezip.util.PermissionUtil
+import kr.co.hongstudio.sitezip.util.ResourceProvider
 import kr.co.hongstudio.sitezip.util.extension.observeBaseViewModelEvent
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.getStateViewModel
@@ -49,6 +51,8 @@ class PlaceZipFragment : BaseFragment() {
     private val mainViewModel: MainViewModel by sharedViewModel()
 
     private val permissionUtil: PermissionUtil by inject()
+
+    private val resourceProvider: ResourceProvider by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -85,7 +89,9 @@ class PlaceZipFragment : BaseFragment() {
         mainViewModel.setSearchVisibility(false)
         mainViewModel.setSearchButtonVisible(false)
         mainViewModel.setFavoriteButtonVisible(false)
-        binding.etSearchText.requestFocus()
+        if (!viewModel.locationUtil.checkLocationServicesStatus()) {
+            showLocationServiceSetting()
+        }
     }
 
     private fun initViewModel() {
@@ -127,6 +133,10 @@ class PlaceZipFragment : BaseFragment() {
         })
         viewModel.searchText.observe(viewLifecycleOwner, Observer {
             LogUtil.d(TAG, "viewModel.searchText.observe.")
+            viewModel.searchSites()
+        })
+        viewModel.searchTextSelection.observe(viewLifecycleOwner, EventObserver {
+            binding.etSearchText.setSelection(binding.etSearchText.length())
         })
         viewModel.playVoiceSearch.observe(viewLifecycleOwner, EventObserver {
             OuterActivities.intentVoiceSearch(context = context ?: return@EventObserver) {
@@ -134,7 +144,7 @@ class PlaceZipFragment : BaseFragment() {
                     val textArray: ArrayList<String>? =
                         it.data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                     textArray.let {
-                        viewModel.setSearchText(textArray?.get(0) ?: "")
+                        viewModel.setSearchText(textArray?.get(0) ?: "", true)
                     }
                 }
             }
@@ -159,4 +169,19 @@ class PlaceZipFragment : BaseFragment() {
         binding.rvPlaces.layoutManager = LinearLayoutManager(activity)
         binding.rvPlaces.adapter = PlacesAdapter(this, viewModel)
     }
+
+    /**
+     * 위치 서비스 설정 팝업창.
+     */
+    private fun showLocationServiceSetting() = AlertDialog.Builder(context)
+        .setTitle(resourceProvider.getString(R.string.location_service_activation_title))
+        .setMessage(resourceProvider.getString(R.string.location_service_activation_message))
+        .setPositiveButton(resourceProvider.getString(R.string.setting)) { _, _ ->
+            OuterActivities.intentGpsSetting(context = context ?: return@setPositiveButton)
+        }
+        .setNegativeButton(resourceProvider.getString(R.string.cancel)) { dialog, _ ->
+            dialog.cancel()
+        }
+        .create()
+        .show()
 }

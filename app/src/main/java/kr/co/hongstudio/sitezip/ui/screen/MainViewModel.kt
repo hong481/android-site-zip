@@ -321,7 +321,7 @@ class MainViewModel(
     }
 
     /**
-     * 사이트 검색.
+     * 사이트 검색 텍스트 존재 여부.
      */
     fun searchSites() {
         _isSearchTextChanged.value = !searchText.value.isNullOrEmpty()

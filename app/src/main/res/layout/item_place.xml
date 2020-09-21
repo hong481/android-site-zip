@@ -151,13 +151,12 @@
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:visibility="@{viewHolder.phoneNumber == null ? View.GONE : View.VISIBLE}"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@id/tv_place_name"
                 app:layout_constraintTop_toBottomOf="@id/tv_address" />
 
             <TextView
                 android:id="@+id/tv_phone_number_value"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="20dp"
@@ -167,9 +166,43 @@
                 android:textSize="12sp"
                 android:visibility="@{viewHolder.phoneNumber == null ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="@id/tv_phone_number"
+                app:layout_constraintEnd_toStartOf="@id/iv_icon"
                 app:layout_constraintStart_toEndOf="@id/tv_phone_number"
                 app:layout_constraintTop_toTopOf="@id/tv_phone_number"
-                tools:text="address" />
+                tools:text="서울특별시" />
+
+            <TextView
+                android:id="@+id/tv_biz_Hour_info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginEnd="20dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/opening_hours"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="@{viewHolder.bizHourInfo == null ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_place_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_phone_number" />
+
+            <TextView
+                android:id="@+id/tv_biz_Hour_info_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="20dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{viewHolder.bizHourInfo}"
+                android:textSize="12sp"
+                android:visibility="@{viewHolder.bizHourInfo == null ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="@id/tv_biz_Hour_info"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_biz_Hour_info"
+                app:layout_constraintTop_toTopOf="@id/tv_biz_Hour_info"
+                tools:text="00:00 ~ 00:00" />
 
             <ImageView
                 android:id="@+id/iv_icon"

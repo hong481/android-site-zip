@@ -2,11 +2,14 @@ package kr.co.hongstudio.sitezip.util
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Context.LOCATION_SERVICE
 import android.location.Location
+import android.location.LocationManager
 import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.*
+
 
 class LocationUtil(
     applicationContext: Context
@@ -15,6 +18,10 @@ class LocationUtil(
     companion object {
         const val UPDATE_INTERVAL_MS: Long = 1000L
         const val FASTEST_UPDATE_INTERVAL_MS: Long = 500L
+
+        fun gpsSetting(context: Context) {
+
+        }
     }
 
     /**
@@ -27,6 +34,11 @@ class LocationUtil(
     private val fusedLocationClient: FusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(applicationContext)
     }
+
+    private val locationManager: LocationManager by lazy {
+        applicationContext.getSystemService(LOCATION_SERVICE) as LocationManager
+    }
+
 
     private val locationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult?) {
@@ -41,6 +53,15 @@ class LocationUtil(
         priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         interval = UPDATE_INTERVAL_MS
         fastestInterval = FASTEST_UPDATE_INTERVAL_MS;
+    }
+
+    /**
+     * 위치 서비스 활성화 확인.
+     */
+    fun checkLocationServicesStatus(): Boolean {
+        return (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        ))
     }
 
     /**

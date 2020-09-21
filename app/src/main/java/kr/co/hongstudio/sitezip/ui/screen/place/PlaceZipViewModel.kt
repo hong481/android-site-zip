@@ -23,9 +23,10 @@ import java.lang.Exception
 class PlaceZipViewModel(
 
     savedStateHandle: SavedStateHandle,
+    val locationUtil: LocationUtil,
     private val applicationContext: Context,
-    private val getPlacesUseCase: GetPlacesUseCase,
-    private val locationUtil: LocationUtil
+    private val getPlacesUseCase: GetPlacesUseCase
+
 
 ) : BaseViewModel(), PlacesHolder.ViewModel {
 
@@ -78,6 +79,12 @@ class PlaceZipViewModel(
     val searchText: MutableLiveData<String> = MutableLiveData()
 
     /**
+     * 검색 텍스트 커서 이동.
+     */
+    private val _searchTextSelection: MutableLiveData<EmptyEvent> = MutableLiveData()
+    val searchTextSelection: LiveData<EmptyEvent> = _searchTextSelection
+
+    /**
      * 음성 검색 시작 이벤트.
      */
     private val _playVoiceSearch: MutableLiveData<EmptyEvent> = MutableLiveData()
@@ -109,7 +116,7 @@ class PlaceZipViewModel(
     fun getInitPlaces(query: String) {
         if (placeZip.value?.places?.size ?: return <= 0) {
             getPlaces(query)
-            setSearchText(query)
+            setSearchText(query, true)
         }
     }
 
@@ -142,7 +149,7 @@ class PlaceZipViewModel(
                 location.longitude,
                 1
             )
-            if (addresses.isNotEmpty()) {
+            if (addresses.isNotEmpty() && _address.value == null) {
                 _address.value = addresses.first()
             }
         } catch (exception: Exception) {
@@ -151,10 +158,27 @@ class PlaceZipViewModel(
     }
 
     /**
+     * 사이트 검색 텍스트 존재 여부.
+     */
+    fun searchSites() {
+        _isSearchTextChanged.value = !searchText.value.isNullOrEmpty()
+    }
+
+    /**
      * 검색 텍스트 설정.
      */
-    fun setSearchText(text: String = "") {
+    fun setSearchText(text: String = "", setSelection: Boolean) {
         searchText.value = text
+        if (setSelection) {
+            setSearchTextSelection()
+        }
+    }
+
+    /**
+     * 검색 텍스트 커서이동 이벤트.
+     */
+    fun setSearchTextSelection() {
+        _searchTextSelection.notify()
     }
 
     /**

@@ -44,4 +44,29 @@ object OuterActivities {
                 }
             )
     }
+
+    /**
+     * GPS 설정창 열기.
+     */
+    fun intentGpsSetting(
+        context: Context,
+        onActivityResult: ((ActivityResult) -> Unit)? = null
+    ): Disposable {
+        val intent = Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+        return TedRxOnActivityResult.with(context)
+            .startActivityForResult(intent)
+            .toV3()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onSuccess = { activityResult ->
+                    onActivityResult?.let {
+                        it(activityResult)
+                    }
+                },
+                onError = {
+                    Log.d(TAG, it.toString())
+                }
+            )
+    }
 }

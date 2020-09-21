@@ -25,14 +25,29 @@ class PlacesHolder(
      * 전화 번호.
      */
     val phoneNumber: LiveData<String> = item.map {
-        if (it?.phone != null) {
-            it.phone
+        if (it?.phone != null || !it?.phone.isNullOrEmpty()) {
+            it?.phone
         } else {
-            if (it?.virtualPhone != null) {
-                it.virtualPhone
+            if (it?.virtualPhone != null || !it?.phone.isNullOrEmpty()) {
+                it?.virtualPhone
             } else {
                 null
             }
+        }
+    }
+
+    /**
+     * 영업 시간.
+     */
+    val bizHourInfo: LiveData<String> = item.map {
+        if (it?.bizHourInfo != null || !it?.bizHourInfo.isNullOrEmpty()) {
+            if (it?.bizHourInfo?.length ?: 0 > 5) {
+                it?.bizHourInfo
+            } else {
+                null
+            }
+        } else {
+            null
         }
     }
 

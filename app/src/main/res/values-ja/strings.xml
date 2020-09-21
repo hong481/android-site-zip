@@ -14,6 +14,8 @@
     <string name="close">閉じる</string>
     <string name="developer_sponsor">開発者後援</string>
     <string name="setting">設定</string>
+    <string name="cancel">キャンセル</string>
+    <string name="opening_hours">営業時間</string>
     <string name="permission_denied_message">[設定]> [権限]でアクセスを許可してください</string>
     <string name="google_admob_app_id">ca-app-pub-7819212431082590~3976385446</string>
     <string name="google_admob_banner_id">ca-app-pub-7819212431082590/9915764372</string>
@@ -28,5 +30,7 @@
     <string name="phone_number">電話番号</string>
     <string name="place_search_hint">市郡区。会社名。商号を入力してください</string>
     <string name="not_found_place_message">場所情報がありません！</string>
+    <string name="location_service_activation_title">位置情報サービスを無効に</string>
+    <string name="location_service_activation_message">アプリを使用するためには、位置情報サービスが必要です。\n[設定]ボタンをクリックして、場所の設定を変更してください。</string>
 
 </resources>
