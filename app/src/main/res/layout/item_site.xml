@@ -20,7 +20,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
@@ -32,7 +32,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="wrap_content"
             android:clickable="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
@@ -61,7 +61,7 @@
             </FrameLayout>
 
             <FrameLayout
-                android:id="@+id/ic_baseline_star_24"
+                android:id="@+id/iv_favorite_on"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
@@ -74,7 +74,6 @@
                 tools:visibility="visible">
 
                 <ImageView
-                    android:id="@+id/iv_favorite_on"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:contentDescription="@string/content_description"
@@ -86,13 +85,13 @@
 
             <ImageView
                 android:id="@+id/iv_icon"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginStart="60dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="10dp"
                 android:background="@drawable/ic_background"
                 android:contentDescription="@string/content_description"
                 app:layout_constraintBottom_toTopOf="@id/v_bottom"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_favorite_on"
                 app:layout_constraintTop_toTopOf="parent"
                 app:loadIcon="@{viewHolder.imageUrl}" />
 
@@ -100,9 +99,9 @@
                 android:id="@+id/tv_site_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@{viewHolder.item.title}"
@@ -110,24 +109,26 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/btn_open_link"
                 app:layout_constraintStart_toEndOf="@+id/iv_icon"
-                app:layout_constraintTop_toTopOf="@+id/iv_icon"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="Site Name" />
 
             <TextView
                 android:id="@+id/tv_site_shortInfo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="20dp"
                 android:ellipsize="end"
-                android:maxLines="2"
+                android:maxLines="3"
                 android:text="@{viewHolder.item.description}"
                 android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/v_bottom"
                 app:layout_constraintEnd_toStartOf="@id/btn_open_link"
                 app:layout_constraintStart_toEndOf="@+id/iv_icon"
                 app:layout_constraintTop_toBottomOf="@+id/tv_site_name"
-                tools:text="Site Name" />
+                tools:text="site information @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" />
 
             <FrameLayout
                 android:id="@+id/btn_open_link"
@@ -143,6 +144,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:layout_gravity="center"
                     android:background="@drawable/ic_baseline_open_in_new_24"
                     android:contentDescription="@string/content_description"
                     android:scaleType="centerInside" />

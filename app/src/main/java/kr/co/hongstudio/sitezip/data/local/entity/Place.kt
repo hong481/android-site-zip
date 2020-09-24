@@ -62,6 +62,11 @@ data class Place(
     var streetViewUrl: String? = null,
 
     /**
+     * 옵션정보.
+     */
+    var options: String? = null,
+
+    /**
      * 도로명.
      */
     var roadAddr: String? = null,

@@ -52,7 +52,6 @@
                 app:layout_goneMarginStart="50dp"
                 tools:text="Place Name" />
 
-
             <ImageView
                 android:id="@+id/iv_review_score"
                 android:layout_width="wrap_content"
@@ -80,6 +79,20 @@
                 tools:text="0.0" />
 
             <TextView
+                android:id="@+id/tv_options_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{viewHolder.item.options}"
+                android:textSize="10sp"
+                android:visibility="@{viewHolder.item.options == null ? View.GONE : View.VISIBLE}"
+                app:layout_constraintStart_toStartOf="@id/tv_place_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_place_name"
+                tools:ignore="SmallSp" />
+
+            <TextView
                 android:id="@+id/tv_road_address"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -90,8 +103,8 @@
                 android:text="@string/road_address"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@id/tv_place_name"
-                app:layout_constraintTop_toBottomOf="@id/tv_place_name" />
+                app:layout_constraintStart_toStartOf="@id/tv_options_value"
+                app:layout_constraintTop_toBottomOf="@id/tv_options_value" />
 
             <TextView
                 android:id="@+id/tv_road_address_value"
