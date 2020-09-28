@@ -7,7 +7,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.AbsListView
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
@@ -112,12 +114,10 @@ class PlaceZipFragment : BaseFragment() {
     }
 
     private fun initViewModel() {
-        binding.etSearchText.setOnEditorActionListener { _, actionId, _ ->
-            when (actionId) {
-                KeyEvent.KEYCODE_SEARCH -> viewModel.getPlaces(
-                    viewModel.searchText.value ?: return@setOnEditorActionListener false
-                )
-            }
+        binding.etSearchText.setOnEditorActionListener { _, _, _ ->
+            viewModel.getPlaces(
+                viewModel.searchText.value ?: return@setOnEditorActionListener false
+            )
             true
         }
         viewModel.placeZip.observe(viewLifecycleOwner, Observer { place ->
