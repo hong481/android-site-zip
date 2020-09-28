@@ -8,9 +8,11 @@ import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.util.Log
 import android.view.*
+import android.widget.AbsListView
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kr.co.hongstudio.sitezip.R
 import kr.co.hongstudio.sitezip.base.fragment.BaseFragment
 import kr.co.hongstudio.sitezip.base.livedata.EventObserver
@@ -67,10 +69,25 @@ class PlaceZipFragment : BaseFragment() {
         initPlacesRecyclerView()
     }
 
-
     private fun initBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        binding.rvPlaces.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                when (newState) {
+                    AbsListView.OnScrollListener.SCROLL_STATE_FLING -> {
+                        mainViewModel.setViewPagerUserInputEnabled(false)
+                    }
+                    AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL -> {
+                        mainViewModel.setViewPagerUserInputEnabled(false)
+                    }
+                    AbsListView.OnScrollListener.SCROLL_STATE_IDLE -> {
+                        mainViewModel.setViewPagerUserInputEnabled(true)
+                    }
+                    else -> Unit
+                }
+            }
+        })
     }
 
     override fun onRestart() {

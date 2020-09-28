@@ -123,7 +123,7 @@ class MainActivity : BaseActivity() {
             if (viewModel.zipList.size <= 0) {
                 viewModel.registerZipsListener()
             } else {
-                App.restart(this, createIntent(applicationContext))
+                App.restart(this, createIntent(applicationContext, true))
             }
         })
         viewModel.zips.observe(this, Observer {
