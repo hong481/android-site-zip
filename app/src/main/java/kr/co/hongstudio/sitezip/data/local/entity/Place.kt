@@ -29,22 +29,22 @@ data class Place(
     /**
      * 장소명.
      */
-    var name: String? = null,
+    var place_name: String? = null,
 
     /**
      * 카테고리.
      */
-    var category: String? = null,
+    var category_name: String? = null,
 
     /**
-     * 이미지 소스 url.
+     *  중요 카테고리만 그룹핑한 카테고리 그룹 코드.
      */
-    var imageSrc: String? = null,
+    var category_group_code: String? = null,
 
     /**
-     * 인터넷 전화번호.
+     * 중요 카테고리만 그룹핑한 카테고리 그룹명.
      */
-    var virtualPhone: String? = null,
+    var category_group_name: String? = null,
 
     /**
      * 일반 전화번호.
@@ -52,49 +52,25 @@ data class Place(
     var phone: String? = null,
 
     /**
-     * 맵 url.
+     *  장소 상세화면
      */
-    var routeUrl: String? = null,
+    var place_url: String? = null,
+
 
     /**
-     * 로드뷰 url.
+     * 전체 도로명 주소.
      */
-    var streetViewUrl: String? = null,
+    var road_address_name: String? = null,
 
     /**
-     * 옵션정보.
+     * 전체 지번 주소.
      */
-    var options: String? = null,
+    var address_name: String? = null,
 
     /**
-     * 도로명.
+     * 중심좌표까지의 거리 (단, x,y 파라미터를 준 경우에만 존재).
      */
-    var roadAddr: String? = null,
-
-    /**
-     * 현재 주소.
-     */
-    var commonAddr: String? = null,
-
-    /**
-     * 일반 주소.
-     */
-    var addr: String? = null,
-
-    /**
-     * 고객 리뷰 수.
-     */
-    var visitorReviewCount: String? = null,
-
-    /**
-     * 고객 리뷰 점수.
-     */
-    var visitorReviewScore: String? = null,
-
-    /**
-     * 영업 시간.
-     */
-    var bizHourInfo: String? = null,
+    var distance: String? = null,
 
     /**
      * 위도 좌표값.

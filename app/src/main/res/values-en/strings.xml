@@ -19,6 +19,7 @@
     <string name="setting">Setting</string>
     <string name="cancel">Cancel</string>
     <string name="opening_hours">Opening hours</string>
+    <string name="view_details">View Details</string>
     <string name="permission_denied_message">Please allow access in Settings> Privileges</string>
     <string name="google_admob_app_id">ca-app-pub-7819212431082590~3976385446</string>
     <string name="google_admob_banner_id">ca-app-pub-7819212431082590/9915764372</string>

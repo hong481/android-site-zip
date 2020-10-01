@@ -124,12 +124,20 @@ class PlaceZipViewModel(
      * 장소 정보 가져오기.
      */
     fun getPlaces(query: String) {
-        compositeDisposable += getPlacesUseCase.request(GetPlacesUseCase.Request(query)) { response ->
-            Log.d(TAG, "total: ${response.total} items:${response.items}")
+        compositeDisposable += getPlacesUseCase.request(
+            GetPlacesUseCase.Request(
+                placeApi = placeZip.value?.placeApi ?: "",
+                apiKey = placeZip.value?.apiKey ?: "",
+                query = query,
+                x = location.value?.latitude.toString(),
+                y = location.value?.longitude.toString()
+            )
+        ) { response ->
+            Log.d(TAG, "items:${response.items}")
             val tempPlaceZip = placeZip.value?.copy()
             tempPlaceZip?.apply {
                 places = response.items.filter {
-                    it.category != null && (it.category ?: "").contains(
+                    it.category_name != null && (it.category_name ?: "").contains(
                         placeZip.value?.defaultQuery ?: ""
                     )
                 }.toMutableList()
@@ -205,9 +213,9 @@ class PlaceZipViewModel(
     /**
      * 장소 페이지로 이동.
      */
-    override fun intentPlacePage(placeId: Long?) {
-        placeId?.let {
-            _intentUrlEvent.notify = "${placeZip.value?.placeUrl}$it"
+    override fun intentPlacePage(placeUrl: String?) {
+        placeUrl?.let {
+            _intentUrlEvent.notify = it
         }
     }
 }

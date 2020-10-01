@@ -43,9 +43,14 @@ data class PlaceZip(
     var defaultQuery: String = "",
 
     /**
-     * 장소 웹페이지 url.
+     * 장소 검색 api.
      */
-    var placeUrl: String = "",
+    var placeApi: String = "",
+
+    /**
+     * api 키.
+     */
+    var apiKey: String = "",
 
     /**
      * 장소 리스트.

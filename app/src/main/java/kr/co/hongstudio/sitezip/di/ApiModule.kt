@@ -1,6 +1,6 @@
 package kr.co.hongstudio.sitezip.di
 
-import kr.co.hongstudio.sitezip.data.remote.SmartPlaceApi
+import kr.co.hongstudio.sitezip.data.remote.PlaceApi
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -10,7 +10,7 @@ object ApiModule {
 
     val INSTANCE: Module = module {
         single {
-            createApi<SmartPlaceApi>(
+            createApi<PlaceApi>(
                 get(named(NetworkModule.Server.NAVER_SMART_STORE.tag))
             )
         }

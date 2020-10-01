@@ -16,6 +16,7 @@
     <string name="setting">設定</string>
     <string name="cancel">キャンセル</string>
     <string name="opening_hours">営業時間</string>
+    <string name="view_details">詳細を見る</string>
     <string name="permission_denied_message">[設定]> [権限]でアクセスを許可してください</string>
     <string name="google_admob_app_id">ca-app-pub-7819212431082590~3976385446</string>
     <string name="google_admob_banner_id">ca-app-pub-7819212431082590/9915764372</string>
