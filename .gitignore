@@ -1,13 +1,13 @@
 *.iml
 
-.cxx
-.apk
-.gradle
-.apk
-.aab
-.json
-.DS_Store
-.externalNativeBuild
+*.cxx
+*.apk
+*.gradle
+*.apk
+*.aab
+*.json
+*.DS_Store
+*.externalNativeBuild
 
 /.idea/caches
 /.idea/libraries

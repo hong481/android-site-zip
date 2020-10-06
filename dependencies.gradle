@@ -13,7 +13,7 @@ ext {
     irRecorderVersion = '2.0.7'
 
     flexboxVersion = '2.0.1'
-    androidxVersion = '1.3.1'
+    androidxVersion = '1.3.2'
     materialVersion = '1.1.0'
     appcompatVersion = '1.2.0'
     mertrialVersion = '1.2.1'
@@ -43,18 +43,18 @@ ext {
     jsoupVersion = '1.12.1'
 
     analyticsVersion = '17.5.0'
-    crashlyticsVersion = '17.2.1'
-    perfVersion = '19.0.8'
+    crashlyticsVersion = '17.2.2'
+    perfVersion = '19.0.9'
     storageVersion = '19.2.0'
-    messagingVersion = '20.2.4'
-    databaseVersion = '19.4.0'
+    messagingVersion = '20.3.0'
+    databaseVersion = '19.5.0'
     storageUiVersion = '4.3.2'
 
-    billingVersion = '3.0.0'
+    billingVersion = '3.0.1'
 
     googleAdsVersion = '19.4.0'
     googleMapsVersion = '17.0.0'
-    googleLocationVersion = '17.0.0'
+    googleLocationVersion = '17.1.0'
 
     glideVersion = '4.11.0'
 
