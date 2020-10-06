@@ -33,4 +33,8 @@
     <string name="place_search_hint">City Township. company name. Please enter your trade name</string>
     <string name="location_service_activation_title">Disable location services</string>
     <string name="location_service_activation_message">Location services are required to use the app.\nClick the Settings button to change the location settings.</string>
+    <string name="appirater_rate_message">Would you mind taking a moment to rate it?\\nThanks for your support!</string>
+    <string name="appirater_rate">Yes, I will rate this app</string>
+    <string name="appirater_rate_later">I will rate it next time</string>
+    <string name="do_not_show_this_window">Do not show this window</string>
 </resources>

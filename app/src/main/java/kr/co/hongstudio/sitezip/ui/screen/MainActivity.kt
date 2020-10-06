@@ -25,9 +25,11 @@ import kr.co.hongstudio.sitezip.data.local.entity.PlaceZip
 import kr.co.hongstudio.sitezip.data.local.entity.SiteZip
 import kr.co.hongstudio.sitezip.databinding.ActivityMainBinding
 import kr.co.hongstudio.sitezip.glide.GlideApp
+import kr.co.hongstudio.sitezip.ui.appirater.AppiraterDialog
 import kr.co.hongstudio.sitezip.util.DisplayUtil
 import kr.co.hongstudio.sitezip.util.KeyboardUtil
 import kr.co.hongstudio.sitezip.util.LogUtil
+import kr.co.hongstudio.sitezip.util.extension.lifecycleFragmentManager
 import kr.co.hongstudio.sitezip.util.extension.observeBaseViewModelEvent
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -76,6 +78,8 @@ class MainActivity : BaseActivity() {
         initBinding()
         initViewPager()
         initViewModel()
+        // 테스트.
+        AppiraterDialog.newInstance().show(lifecycleFragmentManager, AppiraterDialog.TAG)
     }
 
     override fun onResume() {
