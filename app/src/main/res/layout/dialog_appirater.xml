@@ -44,7 +44,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/v_top" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/rate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
                 android:text="@string/appirater_rate"
                 app:layout_constraintTop_toBottomOf="@id/message" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/rate_later"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
                 android:text="@string/appirater_rate_later"
                 app:layout_constraintTop_toBottomOf="@id/rate" />
 
-            <com.google.android.material.checkbox.MaterialCheckBox
+            <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginTop="15dp"
