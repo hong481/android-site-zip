@@ -1,6 +1,8 @@
 package kr.co.hongstudio.sitezip.di
 
 import androidx.lifecycle.SavedStateHandle
+import kr.co.hongstudio.sitezip.ui.appirater.AppiraterDialog
+import kr.co.hongstudio.sitezip.ui.appirater.AppiraterDialogViewModel
 import kr.co.hongstudio.sitezip.ui.screen.MainViewModel
 import kr.co.hongstudio.sitezip.ui.screen.place.PlaceZipViewModel
 import kr.co.hongstudio.sitezip.ui.screen.site.SiteZipViewModel
@@ -38,6 +40,13 @@ object ViewModelModule {
             PlaceZipViewModel(
                 stateHandle,
                 get(),
+                get(),
+                get()
+            )
+        }
+
+        viewModel {
+            AppiraterDialogViewModel(
                 get(),
                 get()
             )

@@ -53,6 +53,7 @@
     <string name="appirater_rate">네, 이 앱을 평가할게요</string>
     <string name="appirater_rate_later">아니요. 다음에 평가할게요</string>
     <string name="do_not_show_this_window">이 창을 다시 표시 안 함</string>
+    <string name="appirater_title">%s 리뷰 및 평가</string>
 
 
 </resources>

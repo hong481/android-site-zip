@@ -37,4 +37,5 @@
     <string name="appirater_rate">Yes, I will rate this app</string>
     <string name="appirater_rate_later">I will rate it next time</string>
     <string name="do_not_show_this_window">Do not show this window</string>
+    <string name="appirater_title">%s Reviews and Ratings</string>
 </resources>

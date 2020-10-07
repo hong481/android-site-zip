@@ -1,81 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.cardview.widget.CardView
+    <data>
+
+        <variable
+            name="viewModel"
+            type="kr.co.hongstudio.sitezip.ui.appirater.AppiraterDialogViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="50dp">
+        android:layout_height="match_parent"
+        android:background="@null">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.cardview.widget.CardView
+            android:id="@+id/layout_dialog"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <View
-                android:id="@+id/v_top"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/colorPrimary"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary">
 
-            <TextView
-                android:id="@+id/tv_dialog_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="테스트입니다."
-                android:textColor="@color/color_ffc107"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/v_top"
-                app:layout_constraintEnd_toEndOf="@+id/v_top"
-                app:layout_constraintStart_toStartOf="@+id/v_top"
-                app:layout_constraintTop_toTopOf="@+id/v_top" />
+                <View
+                    android:id="@+id/v_top"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@color/colorPrimaryDark"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/message"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:lineSpacingExtra="10dp"
-                android:text="@string/appirater_rate_message"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/v_top" />
+                <TextView
+                    android:id="@+id/tv_dialog_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@{viewModel.title}"
+                    android:textColor="@color/color_ffc107"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/v_top"
+                    app:layout_constraintEnd_toEndOf="@+id/v_top"
+                    app:layout_constraintStart_toStartOf="@+id/v_top"
+                    app:layout_constraintTop_toTopOf="@+id/v_top"
+                    tools:text="Title" />
 
-            <Button
-                android:id="@+id/rate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="10dp"
-                android:text="@string/appirater_rate"
-                app:layout_constraintTop_toBottomOf="@id/message" />
+                <TextView
+                    android:id="@+id/message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="10dp"
+                    android:text="@string/appirater_rate_message"
+                    android:textColor="@color/color_ffffff"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/v_top" />
 
-            <Button
-                android:id="@+id/rate_later"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="15dp"
-                android:text="@string/appirater_rate_later"
-                app:layout_constraintTop_toBottomOf="@id/rate" />
+                <Button
+                    android:id="@+id/rate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/colorPrimaryDark"
+                    android:drawableStart="@drawable/ic_baseline_rate_review_24"
+                    android:drawableTint="@color/color_ffc107"
+                    android:foreground="?selectableItemBackground"
+                    android:onClick="@{() -> viewModel.intentMarketPage()}"
+                    android:paddingStart="60dp"
+                    android:paddingEnd="60dp"
+                    android:text="@string/appirater_rate"
+                    android:textColor="@color/color_ffc107"
+                    app:layout_constraintTop_toBottomOf="@id/message" />
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="10dp"
-                android:text="@string/do_not_show_this_window"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rate_later" />
+                <Button
+                    android:id="@+id/rate_later"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/colorPrimaryDark"
+                    android:drawableStart="@drawable/ic_baseline_close_24"
+                    android:drawableTint="@color/color_ffffff"
+                    android:foreground="?selectableItemBackground"
+                    android:onClick="@{() -> viewModel.closeDialog()}"
+                    android:paddingStart="60dp"
+                    android:paddingEnd="60dp"
+                    android:text="@string/appirater_rate_later"
+                    android:textColor="@color/color_ffffff"
+                    app:layout_constraintTop_toBottomOf="@id/rate" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginVertical="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:buttonTint="@color/color_ffffff"
+                    android:checked="@={viewModel.isVisibleDialog()}"
+                    android:text="@string/do_not_show_this_window"
+                    android:textColor="@color/color_ffffff"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rate_later" />
 
-    </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

@@ -20,6 +20,7 @@ import kr.co.hongstudio.sitezip.firebase.FireBaseDatabaseManager
 import kr.co.hongstudio.sitezip.observer.NetworkObserver
 import kr.co.hongstudio.sitezip.util.extension.map
 import kr.co.hongstudio.sitezip.util.extension.notify
+import kr.co.hongstudio.sitezip.util.extension.postValue
 
 class MainViewModel(
 
@@ -155,6 +156,18 @@ class MainViewModel(
     private val _isShowNetworkErrorLayout: MutableLiveData<Boolean> = MutableLiveData()
     val isShowNetworkErrorLayout: LiveData<Boolean> = _isShowNetworkErrorLayout
 
+
+    /**
+     * 진행 다이어로그 표시 체크.
+     */
+    private val _checkVisibleProgress: MutableLiveData<Boolean> = MutableLiveData()
+    val checkVisibleProgress: LiveData<Boolean> = _checkVisibleProgress
+
+    /**
+     * 앱 리뷰 다이어로그 해제.
+     */
+    private val _disposeAppiraterDialogEvent: MutableLiveData<EmptyEvent> = MutableLiveData()
+    val disposeAppiraterDialogEvent: LiveData<EmptyEvent> = _disposeAppiraterDialogEvent
 
     /**
      * 파이어베이스 루트 ref 리스너.
@@ -453,6 +466,18 @@ class MainViewModel(
             adMobPref.showInterstitialAdCount += 1
         }
     }
+
+    /**
+     * 진행 다이어로그 표시 체크 설정.
+     */
+    fun setCheckVisibleProgress(isVisible: Boolean) {
+        _checkVisibleProgress.postValue = isVisible
+    }
+
+    /**
+     * 앱 리뷰 다이어로그 해제.
+     */
+    fun disposeAppiraterDialog() = _disposeAppiraterDialogEvent.notify()
 
     override fun onCleared() {
         super.onCleared()

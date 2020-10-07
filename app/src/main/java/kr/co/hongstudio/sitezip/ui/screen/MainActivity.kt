@@ -15,6 +15,12 @@ import com.bumptech.glide.request.transition.Transition
 import com.google.android.gms.ads.AdRequest
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.storage.FirebaseStorage
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
+import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kr.co.hongstudio.sitezip.App
 import kr.co.hongstudio.sitezip.R
 import kr.co.hongstudio.sitezip.base.activity.BaseActivity
@@ -23,6 +29,7 @@ import kr.co.hongstudio.sitezip.base.model.Model
 import kr.co.hongstudio.sitezip.billing.BillingManager
 import kr.co.hongstudio.sitezip.data.local.entity.PlaceZip
 import kr.co.hongstudio.sitezip.data.local.entity.SiteZip
+import kr.co.hongstudio.sitezip.data.local.preference.AppPreference
 import kr.co.hongstudio.sitezip.databinding.ActivityMainBinding
 import kr.co.hongstudio.sitezip.glide.GlideApp
 import kr.co.hongstudio.sitezip.ui.appirater.AppiraterDialog
@@ -31,8 +38,10 @@ import kr.co.hongstudio.sitezip.util.KeyboardUtil
 import kr.co.hongstudio.sitezip.util.LogUtil
 import kr.co.hongstudio.sitezip.util.extension.lifecycleFragmentManager
 import kr.co.hongstudio.sitezip.util.extension.observeBaseViewModelEvent
+import kr.co.hongstudio.sitezip.util.extension.timer
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.concurrent.TimeUnit
 
 class MainActivity : BaseActivity() {
 
@@ -69,6 +78,9 @@ class MainActivity : BaseActivity() {
     private val viewModel: MainViewModel by viewModel()
     private val billingManager: BillingManager by inject()
     private val displayUtil: DisplayUtil by inject()
+    private val appPref: AppPreference by inject()
+
+    private val appiraterDialogDisposable = CompositeDisposable()
 
     private lateinit var keyboardUtil: KeyboardUtil
 
@@ -78,8 +90,6 @@ class MainActivity : BaseActivity() {
         initBinding()
         initViewPager()
         initViewModel()
-        // 테스트.
-        AppiraterDialog.newInstance().show(lifecycleFragmentManager, AppiraterDialog.TAG)
     }
 
     override fun onResume() {
@@ -180,8 +190,13 @@ class MainActivity : BaseActivity() {
         viewModel.billingSponsor.observe(this, EventObserver {
             billingManager.processToPurchase(BillingManager.SUPPORT, this)
         })
+        viewModel.disposeAppiraterDialogEvent.observe(this, EventObserver {
+            appiraterDialogDisposable.dispose()
+        })
         // 뷰모델 기본 옵저버.
         observeBaseViewModelEvent(viewModel)
+        // 리뷰 요청 팝업 창
+        initAppiraterDialog()
         // 뷰 기본 세팅
         viewModel.setViewCheckNetwork()
     }
@@ -246,6 +261,39 @@ class MainActivity : BaseActivity() {
     }
 
     /**
+     * 앱 리뷰 다이어로그 초기화.
+     */
+    private fun initAppiraterDialog() {
+        val appiraterDialog: AppiraterDialog = AppiraterDialog.newInstance(object : AppiraterDialog.AppiraterDialogCallback {
+                override fun onDismiss() {
+                    viewModel.disposeAppiraterDialog()
+                }
+            })
+        Flowable.interval(10, TimeUnit.SECONDS)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .onBackpressureBuffer()
+            .subscribeBy(
+                onNext = {
+                    if (viewModel.checkVisibleProgress.value == false
+                        && appPref.visibleAppiraterDialog
+                    ) {
+                        timer(5) {
+                            appiraterDialog.show(lifecycleFragmentManager, AppiraterDialog.TAG)
+                        }
+                    } else if (!appPref.visibleAppiraterDialog) {
+                        viewModel.disposeAppiraterDialog()
+                    }
+                },
+                onError = {
+                    LogUtil.exception(TAG, it)
+                }
+            ).let {
+                appiraterDialogDisposable += it
+            }
+    }
+
+    /**
      * 애드몹 배너 초기화.
      */
     private fun initAdViewBanner() {
@@ -265,4 +313,6 @@ class MainActivity : BaseActivity() {
     override fun onBackPressed() {
         moveTaskToBack(true)
     }
+
+
 }

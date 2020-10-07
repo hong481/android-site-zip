@@ -96,6 +96,12 @@ class SiteZipViewModel(
     val scrollToPositionTop: LiveData<EmptyEvent> = _scrollToPositionTop
 
     /**
+     * 진행 다이어로그 표시 체크.
+     */
+    private val _checkVisibleProgress: MutableLiveData<Boolean> = MutableLiveData()
+    val checkVisibleProgress: LiveData<Boolean> = _checkVisibleProgress
+
+    /**
      * 탭 단위 파이어베이스 레퍼런스.
      */
     private var tabRef: DatabaseReference? = makeTabRef(siteZip)
@@ -176,6 +182,7 @@ class SiteZipViewModel(
             }
             val primaryKey = "${siteZip.tabName}_${snapshot.key}"
             showProgress(true)
+            setCheckVisibleProgress(true)
             checkLocalFavoriteSite(
                 primaryKey = primaryKey,
                 onComplete = { isFavorite ->
@@ -209,10 +216,12 @@ class SiteZipViewModel(
                     }
                     _scrollToPositionTop.postNotify()
                     dismissProgress(true)
+                    setCheckVisibleProgress(false)
                 },
                 onError = {
                     Log.d(TAG, it.toString())
                     dismissProgress(true)
+                    setCheckVisibleProgress(false)
                 }
             )
         }
@@ -344,6 +353,13 @@ class SiteZipViewModel(
                     onError(it)
                 }
             )
+    }
+
+    /**
+     * 진행 다이어로그 표시 체크 설정.
+     */
+    fun setCheckVisibleProgress(isVisible: Boolean) {
+        _checkVisibleProgress.postValue = isVisible
     }
 
     /**

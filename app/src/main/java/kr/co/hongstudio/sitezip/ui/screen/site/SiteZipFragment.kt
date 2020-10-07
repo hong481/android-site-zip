@@ -122,6 +122,9 @@ class SiteZipFragment : BaseFragment() {
         viewModel.scrollToPositionTop.observe(viewLifecycleOwner, EventObserver {
             (binding.rvSites.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(0, 0)
         })
+        viewModel.checkVisibleProgress.observe(viewLifecycleOwner, Observer {
+            mainViewModel.setCheckVisibleProgress(it)
+        })
         mainViewModel.isFavoriteMode.observe(viewLifecycleOwner, Observer {
             viewModel.setFavoriteMode(it)
             viewModel.displayTabViews()
