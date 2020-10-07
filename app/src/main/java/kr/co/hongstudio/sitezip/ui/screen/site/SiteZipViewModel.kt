@@ -207,7 +207,7 @@ class SiteZipViewModel(
                                     }
                                 }
                             }
-                        } ?: return@checkLocalFavoriteSite)
+                        } ?: return@let)
                     }
                     _searchSiteZip.postValue = siteZip.apply {
                         siteList.sortBy {
