@@ -21,8 +21,6 @@ import kr.co.hongstudio.sitezip.databinding.FragmentSiteZipBinding
 import kr.co.hongstudio.sitezip.ui.screen.MainViewModel
 import kr.co.hongstudio.sitezip.ui.screen.site.SiteZipViewModel.Serializable.SITE_ZIP
 import kr.co.hongstudio.sitezip.util.ResourceProvider
-import kr.co.hongstudio.sitezip.util.extension.dismissDialog
-import kr.co.hongstudio.sitezip.util.extension.dismissProgressDialog
 import kr.co.hongstudio.sitezip.util.extension.observeBaseViewModelEvent
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.getStateViewModel
@@ -74,6 +72,7 @@ class SiteZipFragment : BaseFragment() {
         mainViewModel.setSearchVisibility(false)
         mainViewModel.setSearchButtonVisible(true)
         mainViewModel.setFavoriteButtonVisible(true)
+        mainViewModel.setViewPagerUserInputEnabled(true)
     }
 
     private fun initBinding() {

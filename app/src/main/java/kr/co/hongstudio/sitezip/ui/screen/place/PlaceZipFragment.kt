@@ -10,11 +10,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AbsListView
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import kr.co.hongstudio.sitezip.R
 import kr.co.hongstudio.sitezip.base.fragment.BaseFragment
 import kr.co.hongstudio.sitezip.base.livedata.EventObserver
@@ -28,11 +26,16 @@ import kr.co.hongstudio.sitezip.util.LogUtil
 import kr.co.hongstudio.sitezip.util.PermissionUtil
 import kr.co.hongstudio.sitezip.util.ResourceProvider
 import kr.co.hongstudio.sitezip.util.extension.observeBaseViewModelEvent
+import net.daum.mf.map.api.MapPOIItem
+import net.daum.mf.map.api.MapPoint
+import net.daum.mf.map.api.MapView
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.getStateViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class PlaceZipFragment : BaseFragment() {
+
+class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
+    MapView.POIItemEventListener {
 
     companion object {
         const val TAG: String = "PlaceListFragment"
@@ -58,6 +61,10 @@ class PlaceZipFragment : BaseFragment() {
 
     private val resourceProvider: ResourceProvider by inject()
 
+    private val mapView: MapView by lazy {
+        MapView(context)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -68,28 +75,13 @@ class PlaceZipFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         initBinding()
         initViewModel()
+        initKakaoMapView()
         initPlacesRecyclerView()
     }
 
     private fun initBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-        binding.rvPlaces.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                when (newState) {
-                    AbsListView.OnScrollListener.SCROLL_STATE_FLING -> {
-                        mainViewModel.setViewPagerUserInputEnabled(false)
-                    }
-                    AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL -> {
-                        mainViewModel.setViewPagerUserInputEnabled(false)
-                    }
-                    AbsListView.OnScrollListener.SCROLL_STATE_IDLE -> {
-                        mainViewModel.setViewPagerUserInputEnabled(true)
-                    }
-                    else -> Unit
-                }
-            }
-        })
     }
 
     override fun onRestart() {
@@ -108,6 +100,7 @@ class PlaceZipFragment : BaseFragment() {
         mainViewModel.setSearchVisibility(false)
         mainViewModel.setSearchButtonVisible(false)
         mainViewModel.setFavoriteButtonVisible(false)
+        mainViewModel.setViewPagerUserInputEnabled(false)
         if (!viewModel.locationUtil.checkLocationServicesStatus()) {
             showLocationServiceSetting()
         }
@@ -120,8 +113,8 @@ class PlaceZipFragment : BaseFragment() {
             )
             true
         }
-        viewModel.placeZip.observe(viewLifecycleOwner, Observer { place ->
-            if (place.state == Model.TRUE) {
+        viewModel.placeZip.observe(viewLifecycleOwner, Observer { placeZip ->
+            if (placeZip.state == Model.TRUE) {
                 // 권한 요청
                 permissionUtil.checkPermission(this,
                     onGranted = {
@@ -131,6 +124,7 @@ class PlaceZipFragment : BaseFragment() {
                         viewModel.setPermissionGranted(false)
                     }
                 )
+                createKakaoMapMarker(placeZip)
             }
         })
         viewModel.location.observe(viewLifecycleOwner, Observer { location ->
@@ -178,6 +172,38 @@ class PlaceZipFragment : BaseFragment() {
     }
 
     /**
+     * 카카오맵 초기화.
+     */
+    private fun initKakaoMapView() {
+        mapView.setMapViewEventListener(this)
+        mapView.setPOIItemEventListener(this)
+        binding.mapView.addView(mapView)
+    }
+
+    private fun createKakaoMapMarker(placeZip: PlaceZip) {
+        mapView.removeAllPOIItems()
+        val placeMapPoints: MutableList<MapPoint> = mutableListOf()
+        for (i: Int in placeZip.places.indices) {
+            val tag = placeZip.id?.toInt()
+            val latitude = placeZip.places[i].y?.toDouble()
+            val longitude = placeZip.places[i].x?.toDouble()
+
+            if (tag != null && latitude != null && longitude != null) {
+                val marker: MapPOIItem = MapPOIItem().apply {
+                    this.tag = tag
+                    this.itemName = placeZip.places[i].place_name
+                    this.mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude)
+                    this.markerType = MapPOIItem.MarkerType.BluePin
+                    this.selectedMarkerType = MapPOIItem.MarkerType.RedPin
+                }
+                placeMapPoints.add(marker.mapPoint)
+                mapView.addPOIItem(marker)
+            }
+            mapView.fitMapViewAreaToShowMapPoints(placeMapPoints.toTypedArray())
+        }
+    }
+
+    /**
      * 장소 리사이클 뷰 초기화.
      */
     private fun initPlacesRecyclerView() {
@@ -201,4 +227,66 @@ class PlaceZipFragment : BaseFragment() {
         }
         .create()
         .show()
+
+    override fun onMapViewInitialized(mapView: MapView?) {
+        // empty
+    }
+
+    override fun onMapViewCenterPointMoved(mapView: MapView?, mapPoint: MapPoint?) {
+        // empty
+    }
+
+    override fun onMapViewZoomLevelChanged(mapView: MapView?, p1: Int) {
+        // empty
+    }
+
+    override fun onMapViewSingleTapped(mapView: MapView?, mapPoint: MapPoint?) {
+        // empty
+    }
+
+    override fun onMapViewDoubleTapped(mapView: MapView?, mapPoint: MapPoint?) {
+        // empty
+    }
+
+    override fun onMapViewLongPressed(mapView: MapView?, mapPoint: MapPoint?) {
+        // empty
+    }
+
+    override fun onMapViewDragStarted(mapView: MapView?, mapPoint: MapPoint?) {
+        // empty
+    }
+
+    override fun onMapViewDragEnded(mapView: MapView?, mapPoint: MapPoint?) {
+        // empty
+    }
+
+    override fun onMapViewMoveFinished(mapView: MapView?, mapPoint: MapPoint?) {
+        // empty
+    }
+
+    override fun onPOIItemSelected(mapView: MapView?, mapPOIItem: MapPOIItem?) {
+        // empty
+    }
+
+    override fun onCalloutBalloonOfPOIItemTouched(mapView: MapView?, mapPOIItem: MapPOIItem?) {
+        // empty
+    }
+
+    override fun onCalloutBalloonOfPOIItemTouched(
+        mapView: MapView?,
+        mapPOIItem: MapPOIItem?,
+        calloutBalloonButtonType: MapPOIItem.CalloutBalloonButtonType?
+    ) {
+        viewModel.findPlace(mapPOIItem?.itemName ?: return)?.let {
+            viewModel.intentPlacePage(it.place_url)
+        }
+    }
+
+    override fun onDraggablePOIItemMoved(
+        mapView: MapView?,
+        mapPOIItem: MapPOIItem?,
+        mapPoint: MapPoint?
+    ) {
+        // empty
+    }
 }

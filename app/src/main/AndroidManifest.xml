@@ -21,13 +21,20 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
+        <!-- google ads-->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/google_admob_app_id" />
 
+        <!-- google geo-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBBAw8I5RPfEeKC-3rfz-jGuVpE_jQzMJ4"/>
+
+        <!-- kakao map-->
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="397e3d2666b2779f56d69376cf5fcbe0"/>
 
         <!-- MainActivity -->
         <activity

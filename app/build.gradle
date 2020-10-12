@@ -184,6 +184,8 @@ def createApk() {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // kakao map
+    implementation files('libs/libDaumMapAndroid.jar')
 
     // Kotlin
     kapt "androidx.databinding:databinding-compiler:$gradle_version"

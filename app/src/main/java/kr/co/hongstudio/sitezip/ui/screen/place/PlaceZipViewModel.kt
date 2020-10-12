@@ -13,6 +13,7 @@ import kr.co.hongstudio.sitezip.base.livedata.EmptyEvent
 import kr.co.hongstudio.sitezip.base.livedata.Event
 import kr.co.hongstudio.sitezip.base.model.Model
 import kr.co.hongstudio.sitezip.base.viewmodel.BaseViewModel
+import kr.co.hongstudio.sitezip.data.local.entity.Place
 import kr.co.hongstudio.sitezip.data.local.entity.PlaceZip
 import kr.co.hongstudio.sitezip.domain.GetPlacesUseCase
 import kr.co.hongstudio.sitezip.util.LocationUtil
@@ -194,6 +195,13 @@ class PlaceZipViewModel(
      */
     fun playVoiceSearch() {
         _playVoiceSearch.notify()
+    }
+
+    /**
+     * 장소 오브젝트 찾기.
+     */
+    fun findPlace(placeName: String): Place? = placeZip.value?.places?.findLast {
+        it.place_name == placeName
     }
 
     /**
