@@ -40,6 +40,8 @@ class PlacesHolder(
 
     interface ViewModel {
         fun intentPlacePage(placeUrl: String?)
+
+        fun selectMapMarker(placeName: String?)
     }
 
 }

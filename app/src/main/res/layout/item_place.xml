@@ -23,7 +23,8 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
-        android:focusableInTouchMode="false"
+        android:background="?attr/selectableItemBackground"
+        android:onClick="@{() -> viewModel.selectMapMarker(viewHolder.item.place_name)}"
         app:cardBackgroundColor="@color/color_ffffff"
         app:cardCornerRadius="10dp">
 

@@ -65,6 +65,8 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
         MapView(context)
     }
 
+    private val mapPoiItems: MutableList<MapPOIItem> = mutableListOf()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -168,6 +170,14 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
                 e.printStackTrace()
             }
         })
+        viewModel.selectMapMarker.observe(viewLifecycleOwner, EventObserver { placeName ->
+            val selectMarker: MapPOIItem? = mapPoiItems.findLast {
+                it.itemName == placeName
+            }
+            selectMarker?.let {
+                mapView.selectPOIItem(selectMarker, true)
+            }
+        })
         observeBaseViewModelEvent(viewModel)
     }
 
@@ -182,7 +192,8 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
 
     private fun createKakaoMapMarker(placeZip: PlaceZip) {
         mapView.removeAllPOIItems()
-        val placeMapPoints: MutableList<MapPoint> = mutableListOf()
+        mapPoiItems.clear()
+        val mapPoiItemPoints: MutableList<MapPoint> = mutableListOf()
         for (i: Int in placeZip.places.indices) {
             val tag = placeZip.id?.toInt()
             val latitude = placeZip.places[i].y?.toDouble()
@@ -196,11 +207,12 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
                     this.markerType = MapPOIItem.MarkerType.BluePin
                     this.selectedMarkerType = MapPOIItem.MarkerType.RedPin
                 }
-                placeMapPoints.add(marker.mapPoint)
-                mapView.addPOIItem(marker)
+                mapPoiItemPoints.add(marker.mapPoint)
+                mapPoiItems.add(marker)
             }
-            mapView.fitMapViewAreaToShowMapPoints(placeMapPoints.toTypedArray())
         }
+        mapView.addPOIItems(mapPoiItems.toTypedArray())
+        mapView.fitMapViewAreaToShowMapPoints(mapPoiItemPoints.toTypedArray())
     }
 
     /**

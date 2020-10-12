@@ -75,6 +75,12 @@ class PlaceZipViewModel(
     val intentUrlEvent: LiveData<Event<String>> = _intentUrlEvent
 
     /**
+     * 마커 선택 이벤트.
+     */
+    private val _selectMapMarkerEvent: MutableLiveData<Event<String>> = MutableLiveData()
+    val selectMapMarker: LiveData<Event<String>> = _selectMapMarkerEvent
+
+    /**
      * 검색어.
      */
     val searchText: MutableLiveData<String> = MutableLiveData()
@@ -225,5 +231,12 @@ class PlaceZipViewModel(
         placeUrl?.let {
             _intentUrlEvent.notify = it
         }
+    }
+
+    override fun selectMapMarker(placeName: String?) {
+        placeName?.let {
+            _selectMapMarkerEvent.notify = it
+        }
+
     }
 }
