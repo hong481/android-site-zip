@@ -35,6 +35,7 @@ object AppModule {
         ViewModelModule.INSTANCE,
         FirebaseModule.INSTANCE,
         AdMobModule.INSTANCE,
-        BillingModule.INSTANCE
+        BillingModule.INSTANCE,
+        GooglePlayModule.INSTANCE
     )
 }

@@ -80,7 +80,7 @@
                     android:drawableStart="@drawable/ic_baseline_rate_review_24"
                     android:drawableTint="@color/color_ffc107"
                     android:foreground="?selectableItemBackground"
-                    android:onClick="@{() -> viewModel.intentMarketPage()}"
+                    android:onClick="@{() -> viewModel.appReviewStart()}"
                     android:paddingStart="60dp"
                     android:paddingEnd="60dp"
                     android:text="@string/appirater_rate"

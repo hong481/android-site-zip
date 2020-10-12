@@ -39,10 +39,10 @@ class AppiraterDialogViewModel(
     val isVisibleDialog: MutableLiveData<Boolean> = MutableLiveData()
 
     /**
-     * 마켓 페이지로 이동.
+     * 앱 리뷰 시작 이벤트.
      */
-    private var _intentMarketPageEvent: MutableLiveData<Event<String>> = MutableLiveData()
-    var intentMarketPageEvent: LiveData<Event<String>> = _intentMarketPageEvent
+    private var _appReviewStartEvent: MutableLiveData<Event<String>> = MutableLiveData()
+    var appReviewStartEvent: LiveData<Event<String>> = _appReviewStartEvent
 
     /**
      * 다이어로크 닫기 이벤트.
@@ -58,10 +58,10 @@ class AppiraterDialogViewModel(
     }
 
     /**
-     * 마켓 페이지로 이동.
+     * 앱 리뷰 시작.
      */
-    fun intentMarketPage() {
-        _intentMarketPageEvent.notify = BASE_MARKET_URL
+    fun appReviewStart() {
+        _appReviewStartEvent.notify = BASE_MARKET_URL
     }
 
     /**

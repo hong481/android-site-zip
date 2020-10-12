@@ -52,6 +52,8 @@ ext {
 
     billingVersion = '3.0.1'
 
+    googlePlayCoreVerison = '1.8.2'
+    googlePlayCoreKtxVerison = '1.8.1'
     googleAdsVersion = '19.4.0'
     googleMapsVersion = '17.0.0'
     googleLocationVersion = '17.1.0'
