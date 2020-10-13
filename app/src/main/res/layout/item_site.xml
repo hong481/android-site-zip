@@ -36,14 +36,14 @@
             android:clickable="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:minHeight="100dp">
+            android:minHeight="80dp">
 
 
             <ImageView
                 android:id="@+id/iv_icon"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="20dp"
                 android:background="@drawable/ic_background"
                 android:contentDescription="@string/content_description"
                 app:layout_constraintBottom_toTopOf="@id/v_bottom"
@@ -84,13 +84,13 @@
                 app:layout_constraintEnd_toStartOf="@id/btn_open_link"
                 app:layout_constraintStart_toEndOf="@+id/iv_icon"
                 app:layout_constraintTop_toBottomOf="@+id/tv_site_name"
-                tools:text="site information @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" />
+                tools:text="site information" />
 
             <FrameLayout
                 android:id="@+id/btn_open_link"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-
+                android:layout_marginEnd="10dp"
                 android:onClick="@{() -> viewModel.intentUrl(viewHolder.item.url)}"
                 android:padding="10dp"
                 app:layout_constraintBottom_toTopOf="@id/v_bottom"
@@ -119,8 +119,7 @@
                 android:id="@+id/iv_favorite_off"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginStart="5sp"
-                android:layout_marginTop="2dp"
+                android:layout_marginStart="10sp"
                 android:contentDescription="@string/content_description"
                 android:onClick="@{() -> viewModel.chooseFavorite(viewHolder.item)}"
                 android:src="@drawable/ic_baseline_star_24"
@@ -136,8 +135,7 @@
                 android:id="@+id/iv_favorite_on"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginStart="5sp"
-                android:layout_marginTop="2dp"
+                android:layout_marginStart="10sp"
                 android:contentDescription="@string/content_description"
                 android:onClick="@{() -> viewModel.releaseFavorite(viewHolder.item)}"
                 android:scaleType="centerInside"
@@ -150,17 +148,6 @@
                 app:tintMode="src_in"
                 tools:visibility="visible" />
 
-            <ImageView
-                android:id="@+id/iv_link_icon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="2dp"
-                android:background="@drawable/ic_baseline_link_24"
-                android:contentDescription="@string/content_description"
-                app:layout_constraintBottom_toBottomOf="@id/v_bottom"
-                app:layout_constraintStart_toEndOf="@id/iv_favorite_off"
-                app:layout_constraintTop_toTopOf="@id/v_bottom" />
 
             <TextView
                 android:id="@+id/tv_site_link"
@@ -175,7 +162,7 @@
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="@id/v_bottom"
                 app:layout_constraintEnd_toStartOf="@id/btn_link_share"
-                app:layout_constraintStart_toEndOf="@+id/iv_link_icon"
+                app:layout_constraintStart_toEndOf="@id/iv_favorite_on"
                 app:layout_constraintTop_toTopOf="@id/v_bottom"
                 tools:text="Site Link" />
 
@@ -183,7 +170,6 @@
                 android:id="@+id/btn_link_share"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_marginTop="2dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_baseline_share_24"
                 android:onClick="@{() -> viewModel.shareLink(viewHolder.item.url)}"
@@ -195,7 +181,6 @@
                 android:id="@+id/btn_link_copy"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_marginTop="2dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_baseline_file_copy_24"
                 android:onClick="@{() -> viewModel.copyLink(viewHolder.item.title, viewHolder.item.url)}"
