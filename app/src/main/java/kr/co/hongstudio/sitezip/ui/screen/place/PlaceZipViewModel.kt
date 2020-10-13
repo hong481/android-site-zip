@@ -211,13 +211,6 @@ class PlaceZipViewModel(
     }
 
     /**
-     * 바인딩.
-     */
-    fun onBind(item: PlaceZip) {
-        placeZip.value = item
-    }
-
-    /**
      * 권한 허용 여부 설정.
      */
     fun setPermissionGranted(isGranted: Boolean) {

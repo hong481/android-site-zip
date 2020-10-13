@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.util.Log
+import android.view.MenuItem
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -13,6 +14,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.gms.ads.AdRequest
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.storage.FirebaseStorage
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -25,14 +27,14 @@ import kr.co.hongstudio.sitezip.App
 import kr.co.hongstudio.sitezip.R
 import kr.co.hongstudio.sitezip.base.activity.BaseActivity
 import kr.co.hongstudio.sitezip.base.livedata.EventObserver
-import kr.co.hongstudio.sitezip.base.model.Model
 import kr.co.hongstudio.sitezip.billing.BillingManager
-import kr.co.hongstudio.sitezip.data.local.entity.PlaceZip
 import kr.co.hongstudio.sitezip.data.local.entity.SiteZip
 import kr.co.hongstudio.sitezip.data.local.preference.AppPreference
 import kr.co.hongstudio.sitezip.databinding.ActivityMainBinding
 import kr.co.hongstudio.sitezip.glide.GlideApp
 import kr.co.hongstudio.sitezip.ui.appirater.AppiraterDialog
+import kr.co.hongstudio.sitezip.ui.screen.place.PlaceZipFragment
+import kr.co.hongstudio.sitezip.ui.screen.site.SiteZipFragmentAdapter
 import kr.co.hongstudio.sitezip.util.DisplayUtil
 import kr.co.hongstudio.sitezip.util.KeyboardUtil
 import kr.co.hongstudio.sitezip.util.LogUtil
@@ -43,7 +45,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
     companion object {
         const val TAG: String = "MainActivity"
@@ -105,6 +107,7 @@ class MainActivity : BaseActivity() {
     private fun initBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        binding.bottomNav.setOnNavigationItemSelectedListener(this)
     }
 
     private fun initViewModel() {
@@ -133,19 +136,26 @@ class MainActivity : BaseActivity() {
         })
         viewModel.zipSize.observe(this, Observer {
             Log.d(TAG, "siteZipSize: $it")
-            (binding.viewPager.adapter as? FragmentAdapter)?.setSize(it)
-            if (viewModel.zipList.size <= 0) {
+            (binding.viewPager.adapter as? SiteZipFragmentAdapter)?.setSize(it)
+            if (viewModel.siteZipList.size <= 0) {
                 viewModel.registerZipsListener()
             } else {
                 App.restart(this, createIntent(applicationContext, true))
             }
         })
-        viewModel.zips.observe(this, Observer {
-            val models: MutableList<Model> = it.toMutableList()
-            (binding.viewPager.adapter as? FragmentAdapter)?.setItems(
-                items = models.apply {
-                    sortBy { model -> model.index }
+        viewModel.siteZips.observe(this, Observer {
+            val items: MutableList<SiteZip> = it.toMutableList()
+            (binding.viewPager.adapter as? SiteZipFragmentAdapter)?.setItems(
+                items = items.apply {
+                    sortBy { item -> item.index }
                 }
+            )
+        })
+        viewModel.placeZip.observe(this, EventObserver {
+            PlaceZipFragment.newInstance(it).replace(
+                fragmentManager = supportFragmentManager,
+                container = binding.frameLayout,
+                tag = PlaceZipFragment.TAG
             )
         })
         viewModel.searchVisibility.observe(this, Observer {
@@ -184,6 +194,15 @@ class MainActivity : BaseActivity() {
                 }
             }
         })
+        // 화면 제어
+        viewModel.replaceSiteScreen.observe(this, EventObserver {
+            viewModel.setVisiblePlaceScreen(false)
+            viewModel.setVisibleSiteScreen(true)
+        })
+        viewModel.replacePlaceScreen.observe(this, EventObserver {
+            viewModel.setVisibleSiteScreen(false)
+            viewModel.setVisiblePlaceScreen(true)
+        })
         viewModel.billingRemoveAds.observe(this, EventObserver {
             billingManager.processToPurchase(BillingManager.REMOVE_ADS, this)
         })
@@ -208,34 +227,27 @@ class MainActivity : BaseActivity() {
         binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.viewPager.offscreenPageLimit = 99
         binding.viewPager.adapter =
-            FragmentAdapter(
+            SiteZipFragmentAdapter(
                 fragmentActivity = this
             )
 
-        val adapter: FragmentAdapter = (binding.viewPager.adapter as FragmentAdapter)
+        val adapterSiteZip: SiteZipFragmentAdapter =
+            (binding.viewPager.adapter as SiteZipFragmentAdapter)
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             Log.d(
                 TAG,
-                "adapter.siteZips.size : ${adapter.adapterItems.size} " +
+                "adapter.siteZips.size : ${adapterSiteZip.adapterItems.size} " +
                         "/ " +
-                        "adapter.siteZipsSize: ${adapter.adapterItemsSize}"
+                        "adapter.siteZipsSize: ${adapterSiteZip.adapterItemsSize}"
             )
             // 리턴.
-            if (adapter.adapterItems.size < adapter.adapterItemsSize) {
+            if (adapterSiteZip.adapterItems.size < adapterSiteZip.adapterItemsSize) {
                 Log.d(TAG, "TabLayoutMediator. return.")
                 return@TabLayoutMediator
             }
-            val itemModel: Model = adapter.adapterItems[position]
-            val tabIconUrl: String = if (itemModel is PlaceZip) {
-                itemModel.tabIconUrl
-            } else {
-                (itemModel as SiteZip).tabIconUrl
-            }
-            tab.text = if (itemModel is PlaceZip) {
-                itemModel.tabName
-            } else {
-                (itemModel as SiteZip).tabName
-            }
+            val siteZip: SiteZip = adapterSiteZip.adapterItems[position]
+            val tabIconUrl: String = siteZip.tabIconUrl
+            tab.text = siteZip.tabName
             val padding: Int = displayUtil.dpToPx(3f).toInt()
             (tab.view.getChildAt(0) as ImageView).setPadding(padding, padding, padding, padding)
             Log.d(TAG, "position : $position / tabIconUrl : $tabIconUrl")
@@ -264,7 +276,8 @@ class MainActivity : BaseActivity() {
      * 앱 리뷰 다이어로그 초기화.
      */
     private fun initAppiraterDialog() {
-        val appiraterDialog: AppiraterDialog = AppiraterDialog.newInstance(object : AppiraterDialog.AppiraterDialogCallback {
+        val appiraterDialog: AppiraterDialog =
+            AppiraterDialog.newInstance(object : AppiraterDialog.AppiraterDialogCallback {
                 override fun onDismiss() {
                     viewModel.disposeAppiraterDialog()
                 }
@@ -314,5 +327,15 @@ class MainActivity : BaseActivity() {
         moveTaskToBack(true)
     }
 
-
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.navigation_site -> {
+                viewModel.replaceSiteScreen()
+            }
+            R.id.navigation_place -> {
+                viewModel.replacePlaceScreen()
+            }
+        }
+        return true
+    }
 }

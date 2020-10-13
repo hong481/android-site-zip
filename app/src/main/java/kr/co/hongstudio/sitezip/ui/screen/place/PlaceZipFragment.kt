@@ -34,8 +34,7 @@ import org.koin.androidx.viewmodel.ext.android.getStateViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
-class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
-    MapView.POIItemEventListener {
+class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener, MapView.POIItemEventListener {
 
     companion object {
         const val TAG: String = "PlaceListFragment"
@@ -71,7 +70,7 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.fragment_place_zip, container, true)
+    ): View = inflater.inflate(R.layout.fragment_place_zip, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -109,6 +108,8 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
     }
 
     private fun initViewModel() {
+
+
         binding.etSearchText.setOnEditorActionListener { _, _, _ ->
             viewModel.getPlaces(
                 viewModel.searchText.value ?: return@setOnEditorActionListener false
@@ -116,6 +117,9 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
             true
         }
         viewModel.placeZip.observe(viewLifecycleOwner, Observer { placeZip ->
+
+            Log.d(TAG, placeZip.toString())
+
             if (placeZip.state == Model.TRUE) {
                 // 권한 요청
                 permissionUtil.checkPermission(this,

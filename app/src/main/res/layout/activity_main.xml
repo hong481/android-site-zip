@@ -75,7 +75,8 @@
                                 android:src="@mipmap/ic_launcher"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:visibility="gone" />
 
                             <TextView
                                 android:id="@+id/tv_app_title"
@@ -87,7 +88,8 @@
                                 android:textSize="20sp"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toEndOf="@+id/iv_logo"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:visibility="gone" />
 
                             <View
                                 android:layout_width="match_parent"
@@ -189,7 +191,8 @@
                                 android:onClick="@{() -> viewModel.setSearchVisibility(false)}"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:visibility="gone" />
 
                             <EditText
                                 android:id="@+id/et_search_text"
@@ -236,8 +239,7 @@
                                 android:visibility="@{viewModel.isSearchTextChanged() == true ? View.VISIBLE : View.GONE}"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                tools:visibility="gone" />
+                                app:layout_constraintTop_toTopOf="parent" />
 
                             <View
                                 android:layout_width="match_parent"
@@ -255,7 +257,7 @@
                             android:background="@color/colorPrimary"
                             android:visibility="@{viewModel.isShowMoreMenu() == true ? View.VISIBLE : View.GONE}"
                             app:layout_constraintTop_toBottomOf="@+id/layout_app_bar"
-                            tools:visibility="visible">
+                            tools:visibility="gone">
 
                             <View
                                 android:layout_width="match_parent"
@@ -318,20 +320,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/colorPrimary"
-                    android:visibility="@{viewModel.zips.size() > 0 == true ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.isVisibleSiteScreen() == true ? View.VISIBLE : View.GONE}"
                     ads:tabMode="scrollable"
                     app:layout_constraintTop_toBottomOf="@id/layout_more_menu"
                     app:tabIconTint="@color/tab_color_selector"
                     app:tabIndicatorColor="@color/color_ffc107"
                     app:tabSelectedTextColor="@color/color_ffc107"
                     app:tabTextAppearance="@style/tab_text"
-                    app:tabTextColor="@color/color_ffffff" />
+                    app:tabTextColor="@color/color_ffffff"
+                    tools:visibility="gone" />
             </com.google.android.material.appbar.AppBarLayout>
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="@{viewModel.isVisibleSiteScreen() == true ? View.VISIBLE : View.GONE}"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+                tools:visibility="visible" />
+
+            <FrameLayout
+                android:id="@+id/frameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="@{viewModel.isVisiblePlaceScreen() == true ? View.VISIBLE : View.GONE}"
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
@@ -382,6 +394,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+
         <com.google.android.gms.ads.AdView
             android:id="@+id/ad_view_banner"
             android:layout_width="match_parent"
@@ -390,6 +403,16 @@
             ads:adSize="SMART_BANNER"
             ads:adUnitId="@string/google_admob_banner_id"
             tools:visibility="visible" />
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_nav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_eeeeee"
+            app:elevation="8dp"
+            app:itemIconTint="@color/bottom_nav_color"
+            app:itemTextColor="@color/bottom_nav_color"
+            app:menu="@menu/item_nav" />
 
     </LinearLayout>
 </layout>

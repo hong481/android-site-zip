@@ -1,7 +1,6 @@
 package kr.co.hongstudio.sitezip.di
 
 import androidx.lifecycle.SavedStateHandle
-import kr.co.hongstudio.sitezip.ui.appirater.AppiraterDialog
 import kr.co.hongstudio.sitezip.ui.appirater.AppiraterDialogViewModel
 import kr.co.hongstudio.sitezip.ui.screen.MainViewModel
 import kr.co.hongstudio.sitezip.ui.screen.place.PlaceZipViewModel

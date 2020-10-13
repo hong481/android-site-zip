@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import kr.co.hongstudio.sitezip.admob.AdMobManager
 import kr.co.hongstudio.sitezip.base.livedata.EmptyEvent
+import kr.co.hongstudio.sitezip.base.livedata.Event
 import kr.co.hongstudio.sitezip.base.model.Model
 import kr.co.hongstudio.sitezip.base.viewmodel.BaseViewModel
 import kr.co.hongstudio.sitezip.data.BuildProperty
@@ -38,15 +39,21 @@ class MainViewModel(
     }
 
     /**
-     * Model zip 리스트. (No LiveData)
+     * SiteZip zip 리스트. (No LiveData)
      */
-    val zipList: MutableList<Model> = mutableListOf()
+    val siteZipList: MutableList<SiteZip> = mutableListOf()
 
     /**
-     * Model zip 라이브데이터.
+     * SiteZip zip 라이브데이터.
      */
-    private val _zips: MutableLiveData<MutableList<Model>> = MutableLiveData()
-    val zips: LiveData<MutableList<Model>> = _zips
+    private val _siteZips: MutableLiveData<MutableList<SiteZip>> = MutableLiveData()
+    val siteZips: LiveData<MutableList<SiteZip>> = _siteZips
+
+    /**
+     * Place zip 라이브데이터.
+     */
+    private val _placeZip: MutableLiveData<Event<PlaceZip>> = MutableLiveData()
+    val placeZip: LiveData<Event<PlaceZip>> = _placeZip
 
     /**
      * Model zip 개수.
@@ -65,6 +72,18 @@ class MainViewModel(
      */
     private val _isShowMoreMenu: MutableLiveData<Boolean> = MutableLiveData(false)
     val isShowMoreMenu: LiveData<Boolean> = _isShowMoreMenu
+
+    private val _isVisibleSiteScreen: MutableLiveData<Boolean> = MutableLiveData(true)
+    val isVisibleSiteScreen: LiveData<Boolean> = _isVisibleSiteScreen
+
+    private val _isVisiblePlaceScreen: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isVisiblePlaceScreen: LiveData<Boolean> = _isVisiblePlaceScreen
+
+    private val _replaceSiteScreen: MutableLiveData<EmptyEvent> = MutableLiveData()
+    val replaceSiteScreen: LiveData<EmptyEvent> = _replaceSiteScreen
+
+    private val _replacePlaceScreen: MutableLiveData<EmptyEvent> = MutableLiveData()
+    val replacePlaceScreen: LiveData<EmptyEvent> = _replacePlaceScreen
 
     /**
      * 검색어.
@@ -138,7 +157,7 @@ class MainViewModel(
     val isEnableContents: LiveData<Boolean> =
         fireBaseDatabaseManager.isAvailable.map { isAvailable ->
             Log.d(TAG, "isAvailable $isAvailable")
-            if (zips.value?.size ?: 0 > 0) {
+            if (siteZips.value?.size ?: 0 > 0) {
                 return@map true
             } else {
                 return@map isAvailable
@@ -172,66 +191,62 @@ class MainViewModel(
     /**
      * 파이어베이스 루트 ref 리스너.
      */
-    private val firebaseRootRefListener: ChildEventListener = object : ChildEventListener {
+    private val rootRefListener: ChildEventListener = object : ChildEventListener {
 
         override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
             Log.d(TAG, "firebaseRootRefListener. onChildAdded. ${snapshot.key ?: ""}")
-
-            zipList.let { list ->
-                if (list.any {
-                        if (it is PlaceZip) it.tabName == snapshot.key ?: ""
-                        else (it as SiteZip).tabName == snapshot.key ?: ""
-                    }) {
-                    return
-                }
-                list.add(snapshot.getValue(
-                    if (snapshot.child(Model.TYPE).getValue(String::class.java)
-                            .equals(PlaceZip.PLACE)
-                    ) {
-                        PlaceZip::class.java
-                    } else {
-                        SiteZip::class.java
-                    }
-                ).apply {
-                    if (this is PlaceZip) {
+            if (snapshot.child(Model.TYPE).getValue(String::class.java).equals(PlaceZip.PLACE)) {
+                val placeZip: PlaceZip =
+                    (snapshot.getValue(PlaceZip::class.java) as PlaceZip).apply {
                         this.tabName = snapshot.key ?: ""
                         this.defaultQuery =
                             snapshot.child(PlaceZip.DEFAULT_QUERY).getValue(String::class.java)
                                 ?: ""
                         this.index = snapshot.child(Model.INDEX).getValue(Int::class.java) ?: 0
                         this.state = snapshot.child(Model.STATE).getValue(Int::class.java) ?: 0
-                    } else {
-                        (this as SiteZip).tabName = snapshot.key ?: ""
+                    }
+                _placeZip.notify = placeZip
+            } else {
+                siteZipList.let { list ->
+                    if (list.any {
+                            it.tabName == snapshot.key ?: ""
+                        }) {
+                        return
+                    }
+                    list.add((snapshot.getValue(SiteZip::class.java) as SiteZip).apply {
+                        this.tabName = snapshot.key ?: ""
                         this.index = snapshot.child(Model.INDEX).getValue(Int::class.java) ?: 0
                         this.state = snapshot.child(Model.STATE).getValue(Int::class.java) ?: 0
+                    })
+                }
+                _siteZips.value = siteZipList.apply {
+                    sortBy {
+                        it.index
                     }
-                } as Model? ?: return)
-            }
-
-            _zips.value = zipList.apply {
-                sortBy {
-                    it.index
                 }
             }
         }
 
         override fun onChildRemoved(snapshot: DataSnapshot) {
             Log.d(TAG, "firebaseRootRefListener. onChildRemoved. ${snapshot.key ?: ""}")
-            val removeIndex = zipList.indexOfFirst {
-                if (it is PlaceZip) {
-                    it.tabName == snapshot.key
-                } else {
-                    (it as SiteZip).tabName == snapshot.key
-                }
-            }
-            if (removeIndex < 0) {
-                return
-            }
-            zipList.removeAt(removeIndex)
 
-            _zips.value = zipList.apply {
-                sortBy {
-                    it.index
+            if (snapshot.child(Model.TYPE).getValue(String::class.java)
+                    .equals(PlaceZip.PLACE)
+            ) {
+                _placeZip.value = null
+            } else {
+                val removeIndex = siteZipList.indexOfFirst {
+                    it.tabName == snapshot.key
+                }
+                if (removeIndex < 0) {
+                    return
+                }
+                siteZipList.removeAt(removeIndex)
+
+                _siteZips.value = siteZipList.apply {
+                    sortBy {
+                        it.index
+                    }
                 }
             }
         }
@@ -242,46 +257,39 @@ class MainViewModel(
 
         override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
             val primaryKey = "${snapshot.key}"
-            var findModel: Model? = null
-            for (model: Model in zipList) {
-                if (model is PlaceZip) {
-                    if (model.tabName == primaryKey) {
-                        findModel = model
+            if (snapshot.child(Model.TYPE).getValue(String::class.java).equals(PlaceZip.PLACE)) {
+                val placeZip: PlaceZip =
+                    (snapshot.getValue(PlaceZip::class.java) as PlaceZip).apply {
+                        this.tabName = snapshot.key ?: ""
+                        this.defaultQuery =
+                            snapshot.child(PlaceZip.DEFAULT_QUERY).getValue(String::class.java)
+                                ?: ""
+                        this.index = snapshot.child(Model.INDEX).getValue(Int::class.java) ?: 0
+                        this.state = snapshot.child(Model.STATE).getValue(Int::class.java) ?: 0
+                    }
+                _placeZip.notify = placeZip
+            } else {
+                var findSiteZip: SiteZip? = null
+                for (siteZip: SiteZip in siteZipList) {
+                    if (siteZip.tabName == primaryKey) {
+                        findSiteZip = siteZip
                         break
                     }
-                } else {
-                    if ((model as SiteZip).tabName == primaryKey) {
-                        findModel = model
-                        break
+                }
+                val changeIndex = siteZipList.indexOf(findSiteZip)
+                if (changeIndex < 0) {
+                    return
+                }
+                siteZipList[changeIndex] =
+                    ((snapshot.getValue(SiteZip::class.java) as SiteZip).apply {
+                        this.tabName = snapshot.key ?: ""
+                        this.index = snapshot.child(Model.INDEX).getValue(Int::class.java) ?: 0
+                        this.state = snapshot.child(Model.STATE).getValue(Int::class.java) ?: 0
+                    })
+                _siteZips.value = siteZipList.apply {
+                    sortBy {
+                        it.index
                     }
-                }
-            }
-            val changeIndex = zipList.indexOf(findModel)
-            if (changeIndex < 0) {
-                return
-            }
-            zipList[changeIndex] = snapshot.getValue(
-                if (snapshot.child(Model.TYPE).getValue(String::class.java).equals(PlaceZip.PLACE)
-                ) {
-                    PlaceZip::class.java
-                } else {
-                    SiteZip::class.java
-                }
-            ).apply {
-                if (this is PlaceZip) {
-                    this.tabName = snapshot.key ?: ""
-                    this.index = snapshot.child(Model.INDEX).getValue(Int::class.java) ?: 0
-                    this.state = snapshot.child(Model.STATE).getValue(Int::class.java) ?: 0
-                } else {
-                    (this as SiteZip).tabName = snapshot.key ?: ""
-                    this.index = snapshot.child(Model.INDEX).getValue(Int::class.java) ?: 0
-                    this.state = snapshot.child(Model.STATE).getValue(Int::class.java) ?: 0
-                }
-            } as Model? ?: return
-
-            _zips.value = zipList.apply {
-                sortBy {
-                    it.index
                 }
             }
         }
@@ -301,10 +309,13 @@ class MainViewModel(
     /**
      * 파이어베이스 탭 개수 리스너.
      */
-    private val firebaseZipSizeRefListener: ValueEventListener = object : ValueEventListener {
+    private val siteZipSizeRefListener: ValueEventListener = object : ValueEventListener {
 
         override fun onDataChange(snapshot: DataSnapshot) {
-            _zipSize.value = snapshot.children.count()
+            val count: Int = snapshot.children.filter {
+                it.child(Model.TYPE).getValue(String::class.java) == SiteZip.SITE
+            }.count()
+            _zipSize.value = count
         }
 
         override fun onCancelled(error: DatabaseError) {
@@ -323,14 +334,26 @@ class MainViewModel(
      * Model Zip 사이즈 리스너 등록.
      */
     fun registerZipSizeListener() {
-        fireBaseDatabaseManager.rootRef.addValueEventListener(firebaseZipSizeRefListener)
+        fireBaseDatabaseManager.rootRef.addValueEventListener(siteZipSizeRefListener)
     }
 
     /**
      * Model Zip 리스트 리스너 등록.
      */
     fun registerZipsListener() {
-        fireBaseDatabaseManager.rootRef.addChildEventListener(firebaseRootRefListener)
+        fireBaseDatabaseManager.rootRef.addChildEventListener(rootRefListener)
+    }
+
+    fun replaceSiteScreen() = _replaceSiteScreen.notify()
+
+    fun replacePlaceScreen() = _replacePlaceScreen.notify()
+
+    fun setVisibleSiteScreen(isVisible: Boolean) {
+        _isVisibleSiteScreen.value = isVisible
+    }
+
+    fun setVisiblePlaceScreen(isVisible: Boolean) {
+        _isVisiblePlaceScreen.value = isVisible
     }
 
     /**
@@ -431,14 +454,14 @@ class MainViewModel(
      * 파이어베이스 Zip Site 리스너 제거.
      */
     private fun unregisterSiteZipSizeRefListener() {
-        fireBaseDatabaseManager.removeRootRefListener(firebaseZipSizeRefListener)
+        fireBaseDatabaseManager.removeRootRefListener(siteZipSizeRefListener)
     }
 
     /**
      * 파이어베이스 Root ref 리스너 제거.
      */
     private fun unregisterRootRefListener() {
-        fireBaseDatabaseManager.removeRootRefListener(firebaseRootRefListener)
+        fireBaseDatabaseManager.removeRootRefListener(rootRefListener)
     }
 
     /**

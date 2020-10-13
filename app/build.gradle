@@ -76,8 +76,8 @@ android {
         }
         /** 바이크닷 **/
         bikedot {
-            versionCode 10
-            versionName "0.1.1"
+            versionCode 11
+            versionName "0.1.2"
             applicationIdSuffix ".bikedot"
             buildConfigField(BUILD_PROPERTIES_TYPE, BUILD_PROPERTIES_NAME, loadProperties(BIKE_DOT_PROPERTIES_PATH))
         }
@@ -197,6 +197,7 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:${rootProject.ext.constraintLayoutVersion}"
 
     // Support
+    implementation "com.android.support:design:${rootProject.ext.supportDesignVersion}"
     implementation "com.google.android:flexbox:${rootProject.ext.flexboxVersion}"
     implementation "com.google.android.material:material:${rootProject.ext.mertrialVersion}"
 
