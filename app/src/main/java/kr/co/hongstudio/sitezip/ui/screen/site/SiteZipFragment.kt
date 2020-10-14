@@ -66,15 +66,6 @@ class SiteZipFragment : BaseFragment() {
         initRecordHistoriesRecyclerView()
     }
 
-    override fun onResume() {
-        super.onResume()
-        mainViewModel.setSearchText("")
-        mainViewModel.setSearchVisibility(false)
-        mainViewModel.setSearchButtonVisible(true)
-        mainViewModel.setFavoriteButtonVisible(true)
-        mainViewModel.setViewPagerUserInputEnabled(true)
-    }
-
     private fun initBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel

@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.google.firebase.database.*
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -123,126 +124,152 @@ class SiteZipViewModel(
     private val firebaseTabRefListener: ChildEventListener = object : ChildEventListener {
 
         override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-            Log.d(
-                TAG,
-                "firebaseTabRefListener. onChildMoved. ${snapshot.key} / ${tabRef?.path.toString()}"
-            )
+            runOnBackgroundThread {
+                Log.d(
+                    TAG,
+                    "firebaseTabRefListener. onChildMoved. ${snapshot.key} / ${tabRef?.path.toString()}"
+                )
+            }.also {
+                compositeDisposable += it
+            }
         }
 
         override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-            Log.d(
-                TAG,
-                "firebaseTabRefListener. onChildChanged. ${snapshot.key} / ${tabRef?.path.toString()}"
-            )
-            if (!(snapshot.key ?: "").contains(SiteZip.SITE) || snapshot.key == null) {
-                return
-            }
-            val primaryKey = "${siteZip.tabName}_${snapshot.key}"
-            val changeIndex = siteZip.siteList.indexOfFirst {
-                it.sitePrimaryKey == primaryKey
-            }
-            if (changeIndex < 0) {
-                return
-            }
-            siteZip.siteList[changeIndex] = snapshot.getValue(Site::class.java).apply {
-                this?.siteTypeName = siteZip.tabName
-                this?.isUseHttpIcon =
-                    snapshot.child(Site.IS_USE_HTTP_ICON_VAR_NAME).getValue(Boolean::class.java)
-                        ?: true
-                this?.sitePrimaryKey = primaryKey
-                val url: String = urlParserUtil.extractUrlFromText(this?.url ?: "")
-                if (url.isNotEmpty()) {
-                    urlParserUtil.getMetadataFromUrl(url)?.also { metaData ->
-                        if (metaData.title.isNotEmpty()) {
-                            this?.title = metaData.title
-                        }
-                        if (metaData.description.isNotEmpty()) {
-                            this?.description = metaData.description
-                        }
-                        if (metaData.imageUrl.isNotEmpty() && this?.isUseHttpIcon == true) {
-                            this.iconUrl = metaData.imageUrl
+            runOnBackgroundThread {
+                Log.d(
+                    TAG,
+                    "firebaseTabRefListener. onChildChanged. ${snapshot.key} / ${tabRef?.path.toString()}"
+                )
+                if (!(snapshot.key ?: "").contains(SiteZip.SITE) || snapshot.key == null) {
+                    return@runOnBackgroundThread
+                }
+                val primaryKey = "${siteZip.tabName}_${snapshot.key}"
+                val changeIndex = siteZip.siteList.indexOfFirst {
+                    it.sitePrimaryKey == primaryKey
+                }
+                if (changeIndex < 0) {
+                    return@runOnBackgroundThread
+                }
+                val site: Site? = snapshot.getValue(Site::class.java).apply {
+                    this?.siteTypeName = siteZip.tabName
+                    this?.isUseHttpIcon =
+                        snapshot.child(Site.IS_USE_HTTP_ICON_VAR_NAME).getValue(Boolean::class.java)
+                            ?: true
+                    this?.sitePrimaryKey = primaryKey
+                    val url: String = urlParserUtil.extractUrlFromText(this?.url ?: "")
+                    if (url.isNotEmpty()) {
+                        urlParserUtil.getMetadataFromUrl(url)?.also { metaData ->
+                            if (metaData.title.isNotEmpty()) {
+                                this?.title = metaData.title
+                            }
+                            if (metaData.description.isNotEmpty()) {
+                                this?.description = metaData.description
+                            }
+                            if (metaData.imageUrl.isNotEmpty() && this?.isUseHttpIcon == true) {
+                                this.iconUrl = metaData.imageUrl
+                            }
                         }
                     }
                 }
-            } ?: return
-            _searchSiteZip.postValue = siteZip.apply {
-                siteList.sortBy {
-                    it.id
+                site?.let {
+                    siteZip.siteList[changeIndex] = site
                 }
+                _searchSiteZip.postValue = siteZip.apply {
+                    siteList.sortBy {
+                        it.id
+                    }
+                }
+            }.also {
+                compositeDisposable += it
             }
         }
 
         override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-            Log.d(
-                TAG,
-                "firebaseTabRefListener. onChildAdded. ${snapshot.key} / ${tabRef?.path.toString()}"
-            )
-            if (!(snapshot.key ?: "").contains(SiteZip.SITE) || snapshot.key == null) {
-                return
-            }
-            val primaryKey = "${siteZip.tabName}_${snapshot.key}"
-            showProgress(true)
-            setCheckVisibleProgress(true)
-            checkLocalFavoriteSite(
-                primaryKey = primaryKey,
-                onComplete = { isFavorite ->
-                    siteZip.siteList.let { list ->
-                        list.add(snapshot.getValue(Site::class.java).apply {
-                            this?.siteTypeName = siteZip.tabName
-                            this?.isUseHttpIcon = snapshot.child(Site.IS_USE_HTTP_ICON_VAR_NAME)
-                                .getValue(Boolean::class.java) ?: true
-                            this?.sitePrimaryKey = primaryKey
-                            val url: String = urlParserUtil.extractUrlFromText(this?.url ?: "")
-                            if (url.isNotEmpty()) {
-                                urlParserUtil.getMetadataFromUrl(url)?.also { metaData ->
-                                    this?.isFavorite = isFavorite
-                                    if (metaData.title.isNotEmpty()) {
-                                        this?.title = metaData.title
-                                    }
-                                    if (metaData.description.isNotEmpty()) {
-                                        this?.description = metaData.description
-                                    }
-                                    if (metaData.imageUrl.isNotEmpty() && this?.isUseHttpIcon == true) {
-                                        this.iconUrl = metaData.imageUrl
+            runOnBackgroundThread {
+                Log.d(
+                    TAG,
+                    "firebaseTabRefListener. onChildAdded. ${snapshot.key} / ${tabRef?.path.toString()}"
+                )
+                if (!(snapshot.key ?: "").contains(SiteZip.SITE) || snapshot.key == null) {
+                    return@runOnBackgroundThread
+                }
+                val primaryKey = "${siteZip.tabName}_${snapshot.key}"
+
+                checkLocalFavoriteSite(
+                    primaryKey = primaryKey,
+                    onComplete = { isFavorite ->
+                        siteZip.siteList.let { list ->
+                            if (list.any { it.sitePrimaryKey == primaryKey }) {
+                                return@let
+                            }
+                            showProgress(true)
+                            setCheckVisibleProgress(true)
+                            val site: Site? = snapshot.getValue(Site::class.java).apply {
+                                this?.siteTypeName = siteZip.tabName
+                                this?.isUseHttpIcon = snapshot.child(Site.IS_USE_HTTP_ICON_VAR_NAME)
+                                    .getValue(Boolean::class.java) ?: true
+                                this?.sitePrimaryKey = primaryKey
+                                val url: String = urlParserUtil.extractUrlFromText(this?.url ?: "")
+                                if (url.isNotEmpty()) {
+                                    urlParserUtil.getMetadataFromUrl(url)?.also { metaData ->
+                                        this?.isFavorite = isFavorite
+                                        if (metaData.title.isNotEmpty()) {
+                                            this?.title = metaData.title
+                                        }
+                                        if (metaData.description.isNotEmpty()) {
+                                            this?.description = metaData.description
+                                        }
+                                        if (metaData.imageUrl.isNotEmpty() && this?.isUseHttpIcon == true) {
+                                            this.iconUrl = metaData.imageUrl
+                                        }
                                     }
                                 }
                             }
-                        } ?: return@let)
-                    }
-                    _searchSiteZip.postValue = siteZip.apply {
-                        siteList.sortBy {
-                            it.id
+                            site?.let {
+                                list.add(it)
+                            }
                         }
+                        _searchSiteZip.postValue = siteZip.apply {
+                            siteList.sortBy {
+                                it.id
+                            }
+                        }
+                        _scrollToPositionTop.postNotify()
+                        dismissProgress(true)
+                        setCheckVisibleProgress(false)
+                    },
+                    onError = {
+                        Log.d(TAG, it.toString())
+                        dismissProgress(true)
+                        setCheckVisibleProgress(false)
                     }
-                    _scrollToPositionTop.postNotify()
-                    dismissProgress(true)
-                    setCheckVisibleProgress(false)
-                },
-                onError = {
-                    Log.d(TAG, it.toString())
-                    dismissProgress(true)
-                    setCheckVisibleProgress(false)
-                }
-            )
+                )
+            }.also {
+                compositeDisposable += it
+            }
         }
 
         override fun onChildRemoved(snapshot: DataSnapshot) {
-            Log.d(
-                TAG,
-                "firebaseTabRefListener. onChildRemoved. ${snapshot.key} / ${tabRef?.path.toString()}"
-            )
-            val primaryKey = "${siteZip.tabName}_${snapshot.key}"
-            val removeIndex = siteZip.siteList.indexOfFirst {
-                it.sitePrimaryKey == primaryKey
-            }
-            if (removeIndex < 0) {
-                return
-            }
-            siteZip.siteList.removeAt(removeIndex)
-            _searchSiteZip.postValue = siteZip.apply {
-                siteList.sortBy {
-                    it.id
+            runOnBackgroundThread {
+                Log.d(
+                    TAG,
+                    "firebaseTabRefListener. onChildRemoved. ${snapshot.key} / ${tabRef?.path.toString()}"
+                )
+                val primaryKey = "${siteZip.tabName}_${snapshot.key}"
+                val removeIndex = siteZip.siteList.indexOfFirst {
+                    it.sitePrimaryKey == primaryKey
                 }
+                if (removeIndex < 0) {
+                    return@runOnBackgroundThread
+                }
+                siteZip.siteList.removeAt(removeIndex)
+                _searchSiteZip.postValue = siteZip.apply {
+                    siteList.sortBy {
+                        it.id
+                    }
+                }
+            }.also {
+                compositeDisposable += it
             }
         }
 
@@ -255,34 +282,36 @@ class SiteZipViewModel(
     /**
      * 탭 단위 뷰 표시. (리사이클러 뷰)
      */
-    fun displayTabViews() = try {
-        if (siteZip.siteList.size > 0) {
-            val tempSiteZip: SiteZip = siteZip.copy().apply {
-                siteList = if (_isFavoriteMode.value == true) {
-                    this.siteList.filter {
-                        it.isFavorite && (it.title.contains(
-                            _searchText.value ?: "",
-                            ignoreCase = true
-                        )
-                                || it.url.contains(_searchText.value ?: "", ignoreCase = true))
-                    }.toMutableList()
-                } else {
-                    this.siteList.filter {
-                        it.title.contains(_searchText.value ?: "", ignoreCase = true)
-                                || it.url.contains(_searchText.value ?: "", ignoreCase = true)
-                    }.toMutableList()
+    fun displayTabViews(): Disposable = runOnBackgroundThread {
+        try {
+            if (siteZip.siteList.size > 0) {
+                val tempSiteZip: SiteZip = siteZip.copy().apply {
+                    siteList = if (_isFavoriteMode.value == true) {
+                        this.siteList.filter {
+                            it.isFavorite && (it.title.contains(
+                                _searchText.value ?: "",
+                                ignoreCase = true
+                            )
+                                    || it.url.contains(_searchText.value ?: "", ignoreCase = true))
+                        }.toMutableList()
+                    } else {
+                        this.siteList.filter {
+                            it.title.contains(_searchText.value ?: "", ignoreCase = true)
+                                    || it.url.contains(_searchText.value ?: "", ignoreCase = true)
+                        }.toMutableList()
+                    }
+                    siteList.sortBy {
+                        it.id
+                    }
                 }
-                siteList.sortBy {
-                    it.id
-                }
+                _isShowNotFoundSite.postValue = tempSiteZip.siteList.size <= 0
+                _searchSiteZip.postValueIfNew(tempSiteZip)
             }
-            _isShowNotFoundSite.value = tempSiteZip.siteList.size <= 0
-            _searchSiteZip.setValueIfNew(tempSiteZip)
-        } else {
-            null
+        } catch (e: ConcurrentModificationException) {
+            Log.w(TAG, e.toString())
         }
-    } catch (e: ConcurrentModificationException) {
-        Log.w(TAG, e.toString())
+    }.also {
+        compositeDisposable += it
     }
 
     /**
@@ -367,20 +396,6 @@ class SiteZipViewModel(
      */
     private fun removeFirebaseListener() {
         tabRef?.removeEventListener(firebaseTabRefListener)
-    }
-
-    /**
-     * 바인딩.
-     */
-    fun onBind(item: SiteZip) {
-        siteZip.siteList.clear()
-        siteZip = item
-
-        removeFirebaseListener()
-
-        tabRef = null
-        tabRef = makeTabRef(item)
-        tabRef?.addChildEventListener(firebaseTabRefListener)
     }
 
     override fun onCleared() {

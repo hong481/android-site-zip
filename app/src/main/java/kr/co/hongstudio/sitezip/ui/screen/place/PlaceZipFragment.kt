@@ -19,7 +19,6 @@ import kr.co.hongstudio.sitezip.base.livedata.EventObserver
 import kr.co.hongstudio.sitezip.base.model.Model
 import kr.co.hongstudio.sitezip.data.local.entity.PlaceZip
 import kr.co.hongstudio.sitezip.databinding.FragmentPlaceZipBinding
-import kr.co.hongstudio.sitezip.ui.screen.MainViewModel
 import kr.co.hongstudio.sitezip.ui.screen.OuterActivities
 import kr.co.hongstudio.sitezip.ui.screen.place.PlaceZipViewModel.Serializable.PLACE_ZIP
 import kr.co.hongstudio.sitezip.util.LogUtil
@@ -31,10 +30,10 @@ import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.getStateViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
-class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener, MapView.POIItemEventListener {
+class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
+    MapView.POIItemEventListener {
 
     companion object {
         const val TAG: String = "PlaceListFragment"
@@ -53,8 +52,6 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener, MapView.P
     val viewModel: PlaceZipViewModel by lazy {
         getStateViewModel<PlaceZipViewModel>(bundle = arguments)
     }
-
-    private val mainViewModel: MainViewModel by sharedViewModel()
 
     private val permissionUtil: PermissionUtil by inject()
 
@@ -78,6 +75,7 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener, MapView.P
         initViewModel()
         initKakaoMapView()
         initPlacesRecyclerView()
+        checkPermission()
     }
 
     private fun initBinding() {
@@ -97,18 +95,13 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener, MapView.P
 
     override fun onResume() {
         super.onResume()
-        mainViewModel.setSearchText("")
-        mainViewModel.setSearchVisibility(false)
-        mainViewModel.setSearchButtonVisible(false)
-        mainViewModel.setFavoriteButtonVisible(false)
-        mainViewModel.setViewPagerUserInputEnabled(false)
         if (!viewModel.locationUtil.checkLocationServicesStatus()) {
             showLocationServiceSetting()
         }
     }
 
     private fun initViewModel() {
-
+        Log.d(TAG, "initViewModel")
 
         binding.etSearchText.setOnEditorActionListener { _, _, _ ->
             viewModel.getPlaces(
@@ -117,19 +110,8 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener, MapView.P
             true
         }
         viewModel.placeZip.observe(viewLifecycleOwner, Observer { placeZip ->
-
             Log.d(TAG, placeZip.toString())
-
             if (placeZip.state == Model.TRUE) {
-                // 권한 요청
-                permissionUtil.checkPermission(this,
-                    onGranted = {
-                        viewModel.setPermissionGranted(true)
-                    },
-                    onDenied = {
-                        viewModel.setPermissionGranted(false)
-                    }
-                )
                 createKakaoMapMarker(placeZip)
             }
         })
@@ -183,6 +165,20 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener, MapView.P
             }
         })
         observeBaseViewModelEvent(viewModel)
+    }
+    
+    private fun checkPermission() {
+        // 권한 요청
+        permissionUtil.checkPermission(this,
+            onGranted = {
+                viewModel.setPermissionGranted(true)
+            },
+            onDenied = {
+                // 게속요청
+                checkPermission()
+                viewModel.setPermissionGranted(false)
+            }
+        )
     }
 
     /**

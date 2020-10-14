@@ -8,6 +8,7 @@ import android.speech.RecognizerIntent
 import android.util.Log
 import android.view.MenuItem
 import android.widget.ImageView
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
@@ -86,6 +87,8 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
 
     private lateinit var keyboardUtil: KeyboardUtil
 
+    private var placeZipFragment: PlaceZipFragment? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
@@ -151,12 +154,15 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
                 }
             )
         })
-        viewModel.placeZip.observe(this, EventObserver {
-            PlaceZipFragment.newInstance(it).replace(
-                fragmentManager = supportFragmentManager,
-                container = binding.frameLayout,
-                tag = PlaceZipFragment.TAG
-            )
+        viewModel.placeZip.observe(this, Observer {
+            PlaceZipFragment.newInstance(it).apply {
+                replace(
+                    fragmentManager = supportFragmentManager,
+                    container = binding.frameLayout,
+                    tag = PlaceZipFragment.TAG,
+                    args = arguments ?: bundleOf()
+                )
+            }
         })
         viewModel.searchVisibility.observe(this, Observer {
             if (it) {
@@ -225,7 +231,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
      */
     private fun initViewPager() = try {
         binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.viewPager.offscreenPageLimit = 99
+        binding.viewPager.offscreenPageLimit = 1
         binding.viewPager.adapter =
             SiteZipFragmentAdapter(
                 fragmentActivity = this
@@ -330,9 +336,17 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.navigation_site -> {
+                viewModel.setSearchText("")
+                viewModel.setSearchVisibility(false)
+                viewModel.setSearchButtonVisible(true)
+                viewModel.setFavoriteButtonVisible(true)
                 viewModel.replaceSiteScreen()
             }
             R.id.navigation_place -> {
+                viewModel.setSearchText("")
+                viewModel.setSearchVisibility(false)
+                viewModel.setSearchButtonVisible(false)
+                viewModel.setFavoriteButtonVisible(false)
                 viewModel.replacePlaceScreen()
             }
         }

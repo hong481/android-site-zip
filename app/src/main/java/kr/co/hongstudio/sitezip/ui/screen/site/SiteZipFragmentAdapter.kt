@@ -30,21 +30,4 @@ class SiteZipFragmentAdapter(
     fun setSize(size: Int) {
         adapterItemsSize = size
     }
-
-    override fun onBindViewHolder(
-        holder: FragmentViewHolder,
-        position: Int,
-        payloads: MutableList<Any>
-    ) {
-        super.onBindViewHolder(holder, position, payloads)
-        val adapterPosition: Int = holder.adapterPosition.takeIf {
-            it != RecyclerView.NO_POSITION
-        } ?: return
-
-        val fragment: SiteZipFragment =
-            (this.fragmentActivity.supportFragmentManager.findFragmentByTag(
-                "f" + holder.itemId
-            ) as? SiteZipFragment) ?: return
-        fragment.viewModel.onBind(adapterItems[adapterPosition])
-    }
 }

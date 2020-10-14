@@ -9,7 +9,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import kr.co.hongstudio.sitezip.admob.AdMobManager
 import kr.co.hongstudio.sitezip.base.livedata.EmptyEvent
-import kr.co.hongstudio.sitezip.base.livedata.Event
 import kr.co.hongstudio.sitezip.base.model.Model
 import kr.co.hongstudio.sitezip.base.viewmodel.BaseViewModel
 import kr.co.hongstudio.sitezip.data.BuildProperty
@@ -52,8 +51,8 @@ class MainViewModel(
     /**
      * Place zip 라이브데이터.
      */
-    private val _placeZip: MutableLiveData<Event<PlaceZip>> = MutableLiveData()
-    val placeZip: LiveData<Event<PlaceZip>> = _placeZip
+    private val _placeZip: MutableLiveData<PlaceZip> = MutableLiveData()
+    val placeZip: LiveData<PlaceZip> = _placeZip
 
     /**
      * Model zip 개수.
@@ -205,7 +204,7 @@ class MainViewModel(
                         this.index = snapshot.child(Model.INDEX).getValue(Int::class.java) ?: 0
                         this.state = snapshot.child(Model.STATE).getValue(Int::class.java) ?: 0
                     }
-                _placeZip.notify = placeZip
+                _placeZip.value = placeZip
             } else {
                 siteZipList.let { list ->
                     if (list.any {
@@ -267,7 +266,7 @@ class MainViewModel(
                         this.index = snapshot.child(Model.INDEX).getValue(Int::class.java) ?: 0
                         this.state = snapshot.child(Model.STATE).getValue(Int::class.java) ?: 0
                     }
-                _placeZip.notify = placeZip
+                _placeZip.value = placeZip
             } else {
                 var findSiteZip: SiteZip? = null
                 for (siteZip: SiteZip in siteZipList) {
