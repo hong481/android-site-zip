@@ -110,13 +110,13 @@ class MainViewModel(
     /**
      * 검색 버튼 표시 여부.
      */
-    private val _isSearchButtonVisible: MutableLiveData<Boolean> = MutableLiveData()
+    private val _isSearchButtonVisible: MutableLiveData<Boolean> = MutableLiveData(true)
     val isSearchButtonVisible: LiveData<Boolean> = _isSearchButtonVisible
 
     /**
      * 줄겨찾기 버튼 표시 여부.
      */
-    private val _isFavoriteButtonVisible: MutableLiveData<Boolean> = MutableLiveData()
+    private val _isFavoriteButtonVisible: MutableLiveData<Boolean> = MutableLiveData(true)
     val isFavoriteButtonVisible: LiveData<Boolean> = _isFavoriteButtonVisible
 
     /**

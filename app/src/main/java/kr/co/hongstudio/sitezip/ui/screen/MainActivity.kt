@@ -87,8 +87,6 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
 
     private lateinit var keyboardUtil: KeyboardUtil
 
-    private var placeZipFragment: PlaceZipFragment? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
@@ -116,6 +114,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
     private fun initViewModel() {
         // 키보드 리스너 등록.
         keyboardUtil = KeyboardUtil(applicationContext, window)
+
         // 라이브데이터 옵저버.
         viewModel.isEnableContents.observe(this, Observer {
             Log.d(TAG, "isEnableContents : $it")
@@ -220,9 +219,9 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         })
         // 뷰모델 기본 옵저버.
         observeBaseViewModelEvent(viewModel)
-        // 리뷰 요청 팝업 창
+        // 리뷰 요청 팝업 창.
         initAppiraterDialog()
-        // 뷰 기본 세팅
+        // 뷰 기본 세팅.
         viewModel.setViewCheckNetwork()
     }
 
@@ -327,6 +326,28 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
     }
 
     /**
+     * 사이트 네비게이션 선택.
+     */
+    private fun selectSiteNavigation() {
+        viewModel.setSearchText("")
+        viewModel.setSearchVisibility(false)
+        viewModel.setSearchButtonVisible(true)
+        viewModel.setFavoriteButtonVisible(true)
+        viewModel.replaceSiteScreen()
+    }
+
+    /**
+     * 장소 네비게이션 선택.
+     */
+    private fun selectPlaceNavigation() {
+        viewModel.setSearchText("")
+        viewModel.setSearchVisibility(false)
+        viewModel.setSearchButtonVisible(false)
+        viewModel.setFavoriteButtonVisible(false)
+        viewModel.replacePlaceScreen()
+    }
+
+    /**
      * 뒤로가기 버튼 클릭시 홈으로 이동.
      */
     override fun onBackPressed() {
@@ -336,18 +357,10 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.navigation_site -> {
-                viewModel.setSearchText("")
-                viewModel.setSearchVisibility(false)
-                viewModel.setSearchButtonVisible(true)
-                viewModel.setFavoriteButtonVisible(true)
-                viewModel.replaceSiteScreen()
+                selectSiteNavigation()
             }
             R.id.navigation_place -> {
-                viewModel.setSearchText("")
-                viewModel.setSearchVisibility(false)
-                viewModel.setSearchButtonVisible(false)
-                viewModel.setFavoriteButtonVisible(false)
-                viewModel.replacePlaceScreen()
+                selectPlaceNavigation()
             }
         }
         return true
