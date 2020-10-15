@@ -25,6 +25,7 @@ import kr.co.hongstudio.sitezip.util.LogUtil
 import kr.co.hongstudio.sitezip.util.PermissionUtil
 import kr.co.hongstudio.sitezip.util.ResourceProvider
 import kr.co.hongstudio.sitezip.util.extension.observeBaseViewModelEvent
+import net.daum.mf.map.api.CameraUpdate
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
@@ -162,11 +163,12 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
             }
             selectMarker?.let {
                 mapView.selectPOIItem(selectMarker, true)
+                mapView.setMapCenterPoint(selectMarker.mapPoint, true)
             }
         })
         observeBaseViewModelEvent(viewModel)
     }
-    
+
     private fun checkPermission() {
         // 권한 요청
         permissionUtil.checkPermission(this,
