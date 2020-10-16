@@ -5,12 +5,12 @@
         android:id="@+id/navigation_site"
         android:enabled="true"
         android:icon="@drawable/ic_navigation_site"
-        android:title="사이트"/>
+        android:title="@string/site"/>
 
     <item
         android:id="@+id/navigation_place"
         android:enabled="true"
         android:icon="@drawable/ic_navigation_place"
-        android:title="장소"/>
+        android:title="@string/place"/>
 
 </menu>

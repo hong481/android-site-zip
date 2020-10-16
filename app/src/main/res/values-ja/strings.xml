@@ -38,5 +38,7 @@
     <string name="appirater_rate">はい、このアプリを評価してみましょう.</string>
     <string name="do_not_show_this_window">このウィンドウを表示しない.</string>
     <string name="appirater_title">" ％s のレビューと評価"</string>
+    <string name="site">サイト</string>
+    <string name="place">場所</string>
 
 </resources>
