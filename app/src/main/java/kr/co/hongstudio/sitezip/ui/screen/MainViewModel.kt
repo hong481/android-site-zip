@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import kr.co.hongstudio.sitezip.admob.AdMobManager
 import kr.co.hongstudio.sitezip.base.livedata.EmptyEvent
+import kr.co.hongstudio.sitezip.base.livedata.Event
 import kr.co.hongstudio.sitezip.base.model.Model
 import kr.co.hongstudio.sitezip.base.viewmodel.BaseViewModel
 import kr.co.hongstudio.sitezip.data.BuildProperty
@@ -78,11 +79,17 @@ class MainViewModel(
     private val _isVisiblePlaceScreen: MutableLiveData<Boolean> = MutableLiveData(false)
     val isVisiblePlaceScreen: LiveData<Boolean> = _isVisiblePlaceScreen
 
+    private val _isVisibleSettingScreen: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isVisibleSettingScreen: LiveData<Boolean> = _isVisibleSettingScreen
+
     private val _replaceSiteScreen: MutableLiveData<EmptyEvent> = MutableLiveData()
     val replaceSiteScreen: LiveData<EmptyEvent> = _replaceSiteScreen
 
-    private val _replacePlaceScreen: MutableLiveData<EmptyEvent> = MutableLiveData()
-    val replacePlaceScreen: LiveData<EmptyEvent> = _replacePlaceScreen
+    private val _replacePlaceScreen: MutableLiveData<Event<PlaceZip>> = MutableLiveData()
+    val replacePlaceScreen: LiveData<Event<PlaceZip>> = _replacePlaceScreen
+
+    private val _replaceSettingScreen: MutableLiveData<EmptyEvent> = MutableLiveData()
+    val replaceSettingScreen: LiveData<EmptyEvent> = _replaceSettingScreen
 
     /**
      * 검색어.
@@ -345,7 +352,11 @@ class MainViewModel(
 
     fun replaceSiteScreen() = _replaceSiteScreen.notify()
 
-    fun replacePlaceScreen() = _replacePlaceScreen.notify()
+    fun replacePlaceScreen() {
+        _replacePlaceScreen.notify = placeZip.value
+    }
+
+    fun replaceSettingScreen() = _replaceSettingScreen.notify()
 
     fun setVisibleSiteScreen(isVisible: Boolean) {
         _isVisibleSiteScreen.value = isVisible
@@ -353,6 +364,10 @@ class MainViewModel(
 
     fun setVisiblePlaceScreen(isVisible: Boolean) {
         _isVisiblePlaceScreen.value = isVisible
+    }
+
+    fun setVisibleSettingScreen(isVisible: Boolean) {
+        _isVisibleSettingScreen.value = isVisible
     }
 
     /**

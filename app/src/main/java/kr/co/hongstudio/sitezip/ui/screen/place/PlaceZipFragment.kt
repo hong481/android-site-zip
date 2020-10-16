@@ -10,7 +10,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kr.co.hongstudio.sitezip.R
@@ -20,16 +19,15 @@ import kr.co.hongstudio.sitezip.base.model.Model
 import kr.co.hongstudio.sitezip.data.local.entity.PlaceZip
 import kr.co.hongstudio.sitezip.databinding.FragmentPlaceZipBinding
 import kr.co.hongstudio.sitezip.ui.screen.OuterActivities
-import kr.co.hongstudio.sitezip.ui.screen.place.PlaceZipViewModel.Serializable.PLACE_ZIP
-import kr.co.hongstudio.sitezip.util.LogUtil
-import kr.co.hongstudio.sitezip.util.PermissionUtil
-import kr.co.hongstudio.sitezip.util.ResourceProvider
+import kr.co.hongstudio.sitezip.util.*
 import kr.co.hongstudio.sitezip.util.extension.observeBaseViewModelEvent
+import kr.co.hongstudio.sitezip.util.extension.timer
+import kr.co.hongstudio.sitezip.util.extension.wait
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.getStateViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
 class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
@@ -38,28 +36,24 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
     companion object {
         const val TAG: String = "PlaceListFragment"
 
-        fun newInstance(placeZip: PlaceZip): PlaceZipFragment =
-            PlaceZipFragment().apply {
-                arguments = bundleOf()
-                arguments?.putParcelable(PLACE_ZIP, placeZip)
-            }
+        fun newInstance(): PlaceZipFragment = PlaceZipFragment()
     }
 
     private val binding: FragmentPlaceZipBinding by lazy {
         FragmentPlaceZipBinding.bind(requireView())
     }
 
-    val viewModel: PlaceZipViewModel by lazy {
-        getStateViewModel<PlaceZipViewModel>(bundle = arguments)
-    }
+    private val viewModel: PlaceZipViewModel by sharedViewModel()
 
     private val permissionUtil: PermissionUtil by inject()
 
     private val resourceProvider: ResourceProvider by inject()
 
-    private val mapView: MapView by lazy {
-        MapView(context)
-    }
+    private val displayUtil: DisplayUtil by inject()
+
+    private lateinit var keyboardUtil: KeyboardUtil
+
+    private var mapView: MapView? = null
 
     private val mapPoiItems: MutableList<MapPOIItem> = mutableListOf()
 
@@ -73,7 +67,6 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
         super.onActivityCreated(savedInstanceState)
         initBinding()
         initViewModel()
-        initKakaoMapView()
         initPlacesRecyclerView()
         checkPermission()
     }
@@ -85,12 +78,13 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
 
     override fun onRestart() {
         super.onRestart()
-        Log.d(TAG, "onRestart.")
+        initKakaoMapView()
     }
 
     override fun onStart() {
         super.onStart()
         Log.d(TAG, "onStart.")
+        initKakaoMapView()
     }
 
     override fun onResume() {
@@ -101,7 +95,23 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
     }
 
     private fun initViewModel() {
-        Log.d(TAG, "initViewModel")
+        Log.d(TAG, "initViewModel: $viewModel")
+
+        // 키보드 리스너 등록.
+        context?.let { context ->
+            activity?.window?.let { window ->
+                keyboardUtil = KeyboardUtil(
+                    applicationContext = context,
+                    window = window,
+                    onHideKeyboard = {
+                        binding.rvPlaces.visibility = View.VISIBLE
+                    },
+                    onShowKeyboard = {
+                        binding.rvPlaces.visibility = View.GONE
+                    }
+                )
+            }
+        }
 
         binding.etSearchText.setOnEditorActionListener { _, _, _ ->
             viewModel.getPlaces(
@@ -110,7 +120,6 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
             true
         }
         viewModel.placeZip.observe(viewLifecycleOwner, Observer { placeZip ->
-            Log.d(TAG, placeZip.toString())
             if (placeZip.state == Model.TRUE) {
                 createKakaoMapMarker(placeZip)
             }
@@ -161,8 +170,8 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
                 it.itemName == placeName
             }
             selectMarker?.let {
-                mapView.selectPOIItem(selectMarker, true)
-                mapView.setMapCenterPoint(selectMarker.mapPoint, true)
+                mapView?.selectPOIItem(selectMarker, true)
+                mapView?.setMapCenterPoint(selectMarker.mapPoint, true)
             }
         })
         observeBaseViewModelEvent(viewModel)
@@ -186,13 +195,22 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
      * 카카오맵 초기화.
      */
     private fun initKakaoMapView() {
-        mapView.setMapViewEventListener(this)
-        mapView.setPOIItemEventListener(this)
-        binding.mapView.addView(mapView)
+        mapView?.let { binding.mapView.removeView(it) }
+        mapView = null
+        mapView = MapView(context).apply {
+            setMapViewEventListener(this@PlaceZipFragment)
+            setPOIItemEventListener(this@PlaceZipFragment)
+        }
+        mapView?.let { mapView ->
+            binding.mapView.addView(mapView)
+            viewModel.placeZip.value?.let { placeZip ->
+                createKakaoMapMarker(placeZip)
+            }
+        }
     }
 
     private fun createKakaoMapMarker(placeZip: PlaceZip) {
-        mapView.removeAllPOIItems()
+        mapView?.removeAllPOIItems()
         mapPoiItems.clear()
         val mapPoiItemPoints: MutableList<MapPoint> = mutableListOf()
         for (i: Int in placeZip.places.indices) {
@@ -212,8 +230,12 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
                 mapPoiItems.add(marker)
             }
         }
-        mapView.addPOIItems(mapPoiItems.toTypedArray())
-        mapView.fitMapViewAreaToShowMapPoints(mapPoiItemPoints.toTypedArray())
+        if (mapPoiItems.size > 0) {
+            timer(2000) {
+                mapView?.addPOIItems(mapPoiItems.toTypedArray())
+                mapView?.fitMapViewAreaToShowMapPoints(mapPoiItemPoints.toTypedArray())
+            }
+        }
     }
 
     /**

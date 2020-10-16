@@ -343,7 +343,7 @@
                 android:id="@+id/frameLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="@{viewModel.isVisiblePlaceScreen() == true ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewModel.isVisiblePlaceScreen() == true || viewModel.isVisibleSettingScreen() == true ? View.VISIBLE : View.GONE}"
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>

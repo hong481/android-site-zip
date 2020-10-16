@@ -7,7 +7,6 @@ import android.location.Location
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kr.co.hongstudio.sitezip.base.livedata.EmptyEvent
 import kr.co.hongstudio.sitezip.base.livedata.Event
@@ -19,11 +18,9 @@ import kr.co.hongstudio.sitezip.domain.GetPlacesUseCase
 import kr.co.hongstudio.sitezip.util.LocationUtil
 import kr.co.hongstudio.sitezip.util.extension.map
 import kr.co.hongstudio.sitezip.util.extension.notify
-import java.lang.Exception
 
 class PlaceZipViewModel(
 
-    savedStateHandle: SavedStateHandle,
     val locationUtil: LocationUtil,
     private val applicationContext: Context,
     private val getPlacesUseCase: GetPlacesUseCase
@@ -35,14 +32,11 @@ class PlaceZipViewModel(
         const val TAG: String = "PlaceListViewModel"
     }
 
-    object Serializable {
-        const val PLACE_ZIP: String = "PlaceListViewModel.Serializable.PLACE_ZIP"
-    }
-
     /**
      * Place Zip.
      */
-    val placeZip: MutableLiveData<PlaceZip> = savedStateHandle.getLiveData(Serializable.PLACE_ZIP)
+    private val _placeZip: MutableLiveData<PlaceZip> = MutableLiveData()
+    val placeZip: LiveData<PlaceZip> = _placeZip
 
     /**
      * 권한 허용 여부.
@@ -149,7 +143,7 @@ class PlaceZipViewModel(
                     )
                 }.toMutableList()
             }
-            placeZip.value = tempPlaceZip
+            _placeZip.value = tempPlaceZip
         }
     }
 
@@ -230,6 +224,12 @@ class PlaceZipViewModel(
         placeName?.let {
             _selectMapMarkerEvent.notify = it
         }
+    }
 
+    /**
+     * 바인드
+     */
+    fun onBind(placeZip: PlaceZip) {
+        _placeZip.value = placeZip
     }
 }

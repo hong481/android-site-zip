@@ -15,11 +15,19 @@
         <variable
             name="mainViewModel"
             type="kr.co.hongstudio.sitezip.ui.screen.MainViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/map_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/rv_places"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/layout_search"
@@ -71,7 +79,6 @@
                     app:layout_constraintStart_toEndOf="@id/iv_search_icon"
                     app:layout_constraintTop_toTopOf="parent" />
 
-
                 <ImageButton
                     android:id="@+id/iv_search"
                     android:layout_width="wrap_content"
@@ -83,7 +90,6 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/iv_play_voice_search"
                     app:layout_constraintTop_toTopOf="parent" />
-
 
                 <ImageButton
                     android:id="@+id/iv_play_voice_search"
@@ -117,14 +123,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <RelativeLayout
-            android:id="@+id/map_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="5dp"
-            app:layout_constraintDimensionRatio="4:3"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_places"
             android:layout_width="match_parent"
@@ -132,9 +130,10 @@
             android:clipToPadding="false"
             android:paddingBottom="5dp"
             android:scrollbars="vertical"
-            android:visibility="@{viewModel.isComingSoon() == true ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.isComingSoon() == true ? View.GONE : viewModel.placeZip.places.size() > 0 ? View.VISIBLE : View.GONE }"
             app:items="@{viewModel.placeZip.places}"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toBottomOf="@id/map_view"
             tools:visibility="visible" />
 

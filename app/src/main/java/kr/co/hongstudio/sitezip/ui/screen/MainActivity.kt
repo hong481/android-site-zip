@@ -8,7 +8,6 @@ import android.speech.RecognizerIntent
 import android.util.Log
 import android.view.MenuItem
 import android.widget.ImageView
-import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
@@ -35,6 +34,8 @@ import kr.co.hongstudio.sitezip.databinding.ActivityMainBinding
 import kr.co.hongstudio.sitezip.glide.GlideApp
 import kr.co.hongstudio.sitezip.ui.appirater.AppiraterDialog
 import kr.co.hongstudio.sitezip.ui.screen.place.PlaceZipFragment
+import kr.co.hongstudio.sitezip.ui.screen.place.PlaceZipViewModel
+import kr.co.hongstudio.sitezip.ui.screen.setting.SettingFragment
 import kr.co.hongstudio.sitezip.ui.screen.site.SiteZipFragmentAdapter
 import kr.co.hongstudio.sitezip.util.DisplayUtil
 import kr.co.hongstudio.sitezip.util.KeyboardUtil
@@ -79,13 +80,18 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
     }
 
     private val viewModel: MainViewModel by viewModel()
+    private val placeZipViewModel: PlaceZipViewModel by viewModel()
+
     private val billingManager: BillingManager by inject()
     private val displayUtil: DisplayUtil by inject()
     private val appPref: AppPreference by inject()
 
+    private val placeZipFragment: PlaceZipFragment by inject()
+    private val settingFragment: SettingFragment by inject()
+
     private val appiraterDialogDisposable = CompositeDisposable()
 
-    private lateinit var keyboardUtil: KeyboardUtil
+    lateinit var keyboardUtil: KeyboardUtil
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -100,6 +106,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         viewModel.setUseAdmob()
     }
 
+
     override fun onDestroy() {
         super.onDestroy()
         binding.adViewBanner.destroy()
@@ -109,6 +116,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.bottomNav.setOnNavigationItemSelectedListener(this)
+        binding.bottomNav.menu.findItem(R.id.navigation_place).isEnabled = false
     }
 
     private fun initViewModel() {
@@ -154,13 +162,9 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
             )
         })
         viewModel.placeZip.observe(this, Observer {
-            PlaceZipFragment.newInstance(it).apply {
-                replace(
-                    fragmentManager = supportFragmentManager,
-                    container = binding.frameLayout,
-                    tag = PlaceZipFragment.TAG,
-                    args = arguments ?: bundleOf()
-                )
+            if (it != null && !binding.bottomNav.menu.findItem(R.id.navigation_place).isEnabled) {
+                binding.bottomNav.menu.findItem(R.id.navigation_place).isEnabled = true
+                placeZipViewModel.onBind(it)
             }
         })
         viewModel.searchVisibility.observe(this, Observer {
@@ -201,12 +205,45 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         })
         // 화면 제어
         viewModel.replaceSiteScreen.observe(this, EventObserver {
-            viewModel.setVisiblePlaceScreen(false)
             viewModel.setVisibleSiteScreen(true)
+            viewModel.setVisiblePlaceScreen(false)
+            viewModel.setVisibleSettingScreen(false)
         })
         viewModel.replacePlaceScreen.observe(this, EventObserver {
             viewModel.setVisibleSiteScreen(false)
             viewModel.setVisiblePlaceScreen(true)
+            viewModel.setVisibleSettingScreen(false)
+            if (supportFragmentManager.findFragmentByTag(PlaceZipFragment.TAG) != null) {
+                supportFragmentManager.beginTransaction().let {
+                    it.show(placeZipFragment)
+                    it.hide(settingFragment)
+                    it.commit()
+                }
+            } else {
+                placeZipFragment.add(
+                    fragmentManager = supportFragmentManager,
+                    container = binding.frameLayout,
+                    tag = PlaceZipFragment.TAG
+                )
+            }
+        })
+        viewModel.replaceSettingScreen.observe(this, EventObserver {
+            viewModel.setVisibleSiteScreen(false)
+            viewModel.setVisiblePlaceScreen(false)
+            viewModel.setVisibleSettingScreen(true)
+            if (supportFragmentManager.findFragmentByTag(SettingFragment.TAG) != null) {
+                supportFragmentManager.beginTransaction().let {
+                    it.show(settingFragment)
+                    it.hide(placeZipFragment)
+                    it.commit()
+                }
+            } else {
+                settingFragment.add(
+                    fragmentManager = supportFragmentManager,
+                    container = binding.frameLayout,
+                    tag = SettingFragment.TAG
+                )
+            }
         })
         viewModel.billingRemoveAds.observe(this, EventObserver {
             billingManager.processToPurchase(BillingManager.REMOVE_ADS, this)
@@ -348,6 +385,17 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
     }
 
     /**
+     * 장소 설정 선택.
+     */
+    private fun selectSettingNavigation() {
+        viewModel.setSearchText("")
+        viewModel.setSearchVisibility(false)
+        viewModel.setSearchButtonVisible(false)
+        viewModel.setFavoriteButtonVisible(false)
+        viewModel.replaceSettingScreen()
+    }
+
+    /**
      * 뒤로가기 버튼 클릭시 홈으로 이동.
      */
     override fun onBackPressed() {
@@ -361,6 +409,9 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
             }
             R.id.navigation_place -> {
                 selectPlaceNavigation()
+            }
+            R.id.navigation_setting -> {
+                selectSettingNavigation()
             }
         }
         return true

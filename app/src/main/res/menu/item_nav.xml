@@ -13,4 +13,10 @@
         android:icon="@drawable/ic_navigation_place"
         android:title="@string/place"/>
 
+    <item
+        android:id="@+id/navigation_setting"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="@string/setting"/>
+
 </menu>
