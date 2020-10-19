@@ -130,7 +130,7 @@
             android:clipToPadding="false"
             android:paddingBottom="5dp"
             android:scrollbars="vertical"
-            android:visibility="@{viewModel.isComingSoon() == true ? View.GONE : viewModel.placeZip.places.size() > 0 ? View.VISIBLE : View.GONE }"
+            android:visibility="@{viewModel.isComingSoon() == true ? View.GONE : viewModel.placeZip.places.size() > 0 &amp;&amp; viewModel.isEnableKeyboard() == false ? View.VISIBLE : View.GONE }"
             app:items="@{viewModel.placeZip.places}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"

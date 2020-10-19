@@ -1,6 +1,7 @@
 package kr.co.hongstudio.sitezip.util
 
 import android.util.Base64
+import android.util.Log
 import java.net.URLDecoder
 import java.net.URLEncoder
 
@@ -16,7 +17,7 @@ class CipherUtil{
 fun String.encodeBase64(flags: Int = Base64.NO_WRAP): String = try {
     Base64.encodeToString(toByteArray(), flags)
 } catch (e: Exception) {
-    LogUtil.exception(CipherUtil.TAG, e)
+    Log.d(CipherUtil.TAG, e.toString())
     ""
 }
 
@@ -26,6 +27,6 @@ fun String.encodeBase64(flags: Int = Base64.NO_WRAP): String = try {
 fun String.decodeBase64(flags: Int = Base64.NO_WRAP): String = try {
     String(Base64.decode(toByteArray(), flags))
 } catch (e: Exception) {
-    LogUtil.exception(CipherUtil.TAG, e)
+    Log.d(CipherUtil.TAG, e.toString())
     ""
 }

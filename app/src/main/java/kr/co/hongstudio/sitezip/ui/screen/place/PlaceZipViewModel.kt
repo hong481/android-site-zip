@@ -98,6 +98,12 @@ class PlaceZipViewModel(
     val isSearchTextChanged: LiveData<Boolean> = _isSearchTextChanged
 
     /**
+     * 키보드 활성화 여부.
+     */
+    private val _isEnableKeyboard: MutableLiveData<Boolean> = MutableLiveData()
+    val isEnableKeyboard: LiveData<Boolean> = _isEnableKeyboard
+
+    /**
      * 위치 콜백 등록.
      */
     fun registerLocationCallback() {
@@ -209,6 +215,13 @@ class PlaceZipViewModel(
      */
     fun setPermissionGranted(isGranted: Boolean) {
         _permissionGranted.notify = isGranted
+    }
+
+    /**
+     * 키보드 활성화 체크.
+     */
+    fun checkKeyboardEnable(isEnable: Boolean) {
+        _isEnableKeyboard.value = isEnable
     }
 
     /**

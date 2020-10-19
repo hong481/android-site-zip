@@ -19,7 +19,7 @@ open class FileUtil {
      */
     open fun moveFile(targetFile: File, moveFile: File): Boolean = try {
         targetFile.renameTo(moveFile).also { isRenameTo ->
-            LogUtil.d(TAG, "movedFile: ${targetFile.path} to ${moveFile.path} [$isRenameTo]")
+            Log.d(TAG, "movedFile: ${targetFile.path} to ${moveFile.path} [$isRenameTo]")
         }
     } catch (e: Exception) {
         Log.d(TAG, e.toString())
@@ -32,7 +32,7 @@ open class FileUtil {
     open fun deleteFile(file: File): Boolean = try {
         if (file.exists())
             file.delete().also { isDeleted ->
-                LogUtil.d(TAG, "deleteFile: ${file.path} [$isDeleted]")
+                Log.d(TAG, "deleteFile: ${file.path} [$isDeleted]")
             }
         else
             false
@@ -47,7 +47,7 @@ open class FileUtil {
     open fun createFile(file: File): Boolean = try {
         if (!file.exists()) {
             file.createNewFile().also { isCreated ->
-                LogUtil.d(TAG, "createFile: ${file.path} [$isCreated]")
+                Log.d(TAG, "createFile: ${file.path} [$isCreated]")
             }
         } else {
             true
@@ -63,7 +63,7 @@ open class FileUtil {
     open fun createDirectory(directory: File): Boolean = try {
         if (!directory.exists()) {
             directory.mkdirs().also { isCreated ->
-                LogUtil.d(TAG, "createDirectory: ${directory.path} [$isCreated]")
+                Log.d(TAG, "createDirectory: ${directory.path} [$isCreated]")
             }
         } else {
             true
@@ -86,7 +86,7 @@ open class FileUtil {
      */
     open fun renameFile(fromFile: File, toFile: File): Boolean = try {
         fromFile.renameTo(toFile).also { isRenamed ->
-            LogUtil.d(TAG, "renameFile: ${fromFile.name} to ${toFile.name} [$isRenamed]")
+            Log.d(TAG, "renameFile: ${fromFile.name} to ${toFile.name} [$isRenamed]")
         }
     } catch (e: Exception) {
         Log.d(TAG, e.toString())

@@ -1,12 +1,12 @@
 package kr.co.hongstudio.sitezip.util.extension
 
+import android.util.Log
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kr.co.hongstudio.sitezip.util.LogUtil
 import java.util.concurrent.TimeUnit
 import io.reactivex.Completable as CompletableV2
 import io.reactivex.Flowable as FlowableV2
@@ -30,7 +30,7 @@ fun timer(delay: Long, onDelayed: () -> Unit): Disposable = Completable.timer(de
     .subscribeOn(Schedulers.io())
     .observeOn(AndroidSchedulers.mainThread())
     .subscribe(onDelayed, {
-        LogUtil.exception(TAG, it)
+        Log.d(TAG, it.toString())
     })
 
 /**
@@ -42,7 +42,7 @@ fun runOnMainThread(runnable: () -> Unit): Disposable = Observable.empty<Unit>()
     .subscribeBy(
         onComplete = runnable,
         onError = {
-            LogUtil.exception(TAG, it)
+            Log.d(TAG, it.toString())
         }
     )
 
@@ -55,7 +55,7 @@ fun runOnBackgroundThread(runnable: () -> Unit): Disposable = Observable.empty<U
     .subscribeBy(
         onComplete = runnable,
         onError = {
-            LogUtil.exception(TAG, it)
+//            Log.d(TAG, it.toString())
         }
     )
 

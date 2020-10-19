@@ -31,7 +31,7 @@ class DatabaseDebugUtil(
                 val customDatabaseFiles: HashMap<String, android.util.Pair<File, String>> =
                     HashMap()
                 customDatabaseFiles[dataBaseFile.name] = android.util.Pair(dataBaseFile, "")
-                LogUtil.d(
+                Log.d(
                     TAG,
                     "setCustomDatabaseFiles." +
                             "\ndataBaseFile.name: ${dataBaseFile.name}" +

@@ -39,7 +39,6 @@ import kr.co.hongstudio.sitezip.ui.screen.setting.SettingFragment
 import kr.co.hongstudio.sitezip.ui.screen.site.SiteZipFragmentAdapter
 import kr.co.hongstudio.sitezip.util.DisplayUtil
 import kr.co.hongstudio.sitezip.util.KeyboardUtil
-import kr.co.hongstudio.sitezip.util.LogUtil
 import kr.co.hongstudio.sitezip.util.extension.lifecycleFragmentManager
 import kr.co.hongstudio.sitezip.util.extension.observeBaseViewModelEvent
 import kr.co.hongstudio.sitezip.util.extension.timer
@@ -177,7 +176,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
             }
         })
         viewModel.searchText.observe(this, Observer {
-            LogUtil.d(TAG, "viewModel.searchText.observe.")
+            Log.d(TAG, "viewModel.searchText.observe.")
             viewModel.searchSites()
         })
         viewModel.setViewPagerUserInputEnabled.observe(this, Observer {
@@ -341,7 +340,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
                     }
                 },
                 onError = {
-                    LogUtil.exception(TAG, it)
+                    Log.d(TAG, it.toString())
                 }
             ).let {
                 appiraterDialogDisposable += it

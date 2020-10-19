@@ -125,10 +125,10 @@ class SiteZipViewModel(
 
         override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
             runOnBackgroundThread {
-                Log.d(
-                    TAG,
-                    "firebaseTabRefListener. onChildMoved. ${snapshot.key} / ${tabRef?.path.toString()}"
-                )
+//                Log.d(
+//                    TAG,
+//                    "firebaseTabRefListener. onChildMoved. ${snapshot.key} / ${tabRef?.path.toString()}"
+//                )
             }.also {
                 compositeDisposable += it
             }
@@ -136,10 +136,10 @@ class SiteZipViewModel(
 
         override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
             runOnBackgroundThread {
-                Log.d(
-                    TAG,
-                    "firebaseTabRefListener. onChildChanged. ${snapshot.key} / ${tabRef?.path.toString()}"
-                )
+//                Log.d(
+//                    TAG,
+//                    "firebaseTabRefListener. onChildChanged. ${snapshot.key} / ${tabRef?.path.toString()}"
+//                )
                 if (!(snapshot.key ?: "").contains(SiteZip.SITE) || snapshot.key == null) {
                     return@runOnBackgroundThread
                 }
@@ -186,10 +186,10 @@ class SiteZipViewModel(
 
         override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
             runOnBackgroundThread {
-                Log.d(
-                    TAG,
-                    "firebaseTabRefListener. onChildAdded. ${snapshot.key} / ${tabRef?.path.toString()}"
-                )
+//                Log.d(
+//                    TAG,
+//                    "firebaseTabRefListener. onChildAdded. ${snapshot.key} / ${tabRef?.path.toString()}"
+//                )
                 if (!(snapshot.key ?: "").contains(SiteZip.SITE) || snapshot.key == null) {
                     return@runOnBackgroundThread
                 }
@@ -251,10 +251,10 @@ class SiteZipViewModel(
 
         override fun onChildRemoved(snapshot: DataSnapshot) {
             runOnBackgroundThread {
-                Log.d(
-                    TAG,
-                    "firebaseTabRefListener. onChildRemoved. ${snapshot.key} / ${tabRef?.path.toString()}"
-                )
+//                Log.d(
+//                    TAG,
+//                    "firebaseTabRefListener. onChildRemoved. ${snapshot.key} / ${tabRef?.path.toString()}"
+//                )
                 val primaryKey = "${siteZip.tabName}_${snapshot.key}"
                 val removeIndex = siteZip.siteList.indexOfFirst {
                     it.sitePrimaryKey == primaryKey
@@ -274,7 +274,7 @@ class SiteZipViewModel(
         }
 
         override fun onCancelled(databaseError: DatabaseError) {
-            Log.d(TAG, "loadPost:onCancelled", databaseError.toException())
+//            Log.d(TAG, "loadPost:onCancelled", databaseError.toException())
             dismissProgress(true)
         }
     }
@@ -306,6 +306,7 @@ class SiteZipViewModel(
                 }
                 _isShowNotFoundSite.postValue = tempSiteZip.siteList.size <= 0
                 _searchSiteZip.postValueIfNew(tempSiteZip)
+                dismissProgress(true)
             }
         } catch (e: ConcurrentModificationException) {
             Log.w(TAG, e.toString())
@@ -333,7 +334,7 @@ class SiteZipViewModel(
     }
 
     override fun copyLink(label: String, text: String) {
-        LogUtil.d(MainViewModel.TAG, "clipBoard. label : $label / text : $text")
+        Log.d(MainViewModel.TAG, "clipBoard. label : $label / text : $text")
         clipboardUtil.copyText(label, text)
         showToast(resourceProvider.getString(R.string.copy_to_link_message))
     }

@@ -19,10 +19,11 @@ import kr.co.hongstudio.sitezip.base.model.Model
 import kr.co.hongstudio.sitezip.data.local.entity.PlaceZip
 import kr.co.hongstudio.sitezip.databinding.FragmentPlaceZipBinding
 import kr.co.hongstudio.sitezip.ui.screen.OuterActivities
-import kr.co.hongstudio.sitezip.util.*
+import kr.co.hongstudio.sitezip.util.KeyboardUtil
+import kr.co.hongstudio.sitezip.util.PermissionUtil
+import kr.co.hongstudio.sitezip.util.ResourceProvider
 import kr.co.hongstudio.sitezip.util.extension.observeBaseViewModelEvent
 import kr.co.hongstudio.sitezip.util.extension.timer
-import kr.co.hongstudio.sitezip.util.extension.wait
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
@@ -48,8 +49,6 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
     private val permissionUtil: PermissionUtil by inject()
 
     private val resourceProvider: ResourceProvider by inject()
-
-    private val displayUtil: DisplayUtil by inject()
 
     private lateinit var keyboardUtil: KeyboardUtil
 
@@ -104,10 +103,10 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
                     applicationContext = context,
                     window = window,
                     onHideKeyboard = {
-                        binding.rvPlaces.visibility = View.VISIBLE
+                        viewModel.checkKeyboardEnable(false)
                     },
                     onShowKeyboard = {
-                        binding.rvPlaces.visibility = View.GONE
+                        viewModel.checkKeyboardEnable(true)
                     }
                 )
             }
@@ -140,7 +139,7 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
             }
         })
         viewModel.searchText.observe(viewLifecycleOwner, Observer {
-            LogUtil.d(TAG, "viewModel.searchText.observe.")
+            Log.d(TAG, "viewModel.searchText.observe.")
             viewModel.searchSites()
         })
         viewModel.searchTextSelection.observe(viewLifecycleOwner, EventObserver {

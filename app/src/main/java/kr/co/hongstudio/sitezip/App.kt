@@ -114,7 +114,7 @@ class App : Application() {
                 )
                 return@setErrorHandler
             }
-            Log.d(TAG, "Undeliverable exception received, not sure what to do : $error")
+//            Log.d(TAG, "Undeliverable exception received, not sure what to do : $error")
         }
     }
 
