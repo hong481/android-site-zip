@@ -140,7 +140,7 @@ class PlaceZipViewModel(
                 y = location.value?.longitude.toString()
             )
         ) { response ->
-            Log.d(TAG, "items:${response.items}")
+//            Log.d(TAG, "items:${response.items}")
             val tempPlaceZip = placeZip.value?.copy()
             tempPlaceZip?.apply {
                 places = response.items.filter {
