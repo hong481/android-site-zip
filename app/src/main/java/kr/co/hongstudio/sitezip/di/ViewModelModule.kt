@@ -45,7 +45,9 @@ object ViewModelModule {
         }
 
         viewModel {
-            SettingViewModel()
+            SettingViewModel(
+                get()
+            )
         }
 
         viewModel {

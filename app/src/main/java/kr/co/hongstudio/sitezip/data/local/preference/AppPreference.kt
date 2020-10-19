@@ -32,6 +32,14 @@ class AppPreferenceImpl(
             pref.putBoolean(Key.VISIBLE_APPIRATER_DIALOG, value)
         }
 
+    override fun registerChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        pref.registerOnSharedPreferenceChangeListener(listener)
+    }
+
+    override fun unregisterChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        pref.unregisterOnSharedPreferenceChangeListener(listener)
+    }
+
     /**
      * 초기화.
      */
@@ -41,6 +49,10 @@ class AppPreferenceImpl(
 
 interface AppPreference {
     var visibleAppiraterDialog: Boolean
+
+    fun registerChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener)
+
+    fun unregisterChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener)
 
     fun clear()
 }

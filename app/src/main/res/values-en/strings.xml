@@ -40,4 +40,6 @@
     <string name="appirater_title">%s Reviews and Ratings</string>
     <string name="site">Site</string>
     <string name="place">Place</string>
+    <string name="setting_appirater_rate_popup">PlayStore review popup</string>
+    <string name="setting_app_version">App Version</string>
 </resources>

@@ -51,11 +51,14 @@
     <string name="google_admob_app_id_test">ca-app-pub-3940256099942544~3347511713</string>
     <string name="google_admob_banner_id_test">ca-app-pub-3940256099942544/6300978111</string>
     <string name="google_admob_interstitial_id_test">ca-app-pub-3940256099942544/1033173712</string>
+
+    <string name="setting_appirater_rate_popup">앱 리뷰 요청 알림</string>
     <string name="appirater_rate_message">잠시 시간을 내어 스토어 평가를 해주실 수 있나요?\n작성하신 의견을 적극적으로 반영할게요!</string>
     <string name="appirater_rate">네, 이 앱을 평가할게요</string>
     <string name="appirater_rate_later">아니요. 다음에 평가할게요</string>
     <string name="do_not_show_this_window">이 창을 다시 표시 안 함</string>
     <string name="appirater_title">%s 리뷰 및 평가</string>
+    <string name="setting_app_version">앱 버전</string>
 
 
 </resources>

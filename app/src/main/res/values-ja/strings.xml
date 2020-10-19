@@ -40,5 +40,7 @@
     <string name="appirater_title">" ％s のレビューと評価"</string>
     <string name="site">サイト</string>
     <string name="place">場所</string>
+    <string name="setting_appirater_rate_popup">" ストア評価通知"</string>
+    <string name="setting_app_version">App Version</string>
 
 </resources>

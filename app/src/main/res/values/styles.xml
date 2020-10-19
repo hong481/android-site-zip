@@ -26,4 +26,8 @@
         <item name="android:windowEnterAnimation">@anim/anim_in</item>
         <item name="android:windowExitAnimation">@anim/anim_out</item>
     </style>
+
+    <style name="BrandedSwitch" parent="AppTheme">
+        <item name="colorAccent">@color/color_ffc107</item>
+    </style>
 </resources>
