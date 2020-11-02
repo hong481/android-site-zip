@@ -76,8 +76,8 @@ android {
         }
         /** 바이크닷 **/
         bikedot {
-            versionCode 12
-            versionName "0.1.3"
+            versionCode 13
+            versionName "0.1.4"
             applicationIdSuffix ".bikedot"
             buildConfigField(BUILD_PROPERTIES_TYPE, BUILD_PROPERTIES_NAME, loadProperties(BIKE_DOT_PROPERTIES_PATH))
         }
@@ -184,8 +184,9 @@ def createApk() {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    // kakao map
-    implementation files('libs/libDaumMapAndroid.jar')
+
+    // Naver Map SDK
+    implementation "com.naver.maps:map-sdk:${rootProject.ext.naverMapsVersion}"
 
     // Kotlin
     kapt "androidx.databinding:databinding-compiler:$gradle_version"

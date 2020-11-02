@@ -202,7 +202,7 @@ class SiteZipViewModel(
                             if (list.any { it.sitePrimaryKey == primaryKey }) {
                                 return@let
                             }
-                            showProgress(true)
+//                            showProgress(true)
                             setCheckVisibleProgress(true)
                             val site: Site? = snapshot.getValue(Site::class.java).apply {
                                 this?.siteTypeName = siteZip.tabName
@@ -235,12 +235,12 @@ class SiteZipViewModel(
                             }
                         }
                         _scrollToPositionTop.postNotify()
-                        dismissProgress(true)
+//                        dismissProgress(true)
                         setCheckVisibleProgress(false)
                     },
                     onError = {
                         Log.d(TAG, it.toString())
-                        dismissProgress(true)
+//                        dismissProgress(true)
                         setCheckVisibleProgress(false)
                     }
                 )
@@ -275,7 +275,7 @@ class SiteZipViewModel(
 
         override fun onCancelled(databaseError: DatabaseError) {
 //            Log.d(TAG, "loadPost:onCancelled", databaseError.toException())
-            dismissProgress(true)
+//            dismissProgress(true)
         }
     }
 
@@ -306,7 +306,7 @@ class SiteZipViewModel(
                 }
                 _isShowNotFoundSite.postValue = tempSiteZip.siteList.size <= 0
                 _searchSiteZip.postValueIfNew(tempSiteZip)
-                dismissProgress(true)
+//                dismissProgress(true)
             }
         } catch (e: ConcurrentModificationException) {
             Log.w(TAG, e.toString())

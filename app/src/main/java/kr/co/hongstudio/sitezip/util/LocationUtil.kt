@@ -18,10 +18,6 @@ class LocationUtil(
     companion object {
         const val UPDATE_INTERVAL_MS: Long = 1000L
         const val FASTEST_UPDATE_INTERVAL_MS: Long = 500L
-
-        fun gpsSetting(context: Context) {
-
-        }
     }
 
     /**

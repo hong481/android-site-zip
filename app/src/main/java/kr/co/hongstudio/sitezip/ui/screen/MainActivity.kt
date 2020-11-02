@@ -23,7 +23,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kr.co.hongstudio.sitezip.App
 import kr.co.hongstudio.sitezip.R
 import kr.co.hongstudio.sitezip.base.activity.BaseActivity
 import kr.co.hongstudio.sitezip.base.livedata.EventObserver
@@ -148,9 +147,11 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
             (binding.viewPager.adapter as? SiteZipFragmentAdapter)?.setSize(it)
             if (viewModel.siteZipList.size <= 0) {
                 viewModel.registerZipsListener()
-            } else {
-                App.restart(this, createIntent(applicationContext, true))
             }
+
+            //else {
+            //   App.restart(this, createIntent(applicationContext, true))
+            //}
         })
         viewModel.siteZips.observe(this, Observer {
             val items: MutableList<SiteZip> = it.toMutableList()

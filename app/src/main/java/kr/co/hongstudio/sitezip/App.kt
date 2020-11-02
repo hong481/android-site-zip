@@ -6,7 +6,6 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Process
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.ads.MobileAds
 import io.reactivex.rxjava3.exceptions.UndeliverableException

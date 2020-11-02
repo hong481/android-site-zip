@@ -21,7 +21,7 @@ ext {
     materialVersion = '1.1.0'
     appcompatVersion = '1.2.0'
     mertrialVersion = '1.2.1'
-    constraintLayoutVersion = '2.0.1'
+    constraintLayoutVersion = '2.0.4'
 
     roomVersion = '2.2.5'
     lifecycleVersion = '2.2.0'
@@ -39,28 +39,30 @@ ext {
     tedpermissionVersion = '2.2.3'
     tedActivityResultVersion = '1.0.8'
 
-    junitVersion = '4.12'
+    junitVersion = '4.13.1'
     junitAndroidVersion = '1.1.2'
     espressoCoreVersion = '3.3.0'
 
     viewpager2Version = '1.0.0'
     jsoupVersion = '1.12.1'
 
-    analyticsVersion = '17.5.0'
+    analyticsVersion = '18.0.0'
     crashlyticsVersion = '17.2.2'
     perfVersion = '19.0.9'
     storageVersion = '19.2.0'
-    messagingVersion = '20.3.0'
-    databaseVersion = '19.5.0'
+    messagingVersion = '21.0.0'
+    databaseVersion = '19.5.1'
     storageUiVersion = '4.3.2'
 
     billingVersion = '3.0.1'
 
-    googlePlayCoreVerison = '1.8.2'
+    googlePlayCoreVerison = '1.8.3'
     googlePlayCoreKtxVerison = '1.8.1'
-    googleAdsVersion = '19.4.0'
+    googleAdsVersion = '19.5.0'
     googleMapsVersion = '17.0.0'
     googleLocationVersion = '17.1.0'
+
+    naverMapsVersion = '3.10.0'
 
     glideVersion = '4.11.0'
 

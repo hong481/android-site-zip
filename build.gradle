@@ -28,7 +28,11 @@ allprojects {
         flatDir {
             dirs 'libs'
         }
+
         maven { url 'https://jitpack.io' }
+        maven {
+            url 'https://navercorp.bintray.com/maps'
+        }
         google()
         jcenter()
     }

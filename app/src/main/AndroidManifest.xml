@@ -31,10 +31,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBBAw8I5RPfEeKC-3rfz-jGuVpE_jQzMJ4" />
 
-        <!-- kakao map-->
+        <!-- naver map-->
         <meta-data
-            android:name="com.kakao.sdk.AppKey"
-            android:value="397e3d2666b2779f56d69376cf5fcbe0" />
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="n1x20lyujv" />
 
         <!-- MainActivity -->
         <activity

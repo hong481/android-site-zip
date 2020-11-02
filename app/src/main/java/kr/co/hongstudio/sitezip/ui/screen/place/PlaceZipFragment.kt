@@ -12,6 +12,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.geometry.LatLngBounds
+import com.naver.maps.map.CameraAnimation
+import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.NaverMap
+import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
 import kr.co.hongstudio.sitezip.R
 import kr.co.hongstudio.sitezip.base.fragment.BaseFragment
 import kr.co.hongstudio.sitezip.base.livedata.EventObserver
@@ -23,16 +31,11 @@ import kr.co.hongstudio.sitezip.util.KeyboardUtil
 import kr.co.hongstudio.sitezip.util.PermissionUtil
 import kr.co.hongstudio.sitezip.util.ResourceProvider
 import kr.co.hongstudio.sitezip.util.extension.observeBaseViewModelEvent
-import kr.co.hongstudio.sitezip.util.extension.timer
-import net.daum.mf.map.api.MapPOIItem
-import net.daum.mf.map.api.MapPoint
-import net.daum.mf.map.api.MapView
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
-class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
-    MapView.POIItemEventListener {
+class PlaceZipFragment : BaseFragment(), OnMapReadyCallback {
 
     companion object {
         const val TAG: String = "PlaceListFragment"
@@ -52,9 +55,9 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
 
     private lateinit var keyboardUtil: KeyboardUtil
 
-    private var mapView: MapView? = null
+    private lateinit var naverMap: NaverMap
 
-    private val mapPoiItems: MutableList<MapPOIItem> = mutableListOf()
+    private val mapMarkers: MutableList<Marker> = mutableListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -73,17 +76,7 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
     private fun initBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        initKakaoMapView()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG, "onStart.")
-        initKakaoMapView()
+        binding.mapView.getMapAsync(this)
     }
 
     override fun onResume() {
@@ -120,7 +113,7 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
         }
         viewModel.placeZip.observe(viewLifecycleOwner, Observer { placeZip ->
             if (placeZip.state == Model.TRUE) {
-                createKakaoMapMarker(placeZip)
+                createMapMarker(placeZip)
             }
         })
         viewModel.location.observe(viewLifecycleOwner, Observer { location ->
@@ -165,12 +158,14 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
             }
         })
         viewModel.selectMapMarker.observe(viewLifecycleOwner, EventObserver { placeName ->
-            val selectMarker: MapPOIItem? = mapPoiItems.findLast {
-                it.itemName == placeName
+            val selectMarker: Marker? = mapMarkers.findLast {
+                it.captionText == placeName
             }
             selectMarker?.let {
-                mapView?.selectPOIItem(selectMarker, true)
-                mapView?.setMapCenterPoint(selectMarker.mapPoint, true)
+                val cameraUpdate: CameraUpdate = CameraUpdate.scrollTo(
+                    selectMarker.position
+                ).animate(CameraAnimation.Easing)
+                naverMap.moveCamera(cameraUpdate)
             }
         })
         observeBaseViewModelEvent(viewModel)
@@ -190,50 +185,47 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
         )
     }
 
-    /**
-     * 카카오맵 초기화.
-     */
-    private fun initKakaoMapView() {
-        mapView?.let { binding.mapView.removeView(it) }
-        mapView = null
-        mapView = MapView(context).apply {
-            setMapViewEventListener(this@PlaceZipFragment)
-            setPOIItemEventListener(this@PlaceZipFragment)
-        }
-        mapView?.let { mapView ->
-            binding.mapView.addView(mapView)
-            viewModel.placeZip.value?.let { placeZip ->
-                createKakaoMapMarker(placeZip)
+    private fun createMapMarker(placeZip: PlaceZip) {
+        if (mapMarkers.size > 0) {
+            mapMarkers.forEach {
+                it.map = null
             }
+            mapMarkers.clear()
         }
-    }
-
-    private fun createKakaoMapMarker(placeZip: PlaceZip) {
-        mapView?.removeAllPOIItems()
-        mapPoiItems.clear()
-        val mapPoiItemPoints: MutableList<MapPoint> = mutableListOf()
         for (i: Int in placeZip.places.indices) {
             val tag = placeZip.id?.toInt()
+            val name = placeZip.places[i].place_name
+            val url = placeZip.places[i].place_url
             val latitude = placeZip.places[i].y?.toDouble()
             val longitude = placeZip.places[i].x?.toDouble()
 
             if (tag != null && latitude != null && longitude != null) {
-                val marker: MapPOIItem = MapPOIItem().apply {
+                val marker: Marker = Marker().apply {
                     this.tag = tag
-                    this.itemName = placeZip.places[i].place_name
-                    this.mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude)
-                    this.markerType = MapPOIItem.MarkerType.BluePin
-                    this.selectedMarkerType = MapPOIItem.MarkerType.RedPin
+                    this.position = LatLng(latitude, longitude)
+                    this.captionText = name ?: ""
+                    this.icon = OverlayImage.fromResource(R.drawable.ic_baseline_place_24)
+                    this.captionColor = resourceProvider.getColor(R.color.colorPrimary)
+                    this.width = Marker.SIZE_AUTO
+                    this.height = Marker.SIZE_AUTO
+                    this.isHideCollidedSymbols = true
+                    this.map = naverMap
+                    name?.let {
+                        this.setOnClickListener {
+                            viewModel.findPlace(name)?.let {
+                                viewModel.intentPlacePage(url)
+                            }
+                            true
+                        }
+                    }
+
                 }
-                mapPoiItemPoints.add(marker.mapPoint)
-                mapPoiItems.add(marker)
+                mapMarkers.add(marker)
             }
-        }
-        if (mapPoiItems.size > 0) {
-            timer(2000) {
-                mapView?.addPOIItems(mapPoiItems.toTypedArray())
-                mapView?.fitMapViewAreaToShowMapPoints(mapPoiItemPoints.toTypedArray())
-            }
+            val bounds: LatLngBounds = LatLngBounds.Builder().include(
+                mapMarkers.map { it.position }
+            ).build()
+            naverMap.moveCamera(CameraUpdate.fitBounds(bounds).animate(CameraAnimation.Easing))
         }
     }
 
@@ -262,65 +254,9 @@ class PlaceZipFragment : BaseFragment(), MapView.MapViewEventListener,
         .create()
         .show()
 
-    override fun onMapViewInitialized(mapView: MapView?) {
-        // empty
+    override fun onMapReady(naverMap: NaverMap) {
+        this.naverMap = naverMap
     }
 
-    override fun onMapViewCenterPointMoved(mapView: MapView?, mapPoint: MapPoint?) {
-        // empty
-    }
 
-    override fun onMapViewZoomLevelChanged(mapView: MapView?, p1: Int) {
-        // empty
-    }
-
-    override fun onMapViewSingleTapped(mapView: MapView?, mapPoint: MapPoint?) {
-        // empty
-    }
-
-    override fun onMapViewDoubleTapped(mapView: MapView?, mapPoint: MapPoint?) {
-        // empty
-    }
-
-    override fun onMapViewLongPressed(mapView: MapView?, mapPoint: MapPoint?) {
-        // empty
-    }
-
-    override fun onMapViewDragStarted(mapView: MapView?, mapPoint: MapPoint?) {
-        // empty
-    }
-
-    override fun onMapViewDragEnded(mapView: MapView?, mapPoint: MapPoint?) {
-        // empty
-    }
-
-    override fun onMapViewMoveFinished(mapView: MapView?, mapPoint: MapPoint?) {
-        // empty
-    }
-
-    override fun onPOIItemSelected(mapView: MapView?, mapPOIItem: MapPOIItem?) {
-        // empty
-    }
-
-    override fun onCalloutBalloonOfPOIItemTouched(mapView: MapView?, mapPOIItem: MapPOIItem?) {
-        // empty
-    }
-
-    override fun onCalloutBalloonOfPOIItemTouched(
-        mapView: MapView?,
-        mapPOIItem: MapPOIItem?,
-        calloutBalloonButtonType: MapPOIItem.CalloutBalloonButtonType?
-    ) {
-        viewModel.findPlace(mapPOIItem?.itemName ?: return)?.let {
-            viewModel.intentPlacePage(it.place_url)
-        }
-    }
-
-    override fun onDraggablePOIItemMoved(
-        mapView: MapView?,
-        mapPOIItem: MapPOIItem?,
-        mapPoint: MapPoint?
-    ) {
-        // empty
-    }
 }

@@ -6,6 +6,7 @@ import java.net.URL
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class ValidatorUtil {
 
     /**
