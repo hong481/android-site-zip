@@ -46,9 +46,7 @@
 -dontwarn com.crashlytics.**
 
 # kakaomap
--keep class net.daum** {*;}
 -keep class android.opengl** {*;}
--keep class com.kakao.util.maps.helper** {*;}
 -keepattributes Signature
 -keepclassmembers class * {
     public static <fields>;
